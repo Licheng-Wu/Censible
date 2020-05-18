@@ -6,10 +6,10 @@ export default class AddExpensePage extends Component {
     render() {
         return (      
             <Container>
-                <Header></Header>
                 <Content contentContainerStyle={styles.container}>
                     <InputGroup borderType='underline' >
-                        <Input style={styles.Inputs} placeholder='Item Name' />
+                        <Input style={styles.TextInputs} placeholder='Item Name' />
+                        <Input style={styles.NumberInputs} keyboardType = 'numeric' placeholder='Amount' />
                     </InputGroup>
                     <Button style={styles.AddButton} primary><Text>Add</Text></Button>
                 </Content>
@@ -30,8 +30,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     }, 
-    Inputs: {
+    TextInputs: {
+        flex: 1,
+        flexDirection: 'column',
         width:20,
+        marginBottom: 30,
+    },
+    NumberInputs: {
+        flex: 1,
+        flexDirection: 'column',
+        width:20,
+        marginBottom: 30,
     },
     AddButton: {
         width:100,
