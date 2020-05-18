@@ -5,6 +5,7 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, View } from 'react-native';
 import AddExpensePage from './src/AddExpensePage';
+import HomeStack from './src/Routes/HomeStack';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -29,7 +30,7 @@ export default class App extends React.Component {
     }
 
     return (
-      <AddExpensePage />               
+      <HomeStack />              
     );
   }
 }
