@@ -1,12 +1,24 @@
-import React from 'react';
-import { AppLoading } from 'expo';
-import { Container, Header, Content, InputGroup, Input, Title, Button, Text } from 'native-base';
-import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, View } from 'react-native';
-import AddExpensePage from './src/AddExpensePage';
-import TabNavigator from './src/Routes/TabNavigator';
-import { NavigationContainer } from '@react-navigation/native';
+import React from "react";
+import { AppLoading } from "expo";
+import {
+  Container,
+  Header,
+  Content,
+  InputGroup,
+  Input,
+  Title,
+  Button,
+  Text,
+  Form,
+  Item,
+  Picker,
+} from "native-base";
+import * as Font from "expo-font";
+import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, View } from "react-native";
+import AddExpenseScreen from "./src/AddExpenseScreen";
+import TabNavigator from "./src/Routes/TabNavigator";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -18,8 +30,8 @@ export default class App extends React.Component {
 
   async componentDidMount() {
     await Font.loadAsync({
-      Roboto: require('native-base/Fonts/Roboto.ttf'),
-      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
       ...Ionicons.font,
     });
     this.setState({ isReady: true });
@@ -30,20 +42,15 @@ export default class App extends React.Component {
       return <AppLoading />;
     }
 
-    return (
-      // <NavigationContainer>
-      //   <HomeStack />      
-        <TabNavigator />
-      // {/* </NavigationContainer> */}
-    );
+    return <TabNavigator />;
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
