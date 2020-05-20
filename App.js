@@ -5,6 +5,7 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, View } from 'react-native';
 import AddExpensePage from './src/AddExpensePage';
+import Login from './src/LoginPage/Login'
 import TabNavigator from './src/Routes/TabNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 
