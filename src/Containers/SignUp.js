@@ -1,4 +1,5 @@
 import * as React from "react";
+import firebase from "../../firebaseDb";
 import {
   View,
   StyleSheet,
@@ -12,17 +13,25 @@ import { Button } from "native-base/src/basic/Button";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabNavigator from "../Routes/TabNavigator";
-import StackNavigator from "../Routes/StackNavigator";
 
-export default class Login extends React.Component {
-  constructor(props) {
-    super(props);
+export default class SignUp extends React.Component {
+  state = {
+    username: "",
+    password: "",
+  };
 
-    this.state = {
-      username: "",
-      password: "",
-    };
-  }
+  SignUp = (email, password) => {
+    try {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((user) => {
+          console.log(user);
+        });
+    } catch (error) {
+      console.log(error.toString(error));
+    }
+  };
 
   handleUsername = (text) => this.setState({ username: text });
 
@@ -30,7 +39,6 @@ export default class Login extends React.Component {
 
   render() {
     const { username, password } = this.state;
-    const { navigation } = this.props;
     return (
       <KeyboardAvoidingView
         style={styles.container}
@@ -52,9 +60,9 @@ export default class Login extends React.Component {
         />
         <Button
           style={styles.button}
-          onPress={() => this.props.navigation.navigate("HomeScreen")}
+          onPress={() => this.SignUp("testass@gmail.com", "testingg")}
         >
-          <Text> Login </Text>
+          <Text> Sign Up </Text>
         </Button>
       </KeyboardAvoidingView>
     );

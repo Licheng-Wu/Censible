@@ -5,6 +5,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Button } from "native-base/src/basic/Button";
 import AddExpenseScreen from "../AddExpenseScreen";
+import Login from "../Containers/Login";
+import HomeScreen from "../Containers/HomeScreen";
 
 export default function TabNavigator() {
   return (
@@ -17,41 +19,6 @@ export default function TabNavigator() {
     </NavigationContainer>
   );
 }
-
-function HomeScreen({ navigation }) {
-  return (
-    <View style={styles.container}>
-      <MonthlyExpense style={styles.expense} />
-      <Button
-        style={styles.button}
-        onPress={() => navigation.navigate("AddExpenses")}
-      >
-        <Text>Add Expense</Text>
-      </Button>
-    </View>
-  );
-}
-
-const MonthlyExpense = () => {
-  return (
-    <View style={styles.innerContainer}>
-      <View style={styles.box}>
-        <Text style={styles.text}> Income </Text>
-        <Text style={styles.number}> 0 </Text>
-      </View>
-
-      <View style={styles.box}>
-        <Text style={styles.text}> Expenses </Text>
-        <Text style={styles.number}> 0 </Text>
-      </View>
-
-      <View style={styles.box}>
-        <Text style={styles.text}> Balance </Text>
-        <Text style={styles.number}> 0 </Text>
-      </View>
-    </View>
-  );
-};
 
 function DetailsScreen() {
   return (
@@ -66,7 +33,7 @@ const HomeStack = createStackNavigator();
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="Login" component={HomeScreen} />
       <HomeStack.Screen name="Details" component={DetailsScreen} />
     </HomeStack.Navigator>
   );

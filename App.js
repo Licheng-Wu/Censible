@@ -17,12 +17,14 @@ import AddExpenseScreen from "./src/AddExpenseScreen";
 import Login from "./src/Containers/Login";
 import TabNavigator from "./src/Routes/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
+import SignUp from "./src/Containers/SignUp";
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isReady: false,
+      isLoggedIn: false,
     };
   }
 
@@ -40,7 +42,7 @@ export default class App extends React.Component {
       return <AppLoading />;
     }
 
-    return <Login />;
+    return <SignUp />;
   }
 }
 
