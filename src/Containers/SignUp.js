@@ -9,69 +9,96 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { Button } from "native-base/src/basic/Button";
+import { Container, Content, Header, Form, Input, Item, Button, Label } from 'native-base';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabNavigator from "../Routes/TabNavigator";
 import BlueButton from "../Component/BlueButton";
+import { color } from "react-native-reanimated";
 
 export default class SignUp extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     };
   }
 
-  register = (email, password) => {
+  signUpUser = (email, password) => {
     try {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then((user) => {
           console.log(user);
+          this.props.navigation.navigate("HomeScreen")
         });
     } catch (error) {
       console.log(error.toString(error));
     }
   };
 
-  handleEmail = (email) => this.setState({ email });
+  handleName = text => this.setState({ name: text });
 
-  handlePassword = (password) => this.setState({ password });
+  handleEmail = text => this.setState({ email: text });
+
+  handlePassword = text => this.setState({ password: text })
+
+  handleConfirmPassword = text => this.setState({ confirmPassword: text })
 
   render() {
     const { email, password } = this.state;
     return (
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-      >
-        <TextInput
-          style={styles.textInput}
-          placeholder="Email"
-          placeholderTextColor="grey"
-          autoCapitalize="none"
-          onChangeText={this.handleEmail}
-          value={email}
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Password"
-          placeholderTextColor="grey"
-          autoCapitalize="none"
-          onChangeText={this.handlePassword}
-          value={password}
-        />
-        <BlueButton
-          style={styles.button}
-          onPress={() => this.register(email, password)}
-        >
-          Sign Up
-        </BlueButton>
-      </KeyboardAvoidingView>
+      <Container style = {styles.container}>
+        <Content>
+          <Form>
+            <Item floatingLabel style = {styles.textInput}>
+              <Label>Name</Label>
+              <Input
+              autoCorrect={false}
+              onChangeText={this.handleName}
+              />
+            </Item>
+            <Item floatingLabel style = {styles.textInput}>
+              <Label>Email</Label>
+              <Input
+              autoCorrect={false}
+              autoCapitalize="none"
+              onChangeText={this.handleEmail}
+              />
+            </Item>
+            <Item floatingLabel style = {styles.textInput}>
+              <Label>Password</Label>
+              <Input
+              autoCorrect={false}
+              secureTextEntry={true}
+              autoCapitalize="none"
+              onChangeText={this.handlePassword}
+              />
+            </Item>
+            <Item floatingLabel style = {styles.textInput}>
+              <Label>Confirm Password</Label>
+              <Input
+              autoCorrect={false}
+              secureTextEntry={true}
+              autoCapitalize="none"
+              onChangeText={this.handleConfirmPassword}
+              />
+            </Item>
+            <Button style = {styles.button}
+              full
+              rounded
+              onPress={() => this.signUpUser(email, password)}
+            >
+              <Text>Sign Up</Text>
+            </Button>
+          </Form>
+        </Content>
+      </Container>
     );
   }
 }
@@ -79,23 +106,22 @@ export default class SignUp extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    padding: 20
   },
   textInput: {
     marginTop: 10,
-    width: 200,
-    height: 30,
-    borderColor: "black",
-    borderWidth: 1,
+  },
+  noMatch: {
+    marginTop: 10,
+    textAlign: 'center',
     fontSize: 20,
+    color: 'red'
+  },
+  match: {
+    color: 'white'
   },
   button: {
-    marginTop: 30,
-    width: 100,
-  },
-  text: {
-    fontSize: 20,
-  },
+    marginTop: 50,
+  }
 });
