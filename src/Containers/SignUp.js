@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { Component } from "react";
 import firebase from "../../firebaseDb";
 import {
   View,
@@ -13,14 +13,19 @@ import { Button } from "native-base/src/basic/Button";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabNavigator from "../Routes/TabNavigator";
+import BlueButton from "../Component/BlueButton";
 
-export default class SignUp extends React.Component {
-  state = {
-    email: "",
-    password: "",
-  };
+export default class SignUp extends Component {
+  constructor(props) {
+    super(props);
 
-  SignUp = (email, password) => {
+    this.state = {
+      email: "",
+      password: "",
+    };
+  }
+
+  register = (email, password) => {
     try {
       firebase
         .auth()
@@ -33,9 +38,9 @@ export default class SignUp extends React.Component {
     }
   };
 
-  handleUsername = (text) => this.setState({ email: text });
+  handleEmail = (email) => this.setState({ email });
 
-  handlePassword = (text) => this.setState({ password: text });
+  handlePassword = (password) => this.setState({ password });
 
   render() {
     const { email, password } = this.state;
@@ -45,25 +50,27 @@ export default class SignUp extends React.Component {
         behavior={Platform.OS == "ios" ? "padding" : "height"}
       >
         <TextInput
-          style={styles.input}
+          style={styles.textInput}
           placeholder="Email"
           placeholderTextColor="grey"
           autoCapitalize="none"
-          onChangeText={() => this.handleUsername}
+          onChangeText={this.handleEmail}
+          value={email}
         />
         <TextInput
-          style={styles.input}
+          style={styles.textInput}
           placeholder="Password"
           placeholderTextColor="grey"
           autoCapitalize="none"
-          onChangeText={() => this.handlePassword}
+          onChangeText={this.handlePassword}
+          value={password}
         />
-        <Button
+        <BlueButton
           style={styles.button}
-          onPress={() => this.SignUp("test1@gmail.com", "testing")}
+          onPress={() => this.register(email, password)}
         >
-          <Text> Sign Up </Text>
-        </Button>
+          Sign Up
+        </BlueButton>
       </KeyboardAvoidingView>
     );
   }
@@ -76,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  input: {
+  textInput: {
     marginTop: 10,
     width: 200,
     height: 30,
@@ -86,5 +93,9 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 30,
+    width: 100,
+  },
+  text: {
+    fontSize: 20,
   },
 });
