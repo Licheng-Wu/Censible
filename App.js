@@ -42,7 +42,7 @@ export default class App extends React.Component {
       return <AppLoading />;
     }
 
-    return <SignUp />;
+    return <Login />;
   }
 }
 

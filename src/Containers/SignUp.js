@@ -16,7 +16,7 @@ import TabNavigator from "../Routes/TabNavigator";
 
 export default class SignUp extends React.Component {
   state = {
-    username: "",
+    email: "",
     password: "",
   };
 
@@ -33,12 +33,12 @@ export default class SignUp extends React.Component {
     }
   };
 
-  handleUsername = (text) => this.setState({ username: text });
+  handleUsername = (text) => this.setState({ email: text });
 
   handlePassword = (text) => this.setState({ password: text });
 
   render() {
-    const { username, password } = this.state;
+    const { email, password } = this.state;
     return (
       <KeyboardAvoidingView
         style={styles.container}
@@ -46,7 +46,7 @@ export default class SignUp extends React.Component {
       >
         <TextInput
           style={styles.input}
-          placeholder="Username"
+          placeholder="Email"
           placeholderTextColor="grey"
           autoCapitalize="none"
           onChangeText={() => this.handleUsername}
@@ -60,7 +60,7 @@ export default class SignUp extends React.Component {
         />
         <Button
           style={styles.button}
-          onPress={() => this.SignUp("testass@gmail.com", "testingg")}
+          onPress={() => this.SignUp("test1@gmail.com", "testing")}
         >
           <Text> Sign Up </Text>
         </Button>

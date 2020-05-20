@@ -1,4 +1,5 @@
 import * as React from "react";
+import firebase from "../../firebaseDb";
 import {
   View,
   StyleSheet,
@@ -19,17 +20,44 @@ export default class Login extends React.Component {
     super(props);
 
     this.state = {
-      username: "",
+      email: "",
       password: "",
+      loggedIn: false,
     };
   }
 
-  handleUsername = (text) => this.setState({ username: text });
+  handleUsername = (text) => this.setState({ email: text });
 
   handlePassword = (text) => this.setState({ password: text });
 
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({
+          loggedIn: true,
+        });
+        console.log("Signed in");
+      } else {
+        console.log("Error");
+      }
+    });
+  }
+
+  Login = (email, password) => {
+    try {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then((res) => {
+          console.log(res.user.email);
+        });
+    } catch (error) {
+      console.log(error.toString(error));
+    }
+  };
+
   render() {
-    const { username, password } = this.state;
+    const { email, password } = this.state;
     const { navigation } = this.props;
     return (
       <KeyboardAvoidingView
@@ -38,7 +66,7 @@ export default class Login extends React.Component {
       >
         <TextInput
           style={styles.input}
-          placeholder="Username"
+          placeholder="Email"
           placeholderTextColor="grey"
           autoCapitalize="none"
           onChangeText={() => this.handleUsername}
@@ -52,7 +80,7 @@ export default class Login extends React.Component {
         />
         <Button
           style={styles.button}
-          onPress={() => this.props.navigation.navigate("HomeScreen")}
+          onPress={() => this.Login("test1@gmail.com", "testing")}
         >
           <Text> Login </Text>
         </Button>
