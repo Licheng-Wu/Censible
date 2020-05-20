@@ -1,7 +1,7 @@
 import * as React from "react";
 import firebase from "../../firebaseDb";
-import { StyleSheet, Text } from "react-native";
-import { Container, Content, Header, Form, Input, Item, Button, Label } from 'native-base';
+import { StyleSheet, Text, Image } from "react-native";
+import { Container, Content, Header, Form, Input, Item, Button, Label, Spinner } from 'native-base';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabNavigator from "../Routes/TabNavigator";
@@ -31,7 +31,7 @@ export default class Login extends React.Component {
 				.signInWithEmailAndPassword(email, password)
 				.then((res) => {
           console.log(res.user.email);
-          this.props.navigation.navigate("HomeScreen")
+          this.props.navigation.navigate("TabNavigator");
 				});
 		} catch (error) {
 			console.log(error.toString(error));
@@ -39,13 +39,18 @@ export default class Login extends React.Component {
 	};
 
 	render() {
-		const { email, password } = this.state;
+		const { email, password, loggedIn } = this.state;
 		const { navigation } = this.props;
 		return (
       <Container style={styles.container}>
         <Content>
+          <Text style = {styles.censible}>Censible</Text>
+          <Image 
+          style = {styles.image}
+          source = {require('../Images/logo.jpg')}
+          />
 					<Form>
-						<Item floatingLabel style = {styles.textInput}>
+						<Item floatingLabel>
 							<Label>Email</Label>
 							<Input
                 autoCorrect={false}
@@ -80,7 +85,6 @@ export default class Login extends React.Component {
             >
               <Text>Sign Up</Text>
             </Button>
-
 					</Form>
         </Content>
       </Container>
@@ -95,6 +99,11 @@ export default class Login extends React.Component {
 			} else {
 				console.log("Error");
       }
+      if (this.state.loggedIn) {
+        return (
+          <Spinner/>
+        )
+      }
 		});
 	}
 }
@@ -105,11 +114,19 @@ const styles = StyleSheet.create({
 		flex: 1,
     justifyContent: "center",
     padding: 20
-	},
-	textInput: {
-		marginTop: 50,
-	},
+  },
+  censible: {
+    fontSize: 40,
+    textAlign: 'center',
+    color: 'brown',
+    textShadowColor: 'black',
+    textShadowRadius: 1
+  },
+  image: {
+    marginTop: 20,
+    alignSelf: 'center'
+  },
 	button: {
 		marginTop: 30,
-	},
+  }
 });

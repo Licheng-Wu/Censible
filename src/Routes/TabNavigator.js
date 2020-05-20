@@ -10,7 +10,7 @@ import HomeScreen from "../Containers/HomeScreen";
 
 export default function TabNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer independent = {true}>
       <Tab.Navigator>
         <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
@@ -33,7 +33,7 @@ const HomeStack = createStackNavigator();
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name="Login" component={HomeScreen} />
+      <HomeStack.Screen name="Home" component={HomeScreen} />
       <HomeStack.Screen name="Details" component={DetailsScreen} />
     </HomeStack.Navigator>
   );

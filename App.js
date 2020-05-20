@@ -44,10 +44,9 @@ export default class App extends React.Component {
     }
 
     return (
-      // <NavigationContainer>
-      //   <LoginStack/>
-      // </NavigationContainer>
-      <TabNavigator/>
+      <NavigationContainer>
+        <LoginStack/>
+      </NavigationContainer>
     )
     
   }
