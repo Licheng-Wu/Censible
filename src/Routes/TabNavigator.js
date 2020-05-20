@@ -1,21 +1,57 @@
 import * as React from "react";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Button } from "native-base/src/basic/Button";
 import AddExpenseScreen from "../AddExpenseScreen";
 
+export default function TabNavigator() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeStackScreen} />
+        <Tab.Screen name="Settings" component={SettingsStackScreen} />
+        <Tab.Screen name="AddExpenses" component={AddExpenseScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+
 function HomeScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
-      <Button onPress={() => navigation.navigate("AddExpenses")}>
+    <View style={styles.container}>
+      <MonthlyExpense style={styles.expense} />
+      <Button
+        style={styles.button}
+        onPress={() => navigation.navigate("AddExpenses")}
+      >
         <Text>Add Expense</Text>
       </Button>
     </View>
   );
 }
+
+const MonthlyExpense = () => {
+  return (
+    <View style={styles.innerContainer}>
+      <View style={styles.box}>
+        <Text style={styles.text}> Income </Text>
+        <Text style={styles.number}> 0 </Text>
+      </View>
+
+      <View style={styles.box}>
+        <Text style={styles.text}> Expenses </Text>
+        <Text style={styles.number}> 0 </Text>
+      </View>
+
+      <View style={styles.box}>
+        <Text style={styles.text}> Balance </Text>
+        <Text style={styles.number}> 0 </Text>
+      </View>
+    </View>
+  );
+};
 
 function DetailsScreen() {
   return (
@@ -57,14 +93,39 @@ function SettingsStackScreen() {
 
 const Tab = createBottomTabNavigator();
 
-export default function TabNavigator() {
-  return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="Settings" component={SettingsStackScreen} />
-        <Tab.Screen name="AddExpenses" component={AddExpenseScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  expense: {
+    marginTop: 10,
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  innerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  box: {
+    flex: 1,
+    backgroundColor: "white",
+    borderColor: "grey",
+    height: 80,
+  },
+  text: {
+    color: "black",
+    fontSize: 25,
+    textAlign: "center",
+  },
+  number: {
+    color: "black",
+    fontSize: 35,
+    textAlign: "center",
+  },
+  button: {
+    marginBottom: 10,
+  },
+});

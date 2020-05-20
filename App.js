@@ -9,14 +9,12 @@ import {
   Title,
   Button,
   Text,
-  Form,
-  Item,
-  Picker,
 } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
 import AddExpenseScreen from "./src/AddExpenseScreen";
+import Login from "./src/Containers/Login";
 import TabNavigator from "./src/Routes/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -42,7 +40,7 @@ export default class App extends React.Component {
       return <AppLoading />;
     }
 
-    return <TabNavigator />;
+    return <Login />;
   }
 }
 
