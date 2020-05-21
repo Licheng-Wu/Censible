@@ -16,7 +16,7 @@ import { StyleSheet, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "../Containers/Login";
 import SignUp from "../Containers/SignUp";
-import HomeScreen from "../Containers/HomeScreen"
+import HomeScreen from "../Containers/HomeScreen";
 import TabNavigator from "./TabNavigator";
 
 const Stack = createStackNavigator();
@@ -24,16 +24,17 @@ const Stack = createStackNavigator();
 export default function LoginStack() {
   return (
     <Stack.Navigator
-      // initialRouteName="Login"
-      // headerMode="screen"
-      // screenOptions={{
-      //   headerTintColor: "white",
-      //   headerStyle: { backgroundColor: "tomato" },
-      // }}
+    // initialRouteName="Login"
+    // headerMode="screen"
+    // screenOptions={{
+    //   headerTintColor: "white",
+    //   headerStyle: { backgroundColor: "tomato" },
+    // }}
     >
       <Stack.Screen
         name="Login"
         component={Login}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="SignUp"
@@ -42,10 +43,7 @@ export default function LoginStack() {
           title: "Sign Up",
         }}
       />
-      <Stack.Screen
-        name="TabNavigator"
-        component={TabNavigator}
-      />
+      <Stack.Screen name="TabNavigator" component={TabNavigator} />
     </Stack.Navigator>
   );
 }

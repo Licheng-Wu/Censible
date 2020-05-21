@@ -5,12 +5,14 @@ import {
   Container,
   Content,
   Header,
+  Title,
   Form,
   Input,
   Item,
   Button,
   Label,
   Spinner,
+  Icon,
 } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -18,6 +20,7 @@ import TabNavigator from "../Routes/TabNavigator";
 import StackNavigator from "../Routes/StackNavigator";
 import BlueButton from "../Component/BlueButton";
 import HomeScreen from "./HomeScreen";
+import { GlobalStyle } from "../styles/GlobalStyles";
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -38,7 +41,7 @@ export default class Login extends React.Component {
     try {
       firebase
         .auth()
-        .signInWithEmailAndPassword(email, password)
+        .signInWithEmailAndPassword(email.trim(), password)
         .then((res) => {
           console.log(res.user.email);
           this.props.navigation.replace("TabNavigator");
@@ -53,22 +56,40 @@ export default class Login extends React.Component {
     const { navigation } = this.props;
     return (
       <Container style={styles.container}>
-        <Content>
-          <Text style={styles.censible}>Censible</Text>
-          <Image style={styles.image} source={require("../Images/logo.jpg")} />
+        <Header style={styles.header}>
+          <Title
+            style={{
+              fontSize: 40,
+              fontFamily: "Roboto",
+              fontWeight: "bold",
+              color: "#3F6DB3",
+            }}
+          >
+            Censible
+          </Title>
+        </Header>
+        <Content style={styles.content}>
+          {/* <Text style={styles.censible}>Censible</Text> */}
+          <Image
+            style={styles.image}
+            source={require("../Images/logo3x.png")}
+          />
           <Form>
-            <Item floatingLabel>
-              <Label>Email</Label>
+            <Item floatingLabel style={GlobalStyle.authTextField}>
+              <Icon name="mail" style={GlobalStyle.authIconStyle} />
               <Input
+                placeholder="Email"
                 autoCorrect={false}
                 autoCapitalize="none"
                 onChangeText={this.handleEmail}
               />
             </Item>
 
-            <Item floatingLabel>
-              <Label>Password</Label>
+            <Item floatingLabel style={GlobalStyle.authTextField}>
+              {/* <Label>Password</Label> */}
+              <Icon name="lock" style={GlobalStyle.authIconStyle} />
               <Input
+                placeholder="Password"
                 autoCorrect={false}
                 autoCapitalize="none"
                 secureTextEntry={true}
@@ -77,22 +98,21 @@ export default class Login extends React.Component {
             </Item>
 
             <Button
-              style={styles.button}
+              style={GlobalStyle.authButton}
               full
               rounded
-              success
               onPress={() => this.loginUser(email, password)}
             >
-              <Text>Login</Text>
+              <Text style={GlobalStyle.authButtonText}>LOG IN</Text>
             </Button>
 
             <Button
-              style={styles.button}
+              style={GlobalStyle.authButton}
               full
               rounded
               onPress={() => navigation.navigate("SignUp")}
             >
-              <Text>Sign Up</Text>
+              <Text style={GlobalStyle.authButtonText}>SIGN UP</Text>
             </Button>
           </Form>
         </Content>
@@ -117,9 +137,18 @@ export default class Login extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#F4FCFF",
     flex: 1,
     justifyContent: "center",
     padding: 20,
+  },
+  header: {
+    backgroundColor: "transparent",
+    borderWidth: 0,
+    elevation: 0,
+  },
+  content: {
+    marginTop: 15,
   },
   censible: {
     fontSize: 40,
