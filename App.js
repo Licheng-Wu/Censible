@@ -18,6 +18,7 @@ import Login from "./src/Containers/Login";
 import TabNavigator from "./src/Routes/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import SignUp from "./src/Containers/SignUp";
+import LoginStack from "./src/Routes/StackNavigator"
 
 export default class App extends React.Component {
   constructor(props) {
@@ -42,7 +43,12 @@ export default class App extends React.Component {
       return <AppLoading />;
     }
 
-    return <Login />;
+    return (
+      <NavigationContainer>
+        <LoginStack/>
+      </NavigationContainer>
+    )
+    
   }
 }
 

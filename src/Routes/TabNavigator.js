@@ -10,7 +10,7 @@ import HomeScreen from "../Containers/HomeScreen";
 
 export default function TabNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer independent = {true}>
       <Tab.Navigator>
         <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
@@ -33,7 +33,7 @@ const HomeStack = createStackNavigator();
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name="Login" component={HomeScreen} />
+      <HomeStack.Screen name="Home" component={HomeScreen} />
       <HomeStack.Screen name="Details" component={DetailsScreen} />
     </HomeStack.Navigator>
   );
@@ -59,40 +59,3 @@ function SettingsStackScreen() {
 }
 
 const Tab = createBottomTabNavigator();
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  expense: {
-    marginTop: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  innerContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  box: {
-    flex: 1,
-    backgroundColor: "white",
-    borderColor: "grey",
-    height: 80,
-  },
-  text: {
-    color: "black",
-    fontSize: 25,
-    textAlign: "center",
-  },
-  number: {
-    color: "black",
-    fontSize: 35,
-    textAlign: "center",
-  },
-  button: {
-    marginBottom: 10,
-  },
-});

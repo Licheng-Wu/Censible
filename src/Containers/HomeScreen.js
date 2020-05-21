@@ -15,10 +15,10 @@ import TabNavigator from "../Routes/TabNavigator";
 
 export default function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <MonthlyExpense style={styles.expense} />
+    <View style={homeStyles.container}>
+      <MonthlyExpense style={homeStyles.expense} />
       <Button
-        style={styles.button}
+        style={homeStyles.button}
         onPress={() => navigation.navigate("AddExpenses")}
       >
         <Text>Add Expense</Text>
@@ -29,41 +29,61 @@ export default function HomeScreen({ navigation }) {
 
 const MonthlyExpense = () => {
   return (
-    <View style={styles.innerContainer}>
-      <View style={styles.box}>
-        <Text style={styles.text}> Income </Text>
-        <Text style={styles.number}> 0 </Text>
+    <View style={expenseStyles.container}>
+      <View style={expenseStyles.box}>
+        <Text style={expenseStyles.text}> Income </Text>
+        <Text style={expenseStyles.number}> 0 </Text>
       </View>
 
-      <View style={styles.box}>
-        <Text style={styles.text}> Expenses </Text>
-        <Text style={styles.number}> 0 </Text>
+      <View style={expenseStyles.box}>
+        <Text style={expenseStyles.text}> Expenses </Text>
+        <Text style={expenseStyles.number}> 0 </Text>
       </View>
 
-      <View style={styles.box}>
-        <Text style={styles.text}> Balance </Text>
-        <Text style={styles.number}> 0 </Text>
+      <View style={expenseStyles.box}>
+        <Text style={expenseStyles.text}> Balance </Text>
+        <Text style={expenseStyles.number}> 0 </Text>
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const homeStyles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
   },
-  input: {
+  expense: {
     marginTop: 10,
-    width: 200,
-    height: 30,
-    borderColor: "black",
-    borderWidth: 1,
-    fontSize: 20,
+    marginLeft: 5,
+    marginRight: 5,
   },
   button: {
-    marginTop: 30,
-  },
+    marginBottom: 10,
+  }
 });
+
+const expenseStyles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  box: {
+    flex: 1,
+    backgroundColor: "white",
+    borderColor: "grey",
+    height: 80,
+  },
+  text: {
+    color: "black",
+    fontSize: 25,
+    textAlign: "center",
+  },
+  number: {
+    color: "black",
+    fontSize: 35,
+    textAlign: "center",
+  }
+})
