@@ -7,13 +7,29 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
+  BackHandler,
 } from "react-native";
 import { Button } from "native-base/src/basic/Button";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabNavigator from "../Routes/TabNavigator";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function HomeScreen({ navigation }) {
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const onBackPress = () => {
+  //       console.log("back");
+  //       return true;
+  //     };
+
+  //     BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+  //     return () =>
+  //       BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+  //   }, [])
+  // );
+
   return (
     <View style={homeStyles.container}>
       <MonthlyExpense style={homeStyles.expense} />
@@ -62,7 +78,7 @@ const homeStyles = StyleSheet.create({
   },
   button: {
     marginBottom: 10,
-  }
+  },
 });
 
 const expenseStyles = StyleSheet.create({
@@ -85,5 +101,5 @@ const expenseStyles = StyleSheet.create({
     color: "black",
     fontSize: 35,
     textAlign: "center",
-  }
-})
+  },
+});

@@ -18,7 +18,7 @@ import Login from "./src/Containers/Login";
 import TabNavigator from "./src/Routes/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import SignUp from "./src/Containers/SignUp";
-import LoginStack from "./src/Routes/StackNavigator"
+import LoginStack from "./src/Routes/StackNavigator";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -26,6 +26,8 @@ export default class App extends React.Component {
     this.state = {
       isReady: false,
       isLoggedIn: false,
+      isLoading: true,
+      userToken: null,
     };
   }
 
@@ -45,10 +47,9 @@ export default class App extends React.Component {
 
     return (
       <NavigationContainer>
-        <LoginStack/>
+        <LoginStack />
       </NavigationContainer>
-    )
-    
+    );
   }
 }
 
