@@ -1,6 +1,6 @@
 import * as React from "react";
 import firebase from "../../firebaseDb";
-import { StyleSheet, Text, Image } from "react-native";
+import { StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import { Container, Content, Header, Form, Input, Item, Button, Label, Spinner } from 'native-base';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -78,13 +78,21 @@ export default class Login extends React.Component {
               <Text>Login</Text>
             </Button>
 
-            <Button style = {styles.button}
+            <TouchableOpacity style = {styles.text}>
+              <Text>
+                New to Censible? <Text 
+                style = {styles.signUp} 
+                onPress = {() => navigation.navigate("SignUp")}>Sign Up</Text>
+              </Text>
+            </TouchableOpacity>
+
+            {/* <Button style = {styles.button}
               full
               rounded
               onPress={() => navigation.navigate("SignUp")}
             >
               <Text>Sign Up</Text>
-            </Button>
+            </Button> */}
 					</Form>
         </Content>
       </Container>
@@ -128,5 +136,14 @@ const styles = StyleSheet.create({
   },
 	button: {
 		marginTop: 30,
+  },
+  text: {
+    alignSelf: 'center',
+    marginTop: 30,
+    fontSize: 13
+  },
+  signUp: {
+    fontWeight: '500',
+    color: 'red'
   }
 });

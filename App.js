@@ -19,6 +19,7 @@ import TabNavigator from "./src/Routes/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import SignUp from "./src/Containers/SignUp";
 import LoginStack from "./src/Routes/StackNavigator"
+import firebase from "./firebaseDb";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -39,15 +40,24 @@ export default class App extends React.Component {
   }
 
   render() {
-    if (!this.state.isReady) {
-      return <AppLoading />;
-    }
+    const {isReady, isLoggedIn} = this.state;
 
-    return (
-      <NavigationContainer>
-        <LoginStack/>
-      </NavigationContainer>
-    )
+    // firebase
+    //   .auth()
+    //   .onAuthStateChanged(user => {
+    //     if (user) {
+    //       this.setState({ isLoggedIn: true})
+    //     }
+    //   })
+    
+    if (! isReady) {
+      return <AppLoading/>
+    // } else if (isLoggedIn) {
+    //   return <TabNavigator/>
+    // } else {
+    //   return <LoginStack/>
+    }
+    return <LoginStack/>
     
   }
 }
