@@ -7,13 +7,14 @@ import { Button } from "native-base/src/basic/Button";
 import AddExpenseScreen from "../AddExpenseScreen";
 import Login from "../Containers/Login";
 import HomeScreen from "../Containers/HomeScreen";
+import Settings from "../Containers/Settings";
 
 export default function TabNavigator() {
   return (
     <NavigationContainer independent = {true}>
       <Tab.Navigator>
         <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="Settings" component={SettingsStackScreen} />
+        <Tab.Screen name="Settings" component={Settings} />
         <Tab.Screen name="AddExpenses" component={AddExpenseScreen} />
       </Tab.Navigator>
     </NavigationContainer>

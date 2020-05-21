@@ -5,59 +5,55 @@ import { Container, Content, Header, Form, Input, Item, Button, Label, Spinner }
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabNavigator from "../Routes/TabNavigator";
-import StackNavigator from "../Routes/StackNavigator";
-import BlueButton from "../Component/BlueButton"
+import BlueButton from "../Component/BlueButton";
 import HomeScreen from "./HomeScreen";
 
 export default class Login extends React.Component {
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		this.state = {
-			email: "",
-			password: "",
-			loggedIn: false,
-		};
-	}
+    this.state = {
+      email: "",
+      password: "",
+      loggedIn: false,
+    };
+  }
 
-	handleEmail = email => this.setState({ email });
+  handleEmail = (email) => this.setState({ email });
 
-	handlePassword = password => this.setState({ password });
+  handlePassword = (password) => this.setState({ password });
 
-	loginUser = (email, password) => {
-		try {
-			firebase
-				.auth()
-				.signInWithEmailAndPassword(email, password)
-				.then((res) => {
+  loginUser = (email, password) => {
+    try {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then((res) => {
           console.log(res.user.email);
-          this.props.navigation.navigate("TabNavigator");
-				});
-		} catch (error) {
-			console.log(error.toString(error));
-		}
-	};
+          this.props.navigation.replace("TabNavigator");
+        });
+    } catch (error) {
+      console.log(error.toString(error));
+    }
+  };
 
-	render() {
-		const { email, password, loggedIn } = this.state;
-		const { navigation } = this.props;
-		return (
+  render() {
+    const { email, password, loggedIn } = this.state;
+    const { navigation } = this.props;
+    return (
       <Container style={styles.container}>
         <Content>
-          <Text style = {styles.censible}>Censible</Text>
-          <Image 
-          style = {styles.image}
-          source = {require('../Images/logo.jpg')}
-          />
-					<Form>
-						<Item floatingLabel>
-							<Label>Email</Label>
-							<Input
+          <Text style={styles.censible}>Censible</Text>
+          <Image style={styles.image} source={require("../Images/logo.jpg")} />
+          <Form>
+            <Item floatingLabel>
+              <Label>Email</Label>
+              <Input
                 autoCorrect={false}
                 autoCapitalize="none"
                 onChangeText={this.handleEmail}
               />
-						</Item>
+            </Item>
 
             <Item floatingLabel>
               <Label>Password</Label>
@@ -69,7 +65,8 @@ export default class Login extends React.Component {
               />
             </Item>
 
-            <Button style = {styles.button}
+            <Button
+              style={styles.button}
               full
               rounded
               success
@@ -96,46 +93,43 @@ export default class Login extends React.Component {
 					</Form>
         </Content>
       </Container>
-		);
+    );
   }
 
-  componentDidMount() {
-		firebase.auth().onAuthStateChanged(user => {
-			if (user) {
-				this.setState({loggedIn: true});
-        console.log("Signed in");
-			} else {
-				console.log("Error");
-      }
-      if (this.state.loggedIn) {
-        return (
-          <Spinner/>
-        )
-      }
-		});
-	}
+  //   componentDidMount() {
+  //     firebase.auth().onAuthStateChanged((user) => {
+  //       if (user) {
+  //         this.setState({ loggedIn: true });
+  //         console.log(user);
+  //       } else {
+  //         console.log("Error");
+  //       }
+  //       if (this.state.loggedIn) {
+  //         return <Spinner />;
+  //       }
+  //     });
+  //   }
 }
 
-
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
+  container: {
+    flex: 1,
     justifyContent: "center",
-    padding: 20
+    padding: 20,
   },
   censible: {
     fontSize: 40,
-    textAlign: 'center',
-    color: 'brown',
-    textShadowColor: 'black',
-    textShadowRadius: 1
+    textAlign: "center",
+    color: "brown",
+    textShadowColor: "black",
+    textShadowRadius: 1,
   },
   image: {
     marginTop: 20,
-    alignSelf: 'center'
+    alignSelf: "center",
   },
-	button: {
-		marginTop: 30,
+  button: {
+    marginTop: 30,
   },
   text: {
     alignSelf: 'center',

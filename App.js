@@ -18,55 +18,59 @@ import Login from "./src/Containers/Login";
 import TabNavigator from "./src/Routes/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import SignUp from "./src/Containers/SignUp";
-import LoginStack from "./src/Routes/StackNavigator"
-import firebase from "./firebaseDb";
+import LoginStack from "./src/Routes/StackNavigator";
+import firebase from 'firebase'
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isReady: false,
-      isLoggedIn: false,
-    };
-  }
+// export default class App extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       isReady: false,
+//       isLoggedIn: false,
+//       isLoading: true,
+//       userToken: null,
+//     };
+//   }
 
-  async componentDidMount() {
-    await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-      ...Ionicons.font,
-    });
-    this.setState({ isReady: true });
-  }
+//   async componentDidMount() {
+//     await Font.loadAsync({
+//       Roboto: require("native-base/Fonts/Roboto.ttf"),
+//       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+//       ...Ionicons.font,
+//     });
+//     this.setState({ isReady: true });
+//   }
 
-  render() {
-    const {isReady, isLoggedIn} = this.state;
+export default () => {
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [user, setUser] = React.useState(null);
 
-    // firebase
-    //   .auth()
-    //   .onAuthStateChanged(user => {
-    //     if (user) {
-    //       this.setState({ isLoggedIn: true})
-    //     }
-    //   })
-    
-    if (! isReady) {
+
+    React.useEffect(() => {
+      setTimeout(() => {
+        setIsLoading(! isLoading);
+        firebase
+        .auth()
+        .onAuthStateChanged(user => {
+          if (user) {
+            setUser(user);
+          }
+        })
+      }, 1000);
+    }, []);
+
+    if (isLoading) {
       return <AppLoading/>
-    // } else if (isLoggedIn) {
-    //   return <TabNavigator/>
-    // } else {
-    //   return <LoginStack/>
+    } else if (user) {
+      return <TabNavigator/>
+    } else {
+      return (
+          <LoginStack/>
+      )
     }
-    return <LoginStack/>
-    
-  }
+    // return (
+    //   <NavigationContainer>
+    //     <LoginStack/>
+    //   </NavigationContainer>
+    // )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
