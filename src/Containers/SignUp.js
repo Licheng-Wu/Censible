@@ -1,14 +1,7 @@
 import React, { Component } from "react";
+import ValidationComponent from 'react-native-form-validator';
 import firebase from "../../firebaseDb";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Text,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { StyleSheet, Text } from "react-native";
 import {
   Container,
   Content,
@@ -19,14 +12,9 @@ import {
   Button,
   Label,
 } from "native-base";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import TabNavigator from "../Routes/TabNavigator";
-import BlueButton from "../Component/BlueButton";
-import { color } from "react-native-reanimated";
 import { GlobalStyle } from "../styles/GlobalStyles";
 
-export default class SignUp extends Component {
+export default class SignUp extends ValidationComponent {
   constructor(props) {
     super(props);
 
@@ -35,20 +23,36 @@ export default class SignUp extends Component {
       email: "",
       password: "",
       confirmPassword: "",
+      passwordMatch: true,
+      isEmailUsed: false
     };
   }
 
   signUpUser = (email, password) => {
-    try {
+    this.validationCheck();
+    const { confirmPassword } = this.state;
+
+    if (password !== confirmPassword) {
+      this.setState({ passwordMatch: false });
+    } else if (this.isFormValid()) {
+      this.setState({ 
+        passwordMatch: true,
+        isEmailUsed: false
+      });
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then((user) => {
-          console.log(user);
-          // this.props.navigation.navigate("HomeScreen");
-        });
-    } catch (error) {
-      console.log(error.toString(error));
+        .then(() => {
+          console.log('User account created & signed in!');
+        })
+        .catch(error => {
+          if (error.code === 'auth/email-already-in-use') {
+            this.setState({ isEmailUsed: true });
+          } else {
+            this.setState({ isEmailUsed: false });
+            console.log(error.toString(error))
+          }
+        })
     }
   };
 
@@ -60,24 +64,83 @@ export default class SignUp extends Component {
 
   handleConfirmPassword = (text) => this.setState({ confirmPassword: text });
 
+  validationCheck = () => {
+    this.validate({
+      name: {
+        required: true
+      },
+      email: {
+        required: true,
+        email: true
+      },
+      password: {
+        required: true,
+        minlength: 8,
+        maxlength: 16
+      },
+      confirmPassword: {
+        required: true,
+        minlength: 8,
+        maxlength: 16
+      }
+    })
+  }
+
+  // rules = {
+  //     passwordMatch(password, confirmPassword) {
+  //       if (password === confirmPassword) {
+  //         return true;
+  //       } else {
+  //         return false;
+  //       }
+  //     }
+  // }
+
+  messages = {
+    en: {
+      email: "Email address is invalid.",
+      required: "Above field is mandatory.",
+      minlength: "Password should have at least 8 characters.",
+      maxlength: "Password should have at most 16 characters."
+    }
+  };
+
   render() {
-    const { email, password } = this.state;
+    const { name, email, password, confirmPassword, passwordMatch, isEmailUsed } = this.state;
     return (
       <Container style={styles.container}>
         <Content>
           <Form>
             <Item floatingLabel style={GlobalStyle.authTextField}>
               <Label>Name</Label>
-              <Input autoCorrect={false} onChangeText={this.handleName} />
+              <Input
+                autoCorrect={false}
+                onChangeText={this.handleName}
+                value={name} />
             </Item>
+            { 
+              this.isFieldInError('name') &&
+              <Text style={GlobalStyle.error}>{this.getErrorsInField('name')[0]}</Text>
+            }
             <Item floatingLabel style={GlobalStyle.authTextField}>
               <Label>Email</Label>
               <Input
                 autoCorrect={false}
                 autoCapitalize="none"
                 onChangeText={this.handleEmail}
+                value={email}
               />
             </Item>
+            { 
+              this.isFieldInError('email') &&
+              <Text style={GlobalStyle.error}>{this.getErrorsInField('email')[0]}</Text>
+            }
+            {
+              isEmailUsed &&
+              <Text style={GlobalStyle.error}>
+                That email address is already in use.
+              </Text>
+            }
             <Item floatingLabel style={GlobalStyle.authTextField}>
               <Label>Password</Label>
               <Input
@@ -85,8 +148,13 @@ export default class SignUp extends Component {
                 secureTextEntry={true}
                 autoCapitalize="none"
                 onChangeText={this.handlePassword}
+                value={password}
               />
             </Item>
+            { 
+              this.isFieldInError('password') &&
+              <Text style={GlobalStyle.error}>{this.getErrorsInField('password')[0]}</Text>
+            }
             <Item floatingLabel style={GlobalStyle.authTextField}>
               <Label>Confirm Password</Label>
               <Input
@@ -94,13 +162,23 @@ export default class SignUp extends Component {
                 secureTextEntry={true}
                 autoCapitalize="none"
                 onChangeText={this.handleConfirmPassword}
+                value={confirmPassword}
               />
             </Item>
+            { 
+              this.isFieldInError('confirmPassword') &&
+              <Text style={GlobalStyle.error}>{this.getErrorsInField('confirmPassword')[0]}</Text>
+            }
+            {
+              !passwordMatch &&
+              <Text style={GlobalStyle.error}>Passwords do not match!</Text>
+            }
             <Button
               style={GlobalStyle.authButton}
               full
               rounded
               onPress={() => this.signUpUser(email, password)}
+                
             >
               <Text style={GlobalStyle.authButtonText}>SIGN UP</Text>
             </Button>
@@ -133,4 +211,10 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 50,
   },
+  error: {
+    justifyContent: "center",
+    textAlign: "center",
+    color: "red",
+
+  }
 });

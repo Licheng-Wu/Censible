@@ -24,9 +24,7 @@ export default class AddExpenseScreen extends Component {
       amount: '',
       category: undefined,
       paymentMode: undefined,
-      currentDate: '',
-      date: '',
-      showDate: false
+      chosenDate: new Date(),
     };
   }
   
@@ -38,18 +36,10 @@ export default class AddExpenseScreen extends Component {
 
   handlePaymentMode = value => this.setState({ paymentMode: value });
 
-  handleDate = date => this.setState({date: date});
-
-  componentDidMount() {
-    var currentDate = new Date();
-    this.setState({
-      currentDate: currentDate,
-      date: currentDate
-    });
-  }
+  handleDate = date => this.setState({chosenDate: date});
 
   render() {
-    const { item, amount, category, paymentMode, currentDate, date, showDate } = this.state;
+    const { item, amount, category, paymentMode } = this.state;
     return (
       <Container style={styles.container}>
         <Header style={styles.header}>
@@ -104,9 +94,9 @@ export default class AddExpenseScreen extends Component {
             </Item>
             <Item last style={styles.picker}>
               <DatePicker
-                defaultDate={currentDate}
+                defaultDate={new Date()}
                 minimumDate={new Date(2010, 0, 1)}
-                maximumDate={currentDate}
+                maximumDate={new Date()}
                 locale={"en"}
                 modalTransparent={true}
                 animationType={"fade"}
