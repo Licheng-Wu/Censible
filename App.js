@@ -18,6 +18,7 @@ import TabNavigator from "./src/Routes/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import LoginStack from "./src/Routes/StackNavigator";
 import firebase from "./firebaseDb";
+import SplashScreen from "./src/Containers/SplashScreen";
 
 export default class App extends React.Component {
   unsubscribe = null;

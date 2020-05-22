@@ -11,10 +11,10 @@ import {
   Item,
   Picker,
   Icon,
-  Label
+  Label,
+  DatePicker
 } from "native-base";
 import { StyleSheet, Text, View } from "react-native";
-import DatePicker from 'react-native-datepicker'
 
 export default class AddExpenseScreen extends Component {
   constructor(props) {
@@ -25,7 +25,8 @@ export default class AddExpenseScreen extends Component {
       category: undefined,
       paymentMode: undefined,
       currentDate: '',
-      date: ''
+      date: '',
+      showDate: false
     };
   }
   
@@ -40,17 +41,15 @@ export default class AddExpenseScreen extends Component {
   handleDate = date => this.setState({date: date});
 
   componentDidMount() {
-    var date = new Date().getDate(); //Current Date
-    var month = new Date().getMonth() + 1; //Current Month
-    var year = new Date().getFullYear();
+    var currentDate = new Date();
     this.setState({
-      currentDate: date + '/' + month + '/' + year,
-      date: date + '/' + month + '/' + year
+      currentDate: currentDate,
+      date: currentDate
     });
   }
 
   render() {
-    const { item, amount, category, paymentMode, currentDate, date } = this.state;
+    const { item, amount, category, paymentMode, currentDate, date, showDate } = this.state;
     return (
       <Container style={styles.container}>
         <Header style={styles.header}>
@@ -61,11 +60,11 @@ export default class AddExpenseScreen extends Component {
         <Content>
           <Form>
             <Item floatingLabel>
-              <Label>Item Name</Label>
+              <Label style={{color: '#bfc6ea'}}>Item Name</Label>
               <Input onChangeText={this.handleItem} value={item} />
             </Item>
-            <Item floatingLabel last>
-              <Label>Amount</Label>
+            <Item floatingLabel >
+              <Label style={{color: '#bfc6ea'}}>Amount</Label>
               <Input keyboardType="numeric" onChangeText={this.handleAmount} value={amount} />
             </Item>
             <Item picker style={styles.picker}>
@@ -103,29 +102,21 @@ export default class AddExpenseScreen extends Component {
                 <Picker.Item label="iBanking" value="key4" />
               </Picker>
             </Item>
-            <DatePicker
-              style={styles.picker}
-              date={date}
-              mode="date"
-              placeholder="Select Date"
-              format="DD/MM/YYYY"
-              minDate="01/01/2010"
-              maxDate={currentDate}
-              confirmBtnText="Confirm"
-              cancelBtnText="Cancel"
-              customStyles={{
-                dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0
-                },
-                dateInput: {
-                  marginLeft: 36
-                }
-              }}
-              onDateChange={this.handleDate}
-            />
+            <Item last style={styles.picker}>
+              <DatePicker
+                defaultDate={currentDate}
+                minimumDate={new Date(2010, 0, 1)}
+                maximumDate={currentDate}
+                locale={"en"}
+                modalTransparent={true}
+                animationType={"fade"}
+                androidMode={"default"}
+                placeHolderText="Select Date"
+                placeHolderTextStyle={{ color: "#bfc6ea" }}
+                onDateChange={this.handleDate.bind(this)}
+                disabled={false}
+              />
+            </Item>
           </Form>
           <Button 
             full
@@ -158,7 +149,7 @@ const styles = StyleSheet.create({
     color: "#3F6DB3",
   },
   picker: {
-    marginTop: 20
+    marginTop: 20,
   },
   button: {
     marginTop: 50

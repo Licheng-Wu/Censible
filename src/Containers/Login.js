@@ -14,11 +14,6 @@ import {
   Spinner,
   Icon,
 } from "native-base";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import TabNavigator from "../Routes/TabNavigator";
-import BlueButton from "../Component/BlueButton";
-import HomeScreen from "./HomeScreen";
 import { GlobalStyle } from "../styles/GlobalStyles";
 
 export default class Login extends React.Component {
@@ -57,7 +52,7 @@ export default class Login extends React.Component {
     return (
       <Container style={styles.container}>
         <Header style={styles.header}>
-          <Title
+          {/* <Title
             style={{
               fontSize: 40,
               fontFamily: "Roboto",
@@ -66,7 +61,7 @@ export default class Login extends React.Component {
             }}
           >
             Censible
-          </Title>
+          </Title> */}
         </Header>
         <Content style={styles.content}>
           {/* <Text style={styles.censible}>Censible</Text> */}
@@ -159,6 +154,7 @@ const styles = StyleSheet.create({
   },
   image: {
     marginTop: 20,
+    marginLeft: 20,
     alignSelf: "center",
   },
   button: {
