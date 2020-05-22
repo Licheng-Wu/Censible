@@ -60,6 +60,7 @@ export default class Login extends React.Component {
           <Title
             style={{
               fontSize: 40,
+              fontFamily: "Roboto",
               fontWeight: "bold",
               color: "#3F6DB3",
             }}
