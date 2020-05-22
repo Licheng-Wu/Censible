@@ -45,7 +45,7 @@ export default class SignUp extends Component {
         .createUserWithEmailAndPassword(email, password)
         .then((user) => {
           console.log(user);
-          this.props.navigation.navigate("HomeScreen");
+          // this.props.navigation.navigate("HomeScreen");
         });
     } catch (error) {
       console.log(error.toString(error));

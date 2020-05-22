@@ -20,60 +20,64 @@ import TabNavigator from "./src/Routes/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import SignUp from "./src/Containers/SignUp";
 import LoginStack from "./src/Routes/StackNavigator";
-import firebase from 'firebase'
+import firebase from "./firebaseDb";
 
-// export default class App extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       isReady: false,
-//       isLoggedIn: false,
-//       isLoading: true,
-//       userToken: null,
-//     };
-//   }
+export default class App extends React.Component {
+  unsubscribe = null;
 
-  // async componentDidMount() {
-  //   await Font.loadAsync({
-  //     Roboto: require("native-base/Fonts/Roboto.ttf"),
-  //     Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-  //     ...Ionicons.font,
-  //   });
-  //   this.setState({ isReady: true });
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      isReady: false,
+      isLoggedIn: false,
+      isLoading: true,
+      userToken: null,
+    };
+  }
 
-export default () => {
-    const [isLoading, setIsLoading] = React.useState(true);
-    const [user, setUser] = React.useState(null);
+  async componentDidMount() {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      ...Ionicons.font,
+    });
+    this.setState({ isReady: true });
+    unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      // console.log(user);
+      if (user) {
+        this.setState({ isLoggedIn: true });
+        console.log(this.state.isLoggedIn);
+      } else {
+        this.setState({ isLoggedIn: false });
+      }
+    });
+  }
 
-
-    React.useEffect(() => {
-      setTimeout(() => {
-        setIsLoading(! isLoading);
-        firebase
-        .auth()
-        .onAuthStateChanged(user => {
-          if (user) {
-            setUser(user);
-          }
-        })
-      }, 1000);
-    }, []);
-
-    if (isLoading) {
-      return <Spinner style={{flex: 1}}/>
-    } else if (user) {
-      return <TabNavigator/>
-    } else {
-      return (
-        <NavigationContainer>
-          <LoginStack/>
-        </NavigationContainer>
-      )
+  componentWillUnmount() {
+    // Unsubscribe to the firebase auth listener when we have stopped using it
+    // Explanation: https://stackoverflow.com/questions/59223510/why-do-i-need-to-unsubscribe-to-onauthstatechanged-in-firebase
+    if (this.unsubscribe) {
+      this.unsubscribe();
     }
-    // return (
-    //   <NavigationContainer>
-    //     <LoginStack/>
-    //   </NavigationContainer>
-    // )
+  }
+
+  // handleClick = () => this.setState({ isLoggedIn: true });
+
+  render() {
+    if (!this.state.isReady) {
+      return <AppLoading />;
+    }
+
+    return (
+      <NavigationContainer>
+        {this.state.isLoggedIn ? (
+          <TabNavigator />
+        ) : (
+          <LoginStack
+          // handleClick={() => this.handleClick.bind(this)}
+          />
+        )}
+      </NavigationContainer>
+    );
+  }
 }
