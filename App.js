@@ -9,6 +9,7 @@ import {
   Title,
   Button,
   Text,
+  Spinner
 } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
@@ -32,14 +33,14 @@ import firebase from 'firebase'
 //     };
 //   }
 
-//   async componentDidMount() {
-//     await Font.loadAsync({
-//       Roboto: require("native-base/Fonts/Roboto.ttf"),
-//       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-//       ...Ionicons.font,
-//     });
-//     this.setState({ isReady: true });
-//   }
+  // async componentDidMount() {
+  //   await Font.loadAsync({
+  //     Roboto: require("native-base/Fonts/Roboto.ttf"),
+  //     Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+  //     ...Ionicons.font,
+  //   });
+  //   this.setState({ isReady: true });
+  // }
 
 export default () => {
     const [isLoading, setIsLoading] = React.useState(true);
@@ -60,12 +61,14 @@ export default () => {
     }, []);
 
     if (isLoading) {
-      return <AppLoading/>
+      return <Spinner style={{flex: 1}}/>
     } else if (user) {
       return <TabNavigator/>
     } else {
       return (
+        <NavigationContainer>
           <LoginStack/>
+        </NavigationContainer>
       )
     }
     // return (
