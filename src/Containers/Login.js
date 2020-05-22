@@ -29,7 +29,7 @@ export default class Login extends React.Component {
     this.state = {
       email: "",
       password: "",
-      loggedIn: false,
+      isLoggedIn: false,
     };
   }
 
@@ -44,7 +44,8 @@ export default class Login extends React.Component {
         .signInWithEmailAndPassword(email.trim(), password)
         .then((res) => {
           console.log(res.user.email);
-          this.props.navigation.replace("TabNavigator");
+          // this.props.navigation.replace("TabNavigator");
+          // this.props.handleClick;
         });
     } catch (error) {
       console.log(error.toString(error));

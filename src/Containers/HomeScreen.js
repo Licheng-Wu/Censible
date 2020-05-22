@@ -14,6 +14,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabNavigator from "../Routes/TabNavigator";
 import { useFocusEffect } from "@react-navigation/native";
+import firebase from "../../firebaseDb";
 
 export default function HomeScreen({ navigation }) {
   // useFocusEffect(
@@ -30,6 +31,19 @@ export default function HomeScreen({ navigation }) {
   //   }, [])
   // );
 
+  // signOut = firebase... AUTOMATICALLY CALLS signout. Must add the fat arrow function
+  signOut = () =>
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        // Sign-out successful.
+        console.log("Signed out");
+      })
+      .catch(function (error) {
+        // An error happened.
+      });
+
   return (
     <View style={homeStyles.container}>
       <MonthlyExpense style={homeStyles.expense} />
@@ -38,6 +52,9 @@ export default function HomeScreen({ navigation }) {
         onPress={() => navigation.navigate("AddExpenses")}
       >
         <Text>Add Expense</Text>
+      </Button>
+      <Button style={homeStyles.button} onPress={signOut}>
+        <Text>Sign Out</Text>
       </Button>
     </View>
   );

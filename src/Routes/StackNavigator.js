@@ -43,7 +43,7 @@ export default function LoginStack() {
           title: "Sign Up",
         }}
       />
-      <Stack.Screen name="TabNavigator" component={TabNavigator} />
+      {/* <Stack.Screen name="TabNavigator" component={TabNavigator} /> */}
     </Stack.Navigator>
   );
 }
