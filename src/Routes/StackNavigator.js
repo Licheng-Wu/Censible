@@ -18,6 +18,7 @@ import Login from "../Containers/Login";
 import SignUp from "../Containers/SignUp";
 import HomeScreen from "../Containers/HomeScreen";
 import TabNavigator from "./TabNavigator";
+import { NavigationContainer } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 

@@ -1,4 +1,5 @@
 import * as React from "react";
+import ValidationComponent from 'react-native-form-validator';
 import firebase from "../../firebaseDb";
 import { StyleSheet, Text, Image } from "react-native";
 import {
@@ -16,7 +17,7 @@ import {
 } from "native-base";
 import { GlobalStyle } from "../styles/GlobalStyles";
 
-export default class Login extends React.Component {
+export default class Login extends ValidationComponent {
   constructor(props) {
     super(props);
 
@@ -32,22 +33,46 @@ export default class Login extends React.Component {
   handlePassword = (password) => this.setState({ password });
 
   loginUser = (email, password) => {
-    try {
+    this.validationCheck();
+    if (this.isFormValid()) {
       firebase
-        .auth()
-        .signInWithEmailAndPassword(email.trim(), password)
-        .then((res) => {
-          console.log(res.user.email);
-          // this.props.navigation.replace("TabNavigator");
-          // this.props.handleClick;
-        });
-    } catch (error) {
-      console.log(error.toString(error));
+          .auth()
+          .signInWithEmailAndPassword(email.trim(), password)
+          .then((res) => {
+            console.log(res.user.email);
+          })
+          .catch(error => {
+            if (error.code === 'auth/user-not-found') {
+              alert('The email address is not registered.');
+            } else if (error.code === 'auth/wrong-password') {
+              alert('The password is invalid.');
+            }
+            console.log(error.code);
+          })
+    }
+  };
+
+  validationCheck = () => {
+    this.validate({
+      email: {
+        required: true,
+        email: true
+      },
+      password: {
+        required: true
+      }
+    })
+  }
+
+  messages = {
+    en: {
+      email: "Email address is invalid.",
+      required: "Above field is mandatory."
     }
   };
 
   render() {
-    const { email, password, loggedIn } = this.state;
+    const { email, password } = this.state;
     const { navigation } = this.props;
     return (
       <Container style={styles.container}>
@@ -79,6 +104,10 @@ export default class Login extends React.Component {
                 onChangeText={this.handleEmail}
               />
             </Item>
+            { 
+              this.isFieldInError('email') &&
+              <Text style={GlobalStyle.error}>{this.getErrorsInField('email')[0]}</Text>
+            }
 
             <Item floatingLabel style={GlobalStyle.authTextField}>
               {/* <Label>Password</Label> */}
@@ -91,6 +120,10 @@ export default class Login extends React.Component {
                 onChangeText={this.handlePassword}
               />
             </Item>
+            { 
+              this.isFieldInError('password') &&
+              <Text style={GlobalStyle.error}>{this.getErrorsInField('password')[0]}</Text>
+            }
 
             <Button
               style={GlobalStyle.authButton}
@@ -160,4 +193,13 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 30,
   },
+  text: {
+    alignSelf: 'center',
+    marginTop: 30,
+    fontSize: 13
+  },
+  signUp: {
+    fontWeight: '500',
+    color: 'red'
+  }
 });

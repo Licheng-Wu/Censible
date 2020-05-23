@@ -4,9 +4,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Button } from "native-base/src/basic/Button";
-import AddExpenseScreen from "../AddExpenseScreen";
+import AddExpenseScreen from "../Containers/AddExpenseScreen";
 import Login from "../Containers/Login";
 import HomeScreen from "../Containers/HomeScreen";
+import Settings from "../Containers/Settings";
 
 export default function TabNavigator() {
   return (
