@@ -9,7 +9,7 @@ import {
   Title,
   Button,
   Text,
-  Spinner
+  Spinner,
 } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
@@ -62,7 +62,7 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.isLoading) {
-      return <Spinner style={{flex: 1}} />;
+      return <Spinner style={{ flex: 1 }} />;
     }
 
     return (
