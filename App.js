@@ -1,16 +1,6 @@
 import React from "react";
 import { AppLoading } from "expo";
-import {
-  Container,
-  Header,
-  Content,
-  InputGroup,
-  Input,
-  Title,
-  Button,
-  Text,
-  Spinner,
-} from "native-base";
+import { Spinner, Root } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
@@ -66,15 +56,15 @@ export default class App extends React.Component {
     }
 
     return (
-      <NavigationContainer>
-        {this.state.isLoggedIn ? (
-          <TabNavigator />
-        ) : (
-          <LoginStack
-          // handleClick={() => this.handleClick.bind(this)}
-          />
-        )}
-      </NavigationContainer>
+      <Root>
+        <NavigationContainer>
+          {this.state.isLoggedIn ? (
+            <TabNavigator />
+          ) : (
+            <LoginStack />
+          )}
+        </NavigationContainer>
+      </Root>
     );
   }
 }
