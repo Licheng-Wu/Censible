@@ -1,7 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const MonthlyExpense = () => {
+const MonthlyExpense = props => {
+
+  const [target, setTarget] = React.useState(500);
+  const balance = target - props.expense;
+
   return (
     <View style={styles.container}>
       <View style={styles.items}>
@@ -10,7 +14,7 @@ const MonthlyExpense = () => {
           </Text>
         <View style={styles.text}>
           <Text style={{ color: "grey" }}>$</Text>
-          <Text style={styles.amount}>240.00</Text>
+          <Text style={styles.amount}>{props.expense.toFixed(2)}</Text>
         </View>
       </View>
 
@@ -20,7 +24,7 @@ const MonthlyExpense = () => {
           </Text>
         <View style={styles.text}>
           <Text style={{ color: "grey" }}>$</Text>
-          <Text style={styles.amount}>260.00</Text>
+          <Text style={styles.amount}>{balance.toFixed(2)}</Text>
         </View>
       </View>
 
@@ -30,7 +34,7 @@ const MonthlyExpense = () => {
           </Text>
         <View style={styles.text}>
           <Text style={{ color: "grey" }}>$</Text>
-          <Text style={styles.amount}>500.00</Text>
+          <Text style={styles.amount}>{target.toFixed(2)}</Text>
         </View>
       </View>
     </View>

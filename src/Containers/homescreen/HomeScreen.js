@@ -4,13 +4,20 @@ import { View, StyleSheet, Text } from "react-native";
 import { Icon } from "react-native-elements";
 import DataPieChart from "./DataPieChart";
 import MonthlyExpense from "./MonthlyExpense"
+import { useNavigation, useRoute, useFocusEffect, useIsFocused } from "@react-navigation/native";
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen() {
+
+  const navigation = useNavigation();
+  const route = useRoute();
+  const isFocused = useIsFocused();
+
+  const [expense, setExpense] = React.useState(0.222);
 
   return (
     <Container>
       <Content contentContainerStyle={{ backgroundColor: "#F4FCFF", flex: 1 }}>
-        <MonthlyExpense />
+        <MonthlyExpense expense={expense} />
         <View style={styles.chart}>
           <DataPieChart style={styles.chart} />
         </View>
@@ -21,7 +28,10 @@ export default function HomeScreen({ navigation }) {
           name="ios-add"
           color="#529FF3"
           type="ionicon"
-          onPress={() => navigation.navigate("AddExpenses")}
+          onPress={() => navigation.navigate("AddExpenses", {
+            expense: expense,
+            setExpense: setExpense
+          })}
         />
       </Footer>
     </Container>

@@ -38,8 +38,17 @@ export default class AddExpenseScreen extends Component {
 
   handleDate = date => this.setState({chosenDate: date});
 
+  passData = () => {
+    const { route, navigation } = this.props;
+    const { amount } = this.state;
+    const totalExpense = parseFloat(amount) + route.params.expense;
+    route.params.setExpense(totalExpense);
+    navigation.goBack();
+  }
+
   render() {
     const { item, amount, category, paymentMode } = this.state;
+    const { navigation } = this.props;
     return (
       <Container style={styles.container}>
         <Header style={styles.header}>
@@ -112,7 +121,8 @@ export default class AddExpenseScreen extends Component {
             full
             rounded
             info
-            style={styles.button}>
+            style={styles.button}
+            onPress={this.passData}>
             <Text style={styles.text}>Add</Text>
           </Button>
         </Content>
