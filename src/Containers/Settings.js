@@ -1,35 +1,33 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import firebase from 'firebase'
-import Login from './Login'
+import { StyleSheet, View, Text } from 'react-native';
+import firebase from 'firebase';
+import { Icon } from 'react-native-elements';
+const Settings = () => {
 
-export default class Settings extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+  signOut = () =>
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        // Sign-out successful.
+        console.log("Signed out");
+      })
+      .catch(error => {
+        // An error happened.
+        console.log(error.toString());
+      });
 
-  logoutUser = () => {
-    try {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          console.log('User signed out!');
-        })
-    } catch (error) {
-      console.log(error.toString(error));
-    }
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress = {this.logoutUser}>
-          <Text>Log Out</Text>
-        </TouchableOpacity>
-      </View>
-    )
-  }
+  return (
+    <View style={styles.container}>
+      <Icon
+        reverse
+        name="ios-log-out"
+        color="#529FF3"
+        type="ionicon"
+        onPress={signOut}
+      />
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -39,3 +37,5 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
+
+export default Settings;

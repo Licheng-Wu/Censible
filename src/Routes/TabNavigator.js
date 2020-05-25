@@ -3,18 +3,18 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Button } from "native-base/src/basic/Button";
 import AddExpenseScreen from "../Containers/AddExpenseScreen";
-import Login from "../Containers/Login";
-import HomeScreen from "../Containers/HomeScreen";
+import HomeScreen from "../Containers/homescreen/HomeScreen";
 import Settings from "../Containers/Settings";
+
+const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
   return (
     <NavigationContainer independent = {true}>
       <Tab.Navigator>
         <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="Settings" component={SettingsStackScreen} />
+        <Tab.Screen name="Settings" component={Settings} />
         <Tab.Screen name="AddExpenses" component={AddExpenseScreen} />
       </Tab.Navigator>
     </NavigationContainer>
@@ -58,5 +58,3 @@ function SettingsStackScreen() {
     </SettingsStack.Navigator>
   );
 }
-
-const Tab = createBottomTabNavigator();

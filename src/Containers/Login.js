@@ -142,20 +142,6 @@ export default class Login extends ValidationComponent {
       </Container>
     );
   }
-
-  //   componentDidMount() {
-  //     firebase.auth().onAuthStateChanged((user) => {
-  //       if (user) {
-  //         this.setState({ loggedIn: true });
-  //         console.log(user);
-  //       } else {
-  //         console.log("Error");
-  //       }
-  //       if (this.state.loggedIn) {
-  //         return <Spinner />;
-  //       }
-  //     });
-  //   }
 }
 
 const styles = StyleSheet.create({

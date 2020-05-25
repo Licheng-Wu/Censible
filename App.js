@@ -33,7 +33,6 @@ export default class App extends React.Component {
       // console.log(user);
       if (user) {
         this.setState({ isLoggedIn: true });
-        console.log(this.state.isLoggedIn);
       } else {
         this.setState({ isLoggedIn: false });
       }

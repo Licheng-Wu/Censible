@@ -16,7 +16,7 @@ import { StyleSheet, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "../Containers/Login";
 import SignUp from "../Containers/SignUp";
-import HomeScreen from "../Containers/HomeScreen";
+import HomeScreen from "../Containers/homescreen/HomeScreen";
 import TabNavigator from "./TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 
