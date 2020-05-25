@@ -1,60 +1,47 @@
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import AddExpenseScreen from "../Containers/AddExpenseScreen";
 import HomeScreen from "../Containers/homescreen/HomeScreen";
-import Settings from "../Containers/Settings";
+import ExploreScreen from "../Containers/ExploreScreen";
+import AddExpenseScreen from "../Containers/AddExpenseScreen";
+import TransactionScreen from "../Containers/TransactionScreen"
+import Settings from "../Containers/SettingsScreen";
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
   return (
-    <NavigationContainer independent = {true}>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeStackScreen} />
+      <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === 'Home') {
+            iconName = 'ios-home'
+          } else if (route.name === 'Explore') {
+            iconName = 'ios-search';
+          } else if (route.name === 'Add Expense') {
+            iconName = 'ios-add-circle';
+          } else if (route.name === 'Transactions') {
+            iconName = 'ios-paper';
+          } else {
+            iconName = 'ios-settings';
+          }
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: 'tomato',
+        inactiveTintColor: 'gray',
+        showLabel: false
+      }}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Explore" component={ExploreScreen} />
+        <Tab.Screen name="Add Expense" component={AddExpenseScreen} />
+        <Tab.Screen name="Transactions" component={TransactionScreen} />
         <Tab.Screen name="Settings" component={Settings} />
-        <Tab.Screen name="AddExpenses" component={AddExpenseScreen} />
       </Tab.Navigator>
-    </NavigationContainer>
-  );
-}
-
-function DetailsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Details!</Text>
-    </View>
-  );
-}
-
-const HomeStack = createStackNavigator();
-
-function HomeStackScreen() {
-  return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-      <HomeStack.Screen name="Details" component={DetailsScreen} />
-    </HomeStack.Navigator>
-  );
-}
-
-const SettingsStack = createStackNavigator();
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
-function SettingsStackScreen() {
-  return (
-    <SettingsStack.Navigator>
-      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      <SettingsStack.Screen name="Details" component={DetailsScreen} />
-    </SettingsStack.Navigator>
   );
 }
