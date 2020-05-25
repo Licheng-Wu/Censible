@@ -5,15 +5,12 @@ import { StyleSheet, Text, Image } from "react-native";
 import {
   Container,
   Content,
-  Header,
-  Title,
   Form,
   Input,
   Item,
   Button,
-  Label,
-  Spinner,
   Icon,
+  Toast
 } from "native-base";
 import { GlobalStyle } from "../styles/GlobalStyles";
 
@@ -43,9 +40,19 @@ export default class Login extends ValidationComponent {
           })
           .catch(error => {
             if (error.code === 'auth/user-not-found') {
-              alert('The email address is not registered.');
+              Toast.show({
+                text: 'The email address is not registered.',
+                buttonText: 'Okay',
+                duration: 3000,
+                type: 'danger'
+              })
             } else if (error.code === 'auth/wrong-password') {
-              alert('The password is invalid.');
+              Toast.show({
+                text: 'Wrong password!',
+                buttonText: 'Okay',
+                duration: 3000,
+                type: 'danger'
+              })
             }
             console.log(error.code);
           })
@@ -76,18 +83,6 @@ export default class Login extends ValidationComponent {
     const { navigation } = this.props;
     return (
       <Container style={styles.container}>
-        <Header style={styles.header}>
-          {/* <Title
-            style={{
-              fontSize: 40,
-              fontFamily: "Roboto",
-              fontWeight: "bold",
-              color: "#3F6DB3",
-            }}
-          >
-            Censible
-          </Title> */}
-        </Header>
         <Content style={styles.content}>
           {/* <Text style={styles.censible}>Censible</Text> */}
           <Image
@@ -147,20 +142,6 @@ export default class Login extends ValidationComponent {
       </Container>
     );
   }
-
-  //   componentDidMount() {
-  //     firebase.auth().onAuthStateChanged((user) => {
-  //       if (user) {
-  //         this.setState({ loggedIn: true });
-  //         console.log(user);
-  //       } else {
-  //         console.log("Error");
-  //       }
-  //       if (this.state.loggedIn) {
-  //         return <Spinner />;
-  //       }
-  //     });
-  //   }
 }
 
 const styles = StyleSheet.create({
