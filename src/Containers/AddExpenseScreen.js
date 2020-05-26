@@ -58,11 +58,11 @@ export default class AddExpenseScreen extends Component {
         </Header>
         <Content>
           <Form>
-            <Item floatingLabel>
+            <Item floatingLabel last>
               <Label style={{color: '#bfc6ea'}}>Item Name</Label>
               <Input onChangeText={this.handleItem} value={item} />
             </Item>
-            <Item floatingLabel >
+            <Item floatingLabel last>
               <Label style={{color: '#bfc6ea'}}>Amount</Label>
               <Input keyboardType="numeric" onChangeText={this.handleAmount} value={amount} />
             </Item>
@@ -110,10 +110,10 @@ export default class AddExpenseScreen extends Component {
                 modalTransparent={true}
                 animationType={"fade"}
                 androidMode={"default"}
-                placeHolderText="Select Date"
                 placeHolderTextStyle={{ color: "#bfc6ea" }}
                 onDateChange={this.handleDate.bind(this)}
                 disabled={false}
+                
               />
             </Item>
           </Form>
