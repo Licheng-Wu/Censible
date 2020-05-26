@@ -26,15 +26,18 @@ export default class AddExpenseScreen extends Component {
       amount: "",
       category: undefined,
       paymentMode: undefined,
+      description: "",
       chosenDate: new Date(),
       user: firebase.auth().currentUser,
     };
   }
 
   addExpense = () => {
-    let uid = this.state.user.uid;
-    let month = this.state.chosenDate.toString().substr(4, 3);
-    let exactDate = this.state.chosenDate.toString().substr(4, 12);
+    const { item, amount, category, paymentMode, description, chosenDate, user } = this.state;
+
+    let uid = user.uid;
+    let month = chosenDate.toString().substr(4, 3);
+    let exactDate = chosenDate.toString().substr(4, 12);
 
     // 1. Add expense to daily
     firebase
@@ -44,7 +47,12 @@ export default class AddExpenseScreen extends Component {
       .collection(month)
       .doc(exactDate)
       .collection("AllExpenses")
-      .add({ name: "Laksa", price: 3, description: "Testing second time" })
+      .add({
+        name: item, 
+        price: amount,
+        category: category, 
+        description: description
+      })
       .then(function (docRef) {
         console.log("Document successfully written!");
       })
@@ -60,7 +68,7 @@ export default class AddExpenseScreen extends Component {
       .collection(month)
       .doc("Info")
       .set(
-        { total: firebase.firestore.FieldValue.increment(3) },
+        { monthlyTotal: firebase.firestore.FieldValue.increment(amount) },
         { merge: true }
       )
       .then(function (docRef) {
@@ -78,7 +86,7 @@ export default class AddExpenseScreen extends Component {
       .collection(month)
       .doc(exactDate)
       .set(
-        { total: firebase.firestore.FieldValue.increment(3) },
+        { dailyTotal: firebase.firestore.FieldValue.increment(amount) },
         { merge: true }
       )
       .then(function (docRef) {
@@ -94,9 +102,13 @@ export default class AddExpenseScreen extends Component {
       .collection("Users")
       .doc(uid)
       .collection(month)
-      .doc("Food")
+      .doc(category)
       .set(
-        { total: firebase.firestore.FieldValue.increment(3) },
+        { 
+          isCategory: true,
+          category: category,
+          total: firebase.firestore.FieldValue.increment(amount),
+        },
         { merge: true }
       )
       .then(function (docRef) {
@@ -107,22 +119,20 @@ export default class AddExpenseScreen extends Component {
       });
   };
 
-  handleItem = (text) => {
-    this.setState({ item: text });
-  };
+  handleItem = text => this.setState({ item: text });
 
-  handleAmount = (number) => {
-    this.setState({ amount: number });
-  };
+  handleAmount = number => this.setState({ amount: parseFloat(number) });
 
-  handleCategory = (value) => this.setState({ category: value });
+  handleCategory = value => this.setState({ category: value });
 
-  handlePaymentMode = (value) => this.setState({ paymentMode: value });
+  handlePaymentMode = value => this.setState({ paymentMode: value });
 
-  handleDate = (date) => this.setState({ chosenDate: date });
+  handleDescription = text => this.setState({description: text});
+
+  handleDate = date => this.setState({ chosenDate: date });
 
   render() {
-    const { item, amount, category, paymentMode } = this.state;
+    const { item, amount, category, paymentMode, description } = this.state;
     const { navigation } = this.props;
     return (
       <Container style={styles.container}>
@@ -131,30 +141,39 @@ export default class AddExpenseScreen extends Component {
         </Header>
         <Content>
           <Form>
-            <Item floatingLabel last>
-              <Label style={{color: '#bfc6ea'}}>Item Name</Label>
-              <Input onChangeText={this.handleItem} value={item} />
+            <Item last>
+              <Input 
+                placeholder="Item Name"
+                placeholderTextColor="#bfc6ea"
+                onChangeText={this.handleItem}
+                value={item}
+              />
             </Item>
-            <Item floatingLabel last>
-              <Label style={{color: '#bfc6ea'}}>Amount</Label>
-              <Input keyboardType="numeric" onChangeText={this.handleAmount} value={amount} />
+            <Item last>
+              <Input 
+                keyboardType="numeric" 
+                placeholder="Amount"
+                placeholderTextColor="#bfc6ea"
+                onChangeText={this.handleAmount}
+                value={amount}
+              />
             </Item>
             <Item picker style={styles.picker}>
               <Picker
                 mode="dropdown"
                 style={{ width: undefined }}
                 placeholder="Category"
-                placeholderStyle={{ color: "#bfc6ea" }}
+                placeholderStyle={{ color: "#bfc6ea", marginLeft: 4 }}
                 placeholderIconColor="#007aff"
                 selectedValue={category}
                 onValueChange={this.handleCategory.bind(this)}
               >
-                <Picker.Item label="Food" value="key0" />
-                <Picker.Item label="Transport" value="key1" />
-                <Picker.Item label="Education" value="key2" />
-                <Picker.Item label="Clothing" value="key3" />
-                <Picker.Item label="Entertainment" value="key4" />
-                <Picker.Item label="Others" value="key5" />
+                <Picker.Item label="Food" value="Food" />
+                <Picker.Item label="Transport" value="Transport" />
+                <Picker.Item label="Education" value="Education" />
+                <Picker.Item label="Entertainment" value="Entertainment" />
+                <Picker.Item label="Sports" value="Sports" />
+                <Picker.Item label="Others" value="Others" />
               </Picker>
             </Item>
             <Item picker style={styles.picker}>
@@ -162,7 +181,7 @@ export default class AddExpenseScreen extends Component {
                 mode="dropdown"
                 style={{ width: undefined }}
                 placeholder="Mode of Payment"
-                placeholderStyle={{ color: "#bfc6ea" }}
+                placeholderStyle={{ color: "#bfc6ea", marginLeft: 4 }}
                 placeholderIconColor="#007aff"
                 selectedValue={paymentMode}
                 onValueChange={this.handlePaymentMode.bind(this)}
@@ -173,6 +192,14 @@ export default class AddExpenseScreen extends Component {
                 <Picker.Item label="Credit Card" value="key3" />
                 <Picker.Item label="iBanking" value="key4" />
               </Picker>
+            </Item>
+            <Item last>
+              <Input
+                placeholder="Description (Optional)"
+                placeholderTextColor="#bfc6ea"
+                onChangeText={this.handleDescription}
+                value={description}
+              />
             </Item>
             <Item last style={styles.picker}>
               <DatePicker
@@ -198,13 +225,21 @@ export default class AddExpenseScreen extends Component {
             onPress={() => {
               if (item && amount && category && paymentMode) {
                 this.addExpense();
+                Toast.show({
+                  text: 'Update successful!',
+                  duration: 3000,
+                  buttonText: 'Okay',
+                  type: 'success',
+                  style: {marginBottom: 40},
+                  onClose: reason => reason == "user" ? navigation.goBack() : null
+                })
               } else {
                 Toast.show({
                   text: 'Please fill in all required fields.',
                   buttonText: 'Okay',
                   duration: 3000,
                   type: 'warning',
-                  style: {marginBottom: 40}
+                  style: {marginBottom: 40},
                 })
               }
             }}
@@ -235,7 +270,7 @@ const styles = StyleSheet.create({
     color: "#3F6DB3",
   },
   picker: {
-    marginTop: 20,
+    marginTop: 7
   },
   button: {
     marginTop: 50,
