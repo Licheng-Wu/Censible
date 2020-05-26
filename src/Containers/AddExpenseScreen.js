@@ -12,31 +12,58 @@ import {
   Picker,
   Icon,
   Label,
-  DatePicker
+  DatePicker,
 } from "native-base";
 import { StyleSheet, Text, View } from "react-native";
+import firebase from "../../firebaseDb";
 
 export default class AddExpenseScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      item: '',
-      amount: '',
+      item: "",
+      amount: "",
       category: undefined,
       paymentMode: undefined,
       chosenDate: new Date(),
+      user: firebase.auth().currentUser,
     };
   }
-  
-  handleItem = text => {this.setState({item: text})};
-  
-  handleAmount = number => {this.setState({amount: number})};
 
-  handleCategory = value => this.setState({ category: value });
+  addExpense = () => {
+    let uid = this.state.user.uid;
+    let month = this.state.chosenDate.toString().substr(4, 3);
+    let exactDate = this.state.chosenDate.toString().substr(4, 12);
 
-  handlePaymentMode = value => this.setState({ paymentMode: value });
+    firebase
+      .firestore()
+      .collection("Users")
+      .doc(uid)
+      .collection(month)
+      .doc(exactDate)
+      .collection("AllExpenses")
+      .add({ name: "Laksa", price: 3, description: "Testing second time" })
+      .then(function (docRef) {
+        console.log("Document successfully written!");
+      })
+      .catch(function (error) {
+        console.error("Error writing document: ", error);
+      });
+  };
 
-  handleDate = date => this.setState({chosenDate: date});
+  handleItem = (text) => {
+    this.setState({ item: text });
+  };
+
+  handleAmount = (number) => {
+    this.setState({ amount: number });
+  };
+
+  handleCategory = (value) => this.setState({ category: value });
+
+  handlePaymentMode = (value) => this.setState({ paymentMode: value });
+
+  handleDate = (date) => this.setState({ chosenDate: date });
 
   passData = () => {
     const { route, navigation } = this.props;
@@ -44,7 +71,7 @@ export default class AddExpenseScreen extends Component {
     const totalExpense = parseFloat(amount) + route.params.expense;
     route.params.setExpense(totalExpense);
     navigation.goBack();
-  }
+  };
 
   render() {
     const { item, amount, category, paymentMode } = this.state;
@@ -52,9 +79,7 @@ export default class AddExpenseScreen extends Component {
     return (
       <Container style={styles.container}>
         <Header style={styles.header}>
-          <Title style={styles.title}>
-            Add Expense
-          </Title>
+          <Title style={styles.title}>Add Expense</Title>
         </Header>
         <Content>
           <Form>
@@ -117,12 +142,13 @@ export default class AddExpenseScreen extends Component {
               />
             </Item>
           </Form>
-          <Button 
+          <Button
             full
             rounded
             info
             style={styles.button}
-            onPress={this.passData}>
+            onPress={this.addExpense}
+          >
             <Text style={styles.text}>Add</Text>
           </Button>
         </Content>
@@ -152,13 +178,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   button: {
-    marginTop: 50
+    marginTop: 50,
   },
   text: {
     flex: 1,
     textAlign: "center",
     fontSize: 20,
-    color: "white"    
+    color: "white",
   },
   TextInputs: {
     flex: 1,
