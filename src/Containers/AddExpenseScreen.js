@@ -36,6 +36,7 @@ export default class AddExpenseScreen extends Component {
     let month = this.state.chosenDate.toString().substr(4, 3);
     let exactDate = this.state.chosenDate.toString().substr(4, 12);
 
+    // 1. Add expense to daily
     firebase
       .firestore()
       .collection("Users")
@@ -46,6 +47,60 @@ export default class AddExpenseScreen extends Component {
       .add({ name: "Laksa", price: 3, description: "Testing second time" })
       .then(function (docRef) {
         console.log("Document successfully written!");
+      })
+      .catch(function (error) {
+        console.error("Error writing document: ", error);
+      });
+
+    // 2. Update monthly total
+    firebase
+      .firestore()
+      .collection("Users")
+      .doc(uid)
+      .collection(month)
+      .doc("Info")
+      .set(
+        { total: firebase.firestore.FieldValue.increment(3) },
+        { merge: true }
+      )
+      .then(function (docRef) {
+        console.log("Total expense updated!");
+      })
+      .catch(function (error) {
+        console.error("Error writing document: ", error);
+      });
+
+    // 3. Update daily total
+    firebase
+      .firestore()
+      .collection("Users")
+      .doc(uid)
+      .collection(month)
+      .doc(exactDate)
+      .set(
+        { total: firebase.firestore.FieldValue.increment(3) },
+        { merge: true }
+      )
+      .then(function (docRef) {
+        console.log("Daily total updated!");
+      })
+      .catch(function (error) {
+        console.error("Error writing document: ", error);
+      });
+
+    // 4. Update monthly category expense
+    firebase
+      .firestore()
+      .collection("Users")
+      .doc(uid)
+      .collection(month)
+      .doc("Food")
+      .set(
+        { total: firebase.firestore.FieldValue.increment(3) },
+        { merge: true }
+      )
+      .then(function (docRef) {
+        console.log("Monthly category total updated!");
       })
       .catch(function (error) {
         console.error("Error writing document: ", error);
