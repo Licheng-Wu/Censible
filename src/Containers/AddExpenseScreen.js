@@ -13,6 +13,7 @@ import {
   Icon,
   Label,
   DatePicker,
+  Toast
 } from "native-base";
 import { StyleSheet, Text, View } from "react-native";
 import firebase from "../../firebaseDb";
@@ -64,14 +65,6 @@ export default class AddExpenseScreen extends Component {
   handlePaymentMode = (value) => this.setState({ paymentMode: value });
 
   handleDate = (date) => this.setState({ chosenDate: date });
-
-  passData = () => {
-    const { route, navigation } = this.props;
-    const { amount } = this.state;
-    const totalExpense = parseFloat(amount) + route.params.expense;
-    route.params.setExpense(totalExpense);
-    navigation.goBack();
-  };
 
   render() {
     const { item, amount, category, paymentMode } = this.state;
@@ -147,7 +140,19 @@ export default class AddExpenseScreen extends Component {
             rounded
             info
             style={styles.button}
-            onPress={this.addExpense}
+            onPress={() => {
+              if (item && amount && category && paymentMode) {
+                this.addExpense();
+              } else {
+                Toast.show({
+                  text: 'Please fill in all required fields.',
+                  buttonText: 'Okay',
+                  duration: 3000,
+                  type: 'warning',
+                  style: {marginBottom: 40}
+                })
+              }
+            }}
           >
             <Text style={styles.text}>Add</Text>
           </Button>

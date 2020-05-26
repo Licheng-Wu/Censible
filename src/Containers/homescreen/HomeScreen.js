@@ -5,6 +5,54 @@ import { Icon } from "react-native-elements";
 import DataPieChart from "./DataPieChart";
 import MonthlyExpense from "./MonthlyExpense";
 import { useNavigation } from "@react-navigation/native";
+import firebase from '../../../firebaseDb';
+
+const renderData = doc => {
+  doc.data()
+    .collection("AllExpenses")
+    .get()
+    .then(snapshot => {
+      snapshot.docs.forEach(documentSnapshot => {
+        console.log(documentSnapshot.data().name);
+      })
+    })
+
+}
+
+const readData = () => {
+
+  let uid = firebase.auth().currentUser.uid;
+  let month = new Date().toString().substr(4, 3);
+  console.log(uid);
+
+  firebase
+      .firestore()
+      .collection("Users")
+      .doc(uid)
+      .collection("May")
+      .doc("May 26 2020")
+      .collection("AllExpenses")
+      .get()
+      .then(querySnapshot => {
+        const results = [];
+        querySnapshot.docs.forEach(doc => {
+          results.push(doc.data());
+          console.log(results);
+        })
+      }).catch(error => {
+        console.error(error);
+      })
+
+      // .doc(exactDate)
+      // .collection("AllExpenses")
+      // .add({ name: "Laksa", price: 3, description: "Testing second time" })
+      // .then(function (docRef) {
+      //   console.log("Document successfully written!");
+      // })
+      // .catch(function (error) {
+      //   console.error("Error writing document: ", error);
+      // });
+}
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -24,12 +72,7 @@ export default function HomeScreen() {
           name="ios-add"
           color="#529FF3"
           type="ionicon"
-          onPress={() =>
-            navigation.navigate("Add Expense", {
-              expense: expense,
-              setExpense: setExpense,
-            })
-          }
+          onPress={readData}
         />
       </Footer>
     </Container>
