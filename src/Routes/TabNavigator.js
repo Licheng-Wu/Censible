@@ -6,7 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../Containers/homescreen/HomeScreen";
 import ExploreScreen from "../Containers/ExploreScreen";
 import AddExpenseScreen from "../Containers/AddExpenseScreen";
-import TransactionScreen from "../Containers/TransactionScreen"
+import TransactionScreen from "../Containers/transaction/TransactionScreen"
 import Settings from "../Containers/SettingsScreen";
 
 const Tab = createBottomTabNavigator();

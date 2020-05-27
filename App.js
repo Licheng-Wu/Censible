@@ -9,6 +9,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import LoginStack from "./src/Routes/StackNavigator";
 import firebase from "./firebaseDb";
 import SplashScreen from "./src/Containers/SplashScreen";
+import TransactionDetails from "./src/Containers/transaction/TransactionDetails"
+import TxnStackNavigator from "./src/Routes/TxnStackNavigator"
 
 export default class App extends React.Component {
   unsubscribe = null;
