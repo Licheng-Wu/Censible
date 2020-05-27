@@ -57,8 +57,8 @@ export default class AddExpenseScreen extends Component {
       .collection("Users")
       .doc(uid)
       .collection(month)
-      .doc("Dates")
-      .collection(exactDate)
+      .doc(exactDate)
+      .collection("All Expenses")
       .add({
         name: item,
         price: amount,
@@ -99,8 +99,8 @@ export default class AddExpenseScreen extends Component {
       .collection("Users")
       .doc(uid)
       .collection(month)
-      .doc("Dates")
-      .collection(exactDate)
+      .doc(exactDate)
+      .collection("All Expenses")
       .doc("Daily Info")
       .set(
         { dailyTotal: firebase.firestore.FieldValue.increment(amount) },
