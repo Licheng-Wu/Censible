@@ -2,8 +2,10 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { PieChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
+import firebase from "../../../firebaseDb";
 
-export default function DataPieChart() {
+const DataPieChart = props => {
+  
   const screenWidth = Dimensions.get("window").width;
   const chartConfig = {
     backgroundGradientFrom: "#1E2923",
@@ -15,42 +17,73 @@ export default function DataPieChart() {
     barPercentage: 0.5,
     useShadowColorFromDataset: false, // optional
   };
+
+  // let uid = firebase.auth().currentUser.uid;
+  // let month = new Date().toString().substr(4, 3);
+
+  // React.useEffect(() => {
+  //   firebase
+  //     .firestore()
+  //     .collection("Users")
+  //     .doc(uid)
+  //     .collection(month)
+  //     .where("isCategory", "==", true)
+  //     .onSnapshot(querySnapshot => {
+  //       const results = [];
+  //       querySnapshot.docs.forEach(doc => {
+  //         results.push(doc.data().total);
+  //       })
+  //       setPrices(results);
+  //     }, error => {
+  //       console.error(error);
+  //     })
+  //   }, [prices])
+
+  // const prices = props.prices;
+
   const data = [
     {
       name: "Food",
-      population: 100,
+      population: props.food,
       color: "#FFE11D",
       legendFontColor: "#7F7F7F",
       legendFontSize: 15,
     },
     {
       name: "Transport",
-      population: 50,
+      population: props.transport,
       color: "#00A74F",
       legendFontColor: "#7F7F7F",
       legendFontSize: 15,
     },
     {
-      name: "Leisure",
-      population: 37,
+      name: "Education",
+      population: props.education,
       color: "#EE3253",
       legendFontColor: "#7F7F7F",
       legendFontSize: 15,
     },
     {
-      name: "Sports",
-      population: 34,
+      name: "Entertainment",
+      population: props.entertainment,
       color: "#00B8C4",
       legendFontColor: "#7F7F7F",
       legendFontSize: 15,
     },
     {
-      name: "Others",
-      population: 19,
+      name: "Sports",
+      population: props.sports,
       color: "#B7881F",
       legendFontColor: "#7F7F7F",
       legendFontSize: 15,
     },
+    {
+      name: "Others",
+      population: props.others,
+      color: "#483d8b",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15
+    }
   ];
 
   return (
@@ -66,3 +99,5 @@ export default function DataPieChart() {
     />
   );
 }
+
+export default DataPieChart;
