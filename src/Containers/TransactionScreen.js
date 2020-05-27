@@ -3,6 +3,22 @@ import { StyleSheet, Text, View } from "react-native";
 import { Container, Header, Title, Content, List, ListItem } from "native-base";
 
 const TransactionScreen = () => {
+
+  const [data, setData] = React.useState([]);
+
+  let uid = firebase.auth().currentUser.uid;
+  let month = new Date().toString().substr(4, 3);
+
+  let monthRef = firebase
+    .firestore()
+    .collection("Users")
+    .doc(uid)
+    .collection(month)
+
+  monthRef
+    .doc("Date")
+    .get()
+
   return (
     <Container>
         <Header>

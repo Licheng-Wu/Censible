@@ -39,12 +39,14 @@ export default class AddExpenseScreen extends Component {
     let month = chosenDate.toString().substr(4, 3);
     let exactDate = chosenDate.toString().substr(4, 12);
 
-    // 1. Add expense to daily
-    firebase
+    let collectionRef = firebase
       .firestore()
       .collection("Users")
       .doc(uid)
-      .collection(month)
+      .collection(month);
+
+    // 1. Add expense to daily
+    collectionRef
       .doc(exactDate)
       .collection("AllExpenses")
       .add({
@@ -61,11 +63,7 @@ export default class AddExpenseScreen extends Component {
       });
 
     // 2. Update monthly total
-    firebase
-      .firestore()
-      .collection("Users")
-      .doc(uid)
-      .collection(month)
+    collectionRef
       .doc("Info")
       .set(
         { monthlyTotal: firebase.firestore.FieldValue.increment(amount) },
@@ -79,11 +77,7 @@ export default class AddExpenseScreen extends Component {
       });
 
     // 3. Update daily total
-    firebase
-      .firestore()
-      .collection("Users")
-      .doc(uid)
-      .collection(month)
+    collectionRef
       .doc(exactDate)
       .set(
         { dailyTotal: firebase.firestore.FieldValue.increment(amount) },
@@ -97,11 +91,7 @@ export default class AddExpenseScreen extends Component {
       });
 
     // 4. Update monthly category expense
-    firebase
-      .firestore()
-      .collection("Users")
-      .doc(uid)
-      .collection(month)
+    collectionRef
       .doc(category)
       .set(
         { 

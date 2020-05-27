@@ -5,7 +5,6 @@ import firebase from '../../../firebaseDb';
 
 const MonthlyExpense = props => {
 
-  const [expense, setExpense] = React.useState(0);
   const [target, setTarget] = React.useState(500);
   const balance = target - props.expense;
 
