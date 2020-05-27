@@ -1,5 +1,5 @@
 import * as React from "react";
-import ValidationComponent from 'react-native-form-validator';
+import ValidationComponent from "react-native-form-validator";
 import firebase from "../../firebaseDb";
 import { StyleSheet, Text, Image } from "react-native";
 import {
@@ -10,7 +10,7 @@ import {
   Item,
   Button,
   Icon,
-  Toast
+  Toast,
 } from "native-base";
 import { GlobalStyle } from "../styles/GlobalStyles";
 
@@ -33,29 +33,29 @@ export default class Login extends ValidationComponent {
     this.validationCheck();
     if (this.isFormValid()) {
       firebase
-          .auth()
-          .signInWithEmailAndPassword(email.trim(), password)
-          .then((res) => {
-            console.log(res.user.email);
-          })
-          .catch(error => {
-            if (error.code === 'auth/user-not-found') {
-              Toast.show({
-                text: 'The email address is not registered.',
-                buttonText: 'Okay',
-                duration: 3000,
-                type: 'danger'
-              })
-            } else if (error.code === 'auth/wrong-password') {
-              Toast.show({
-                text: 'Wrong password!',
-                buttonText: 'Okay',
-                duration: 3000,
-                type: 'danger'
-              })
-            }
-            console.log(error.code);
-          })
+        .auth()
+        .signInWithEmailAndPassword(email.trim(), password)
+        .then((res) => {
+          console.log(res.user.email);
+        })
+        .catch((error) => {
+          if (error.code === "auth/user-not-found") {
+            Toast.show({
+              text: "The email address is not registered.",
+              buttonText: "Okay",
+              duration: 3000,
+              type: "danger",
+            });
+          } else if (error.code === "auth/wrong-password") {
+            Toast.show({
+              text: "Wrong password!",
+              buttonText: "Okay",
+              duration: 3000,
+              type: "danger",
+            });
+          }
+          console.log(error.code);
+        });
     }
   };
 
@@ -63,19 +63,19 @@ export default class Login extends ValidationComponent {
     this.validate({
       email: {
         required: true,
-        email: true
+        email: true,
       },
       password: {
-        required: true
-      }
-    })
-  }
+        required: true,
+      },
+    });
+  };
 
   messages = {
     en: {
       email: "Email address is invalid.",
-      required: "Above field is mandatory."
-    }
+      required: "Above field is mandatory.",
+    },
   };
 
   render() {
@@ -99,10 +99,11 @@ export default class Login extends ValidationComponent {
                 onChangeText={this.handleEmail}
               />
             </Item>
-            { 
-              this.isFieldInError('email') &&
-              <Text style={GlobalStyle.error}>{this.getErrorsInField('email')[0]}</Text>
-            }
+            {this.isFieldInError("email") && (
+              <Text style={GlobalStyle.error}>
+                {this.getErrorsInField("email")[0]}
+              </Text>
+            )}
 
             <Item floatingLabel style={GlobalStyle.authTextField}>
               {/* <Label>Password</Label> */}
@@ -115,10 +116,11 @@ export default class Login extends ValidationComponent {
                 onChangeText={this.handlePassword}
               />
             </Item>
-            { 
-              this.isFieldInError('password') &&
-              <Text style={GlobalStyle.error}>{this.getErrorsInField('password')[0]}</Text>
-            }
+            {this.isFieldInError("password") && (
+              <Text style={GlobalStyle.error}>
+                {this.getErrorsInField("password")[0]}
+              </Text>
+            )}
 
             <Button
               style={GlobalStyle.authButton}
@@ -175,12 +177,12 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   text: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: 30,
-    fontSize: 13
+    fontSize: 13,
   },
   signUp: {
-    fontWeight: '500',
-    color: 'red'
-  }
+    fontWeight: "500",
+    color: "red",
+  },
 });
