@@ -57,8 +57,8 @@ export default class AddExpenseScreen extends Component {
       .collection("Users")
       .doc(uid)
       .collection(month)
-      .doc(exactDate)
-      .collection("AllExpenses")
+      .doc("Dates")
+      .collection(exactDate)
       .add({
         name: item,
         price: amount,
@@ -72,7 +72,7 @@ export default class AddExpenseScreen extends Component {
         console.error("Error writing document: ", error);
       });
 
-    // 2. Update monthly total
+    // 2. Update monthly total in Info AND category expense in Info
     firebase
       .firestore()
       .collection("Users")
@@ -80,7 +80,10 @@ export default class AddExpenseScreen extends Component {
       .collection(month)
       .doc("Info")
       .set(
-        { monthlyTotal: firebase.firestore.FieldValue.increment(amount) },
+        {
+          monthlyTotal: firebase.firestore.FieldValue.increment(amount),
+          [category]: firebase.firestore.FieldValue.increment(amount),
+        },
         { merge: true }
       )
       .then(function (docRef) {
@@ -96,7 +99,9 @@ export default class AddExpenseScreen extends Component {
       .collection("Users")
       .doc(uid)
       .collection(month)
-      .doc(exactDate)
+      .doc("Dates")
+      .collection(exactDate)
+      .doc("Daily Info")
       .set(
         { dailyTotal: firebase.firestore.FieldValue.increment(amount) },
         { merge: true }
@@ -108,27 +113,27 @@ export default class AddExpenseScreen extends Component {
         console.error("Error writing document: ", error);
       });
 
-    // 4. Update monthly category expense
-    firebase
-      .firestore()
-      .collection("Users")
-      .doc(uid)
-      .collection(month)
-      .doc(category)
-      .set(
-        {
-          isCategory: true,
-          category: category,
-          total: firebase.firestore.FieldValue.increment(amount),
-        },
-        { merge: true }
-      )
-      .then(function (docRef) {
-        console.log("Monthly category total updated!");
-      })
-      .catch(function (error) {
-        console.error("Error writing document: ", error);
-      });
+    // // 4. Update monthly category expense
+    // firebase
+    //   .firestore()
+    //   .collection("Users")
+    //   .doc(uid)
+    //   .collection(month)
+    //   .doc(category)
+    //   .set(
+    //     {
+    //       isCategory: true,
+    //       category: category,
+    //       total: firebase.firestore.FieldValue.increment(amount),
+    //     },
+    //     { merge: true }
+    //   )
+    //   .then(function (docRef) {
+    //     console.log("Monthly category total updated!");
+    //   })
+    //   .catch(function (error) {
+    //     console.error("Error writing document: ", error);
+    //   });
   };
 
   handleItem = (text) => this.setState({ item: text });
