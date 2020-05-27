@@ -9,14 +9,15 @@ import {
   Button,
   Form,
   Item,
-  Picker,
   Icon,
   Label,
+  Picker,
   DatePicker,
-  Toast
+  Toast,
 } from "native-base";
 import { StyleSheet, Text, View } from "react-native";
 import firebase from "../../firebaseDb";
+import CategoryPicker from "../Component/CategoryPicker";
 
 export default class AddExpenseScreen extends Component {
   constructor(props) {
@@ -24,7 +25,7 @@ export default class AddExpenseScreen extends Component {
     this.state = {
       item: "",
       amount: "",
-      category: undefined,
+      category: "Food",
       paymentMode: undefined,
       description: "",
       chosenDate: new Date(),
@@ -33,7 +34,18 @@ export default class AddExpenseScreen extends Component {
   }
 
   addExpense = () => {
-    const { item, amount, category, paymentMode, description, chosenDate, user } = this.state;
+    const {
+      item,
+      amount,
+      category,
+      paymentMode,
+      description,
+      chosenDate,
+      user,
+    } = this.state;
+
+    console.log("here");
+    console.log(this.state.item);
 
     let uid = user.uid;
     let month = chosenDate.toString().substr(4, 3);
@@ -48,10 +60,10 @@ export default class AddExpenseScreen extends Component {
       .doc(exactDate)
       .collection("AllExpenses")
       .add({
-        name: item, 
+        name: item,
         price: amount,
-        category: category, 
-        description: description
+        category: category,
+        description: description,
       })
       .then(function (docRef) {
         console.log("Document successfully written!");
@@ -104,7 +116,7 @@ export default class AddExpenseScreen extends Component {
       .collection(month)
       .doc(category)
       .set(
-        { 
+        {
           isCategory: true,
           category: category,
           total: firebase.firestore.FieldValue.increment(amount),
@@ -119,18 +131,17 @@ export default class AddExpenseScreen extends Component {
       });
   };
 
-  handleItem = text => this.setState({ item: text });
+  handleItem = (text) => this.setState({ item: text });
 
-  handleAmount = number => this.setState({ amount: parseFloat(number) });
+  handleAmount = (number) => this.setState({ amount: parseFloat(number) });
 
-  handleCategory = value => this.setState({ category: value });
+  handleCategory = (value) => this.setState({ category: value });
 
-  handlePaymentMode = value => this.setState({ paymentMode: value });
+  // handlePaymentMode = (value) => this.setState({ paymentMode: value });
 
-  handleDescription = text => this.setState({description: text});
+  handleDescription = (text) => this.setState({ description: text });
 
-  handleDate = date => this.setState({ chosenDate: date });
-
+  handleDate = (date) => this.setState({ chosenDate: date });
   render() {
     const { item, amount, category, paymentMode, description } = this.state;
     const { navigation } = this.props;
@@ -142,7 +153,7 @@ export default class AddExpenseScreen extends Component {
         <Content>
           <Form>
             <Item last>
-              <Input 
+              <Input
                 placeholder="Item Name"
                 placeholderTextColor="#bfc6ea"
                 onChangeText={this.handleItem}
@@ -150,15 +161,18 @@ export default class AddExpenseScreen extends Component {
               />
             </Item>
             <Item last>
-              <Input 
-                keyboardType="numeric" 
+              <Input
+                keyboardType="numeric"
                 placeholder="Amount"
                 placeholderTextColor="#bfc6ea"
                 onChangeText={this.handleAmount}
                 value={amount}
               />
             </Item>
-            <Item picker style={styles.picker}>
+            <View style={{ marginTop: 10 }}>
+              <CategoryPicker handleCategory={this.handleCategory.bind(this)} />
+            </View>
+            {/* <Item picker style={styles.picker}>
               <Picker
                 mode="dropdown"
                 style={{ width: undefined }}
@@ -175,8 +189,8 @@ export default class AddExpenseScreen extends Component {
                 <Picker.Item label="Sports" value="Sports" />
                 <Picker.Item label="Others" value="Others" />
               </Picker>
-            </Item>
-            <Item picker style={styles.picker}>
+            </Item> */}
+            {/* <Item picker style={styles.picker}>
               <Picker
                 mode="dropdown"
                 style={{ width: undefined }}
@@ -192,7 +206,7 @@ export default class AddExpenseScreen extends Component {
                 <Picker.Item label="Credit Card" value="key3" />
                 <Picker.Item label="iBanking" value="key4" />
               </Picker>
-            </Item>
+            </Item> */}
             <Item last>
               <Input
                 placeholder="Description (Optional)"
@@ -213,34 +227,38 @@ export default class AddExpenseScreen extends Component {
                 placeHolderTextStyle={{ color: "#bfc6ea" }}
                 onDateChange={this.handleDate.bind(this)}
                 disabled={false}
-                
               />
             </Item>
           </Form>
+
           <Button
             full
             rounded
             info
             style={styles.button}
             onPress={() => {
-              if (item && amount && category && paymentMode) {
+              if (item && amount && amount > 0 && category) {
                 this.addExpense();
+                this.setState({ item: "" });
+                this.setState({ amount: "" });
+
                 Toast.show({
-                  text: 'Update successful!',
+                  text: "Update successful!",
                   duration: 3000,
-                  buttonText: 'Okay',
-                  type: 'success',
-                  style: {marginBottom: 40},
-                  onClose: reason => reason == "user" ? navigation.goBack() : null
-                })
+                  buttonText: "Okay",
+                  type: "success",
+                  style: { marginBottom: 40 },
+                  onClose: (reason) =>
+                    reason == "user" ? navigation.goBack() : null,
+                });
               } else {
                 Toast.show({
-                  text: 'Please fill in all required fields.',
-                  buttonText: 'Okay',
+                  text: "Please fill in all required fields.",
+                  buttonText: "Okay",
                   duration: 3000,
-                  type: 'warning',
-                  style: {marginBottom: 40},
-                })
+                  type: "warning",
+                  style: { marginBottom: 40 },
+                });
               }
             }}
           >
@@ -270,7 +288,7 @@ const styles = StyleSheet.create({
     color: "#3F6DB3",
   },
   picker: {
-    marginTop: 7
+    marginTop: 7,
   },
   button: {
     marginTop: 50,

@@ -1,22 +1,17 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import firebase from '../../../firebaseDb';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import firebase from "../../../firebaseDb";
 
-
-const MonthlyExpense = props => {
-
-  const [expense, setExpense] = React.useState(0);
+const MonthlyExpense = (props) => {
   const [target, setTarget] = React.useState(500);
   const balance = target - props.expense;
-
-  
 
   return (
     <View style={styles.container}>
       <View style={styles.items}>
         <Text style={{ color: "#F43356", fontSize: 16, textAlign: "center" }}>
           Expense
-          </Text>
+        </Text>
         <View style={styles.text}>
           <Text style={{ color: "grey" }}>$</Text>
           <Text style={styles.amount}>{props.expense.toFixed(2)}</Text>
@@ -26,7 +21,7 @@ const MonthlyExpense = props => {
       <View style={styles.items}>
         <Text style={{ color: "#00C928", fontSize: 16, textAlign: "center" }}>
           Balance
-          </Text>
+        </Text>
         <View style={styles.text}>
           <Text style={{ color: "grey" }}>$</Text>
           <Text style={styles.amount}>{balance.toFixed(2)}</Text>
@@ -36,7 +31,7 @@ const MonthlyExpense = props => {
       <View style={styles.items}>
         <Text style={{ color: "black", fontSize: 16, textAlign: "center" }}>
           Target
-          </Text>
+        </Text>
         <View style={styles.text}>
           <Text style={{ color: "grey" }}>$</Text>
           <Text style={styles.amount}>{target.toFixed(2)}</Text>
@@ -78,7 +73,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textAlign: "center",
   },
-
-})
+});
 
 export default MonthlyExpense;

@@ -5,10 +5,9 @@ import { Icon } from "react-native-elements";
 import DataPieChart from "./DataPieChart";
 import MonthlyExpense from "./MonthlyExpense";
 import { useNavigation } from "@react-navigation/native";
-import firebase from '../../../firebaseDb';
+import firebase from "../../../firebaseDb";
 
-const HomeScreen = ({navigation}) => {
-
+const HomeScreen = ({ navigation }) => {
   // Monthly expense
   const [expense, setExpense] = React.useState(0);
 
@@ -22,29 +21,28 @@ const HomeScreen = ({navigation}) => {
   let uid = firebase.auth().currentUser.uid;
   let month = new Date().toString().substr(4, 3);
   let collectionRef = firebase
-                        .firestore()
-                        .collection("Users")
-                        .doc(uid)
-                        .collection(month);
+    .firestore()
+    .collection("Users")
+    .doc(uid)
+    .collection(month);
 
   React.useEffect(() => {
-    
     // Updates monthly expense
-    collectionRef
-      .doc("Info")
-      .onSnapshot(doc => {
+    collectionRef.doc("Info").onSnapshot(
+      (doc) => {
         if (doc.exists) {
           setExpense(doc.data().monthlyTotal);
         }
-      }, error => {
+      },
+      (error) => {
         console.error(error);
-      })
+      }
+    );
 
     // Updates pie chart
-    collectionRef
-      .where("isCategory", "==", true)
-      .onSnapshot(querySnapshot => {
-        querySnapshot.docs.forEach(doc => {
+    collectionRef.where("isCategory", "==", true).onSnapshot(
+      (querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
           if (doc.id === "Food") {
             // prices.splice(0, 1, doc.data().total)
             setFoodPrice(doc.data().total);
@@ -64,18 +62,21 @@ const HomeScreen = ({navigation}) => {
             // prices.splice(5, 1, doc.data().total)
             setOtherPrice(doc.data().total);
           }
-        })
-      }, error => {
+        });
+      },
+      (error) => {
         console.error(error);
-      })
-  }, [])
+      }
+    );
+  }, []);
 
   return (
     <Container>
       <Content contentContainerStyle={{ backgroundColor: "#F4FCFF", flex: 1 }}>
         <MonthlyExpense expense={expense} />
         <View style={styles.chart}>
-          <DataPieChart style={styles.chart}
+          <DataPieChart
+            style={styles.chart}
             food={foodPrice}
             transport={transportPrice}
             education={educationPrice}
@@ -96,7 +97,7 @@ const HomeScreen = ({navigation}) => {
       </Footer>
     </Container>
   );
-}
+};
 
 const styles = StyleSheet.create({
   bodyContainer: {
