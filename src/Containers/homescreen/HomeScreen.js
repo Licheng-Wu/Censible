@@ -17,42 +17,50 @@ const HomeScreen = ({ navigation }) => {
   const [sportsPrice, setSportsPrice] = React.useState(0);
   const [otherPrice, setOtherPrice] = React.useState(0);
 
-  let uid = firebase.auth().currentUser.uid;
-  let month = new Date().toString().substr(4, 3);
-  let collectionRef = firebase
-    .firestore()
-    .collection("Users")
-    .doc(uid)
-    .collection(month);
-
-  // Updates monthly expense and pie chart
-  collectionRef
-    .doc("Info")
-    .onSnapshot(doc => {
-      if (doc.exists) {
-        setExpense(doc.data().monthlyTotal);
-        if (doc.data().Food) {
-          setFoodPrice(doc.data().Food);
+  React.useEffect(() => {
+    let uid = firebase.auth().currentUser.uid;
+    let month = new Date().toString().substr(4, 3);
+    var unsubscribe = firebase
+      .firestore()
+      .collection("Users")
+      .doc(uid)
+      .collection(month)
+      .doc("Info")
+      .onSnapshot(doc => {
+        if (doc.exists) {
+          setExpense(doc.data().monthlyTotal);
+          if (doc.data().Food !== undefined) {
+            setFoodPrice(doc.data().Food);
+          }
+          if (doc.data().Transport !== undefined) {
+            setTransportPrice(doc.data().Transport);
+          }
+          if (doc.data().Education !== undefined) {
+            setEducationPrice(doc.data().Education);
+          }
+          if (doc.data().Entertainment !== undefined) {
+            setEntertainmentPrice(doc.data().Entertainment);
+          }
+          if (doc.data().Sports !== undefined) {
+            setSportsPrice(doc.data().Sports);
+          }
+          if (doc.data().Others !== undefined) {
+            setOtherPrice(doc.data().Others);
+          }
+        } else {
+          setExpense(0);
+          setFoodPrice(0);
+          setTransportPrice(0);
+          setEducationPrice(0);
+          setEntertainmentPrice(0);
+          setSportsPrice(0);
+          setOtherPrice(0);
         }
-        if (doc.data().Transport) {
-          setTransportPrice(doc.data().Transport);
-        }
-        if (doc.data().Education) {
-          setEducationPrice(doc.data().Education);
-        }
-        if (doc.data().Entertainment) {
-          setEntertainmentPrice(doc.data().Entertainment);
-        }
-        if (doc.data().Sports) {
-          setSportsPrice(doc.data().Sports);
-        }
-        if (doc.data().Others) {
-          setOtherPrice(doc.data().Others);
-        }
-      }
-    }, error => {
-      console.error(error);
-    })
+      }, error => {
+        console.error(error);
+      });
+      return unsubscribe;
+  }, []);
 
   return (
     <Container>
@@ -61,12 +69,12 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.chart}>
           <DataPieChart
             style={styles.chart}
-            food={foodPrice}
-            transport={transportPrice}
-            education={educationPrice}
-            entertainment={entertainmentPrice}
-            sports={sportsPrice}
-            others={otherPrice}
+            food={parseFloat(foodPrice.toFixed(2))}
+            transport={parseFloat(transportPrice.toFixed(2))}
+            education={parseFloat(educationPrice.toFixed(2))}
+            entertainment={parseFloat(entertainmentPrice.toFixed(2))}
+            sports={parseFloat(sportsPrice.toFixed(2))}
+            others={parseFloat(otherPrice.toFixed(2))}
           />
         </View>
       </Content>

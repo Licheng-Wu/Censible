@@ -1,6 +1,5 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import DateList from "../Containers/transaction/DateList";
 import TransactionDetails from "../Containers/transaction/TransactionDetails";
 import TransactionScreen from "../Containers/transaction/TransactionScreen";
 
@@ -23,11 +22,6 @@ const TxnStackNavigator = () => {
           headerShown: false,
         }}
       />
-      {/* <TxnStack.Screen
-        name="DateList"
-        component={DateList}
-        options={{ headerShown: false }}
-      /> */}
       <TxnStack.Screen
         name="Details"
         component={TransactionDetails}

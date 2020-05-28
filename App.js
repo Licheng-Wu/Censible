@@ -3,14 +3,12 @@ import { AppLoading } from "expo";
 import { Spinner, Root } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, View } from "react-native";
 import TabNavigator from "./src/Routes/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import LoginStack from "./src/Routes/StackNavigator";
 import firebase from "./firebaseDb";
 import SplashScreen from "./src/Containers/SplashScreen";
-import TransactionDetails from "./src/Containers/transaction/TransactionDetails"
-import TxnStackNavigator from "./src/Routes/TxnStackNavigator"
+import ModalStackNavigator from "./src/Routes/ModalStackNavigator";
 
 export default class App extends React.Component {
   unsubscribe = null;

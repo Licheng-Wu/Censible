@@ -120,11 +120,6 @@ const TransactionDetails = ({ route, navigation }) => {
         </View>
       </Content>
     </Container>
-
-
-    // <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-    // <Text>{name}</Text>
-    // </View>
   )
 }
 
@@ -139,7 +134,6 @@ const styles = StyleSheet.create({
   },
   content: {
     marginTop: 50,
-
   },
   header: {
     flex: 1,
@@ -157,14 +151,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 20,
-    elevation: 3,
   },
   textLeft: {
     fontSize: 20,
     color: "#bfc6ea"
   },
   textRight: {
-    fontSize: 20
+    fontSize: 20,
+    flexShrink: 1,
+    textAlign: "right"
   },
   buttons: {
     flexDirection: "row",

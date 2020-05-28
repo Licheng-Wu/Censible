@@ -4,7 +4,6 @@ import { Container, Header, Title, Content, List, ListItem } from "native-base";
 import { YellowBox } from "react-native";
 import firebase from "../../../firebaseDb";
 import DateList from "./DateList";
-import TxnStackNavigator from "../../Routes/TxnStackNavigator";
 
 class TransactionScreen extends React.Component {
   constructor(props) {

@@ -107,7 +107,7 @@ export default class AddExpenseScreen extends Component {
 
   handleItem = (text) => this.setState({ item: text });
 
-  handleAmount = (number) => this.setState({ amount: parseFloat(number) });
+  handleAmount = (number) => this.setState({ amount: number });
 
   handleCategory = (value) => this.setState({ category: value });
 
@@ -168,6 +168,7 @@ export default class AddExpenseScreen extends Component {
               <Input
                 placeholder="Description (Optional)"
                 placeholderTextColor="#bfc6ea"
+                maxLength={50}
                 onChangeText={this.handleDescription}
                 value={description}
               />
@@ -196,8 +197,11 @@ export default class AddExpenseScreen extends Component {
             onPress={() => {
               if (item && amount && amount > 0 && category) {
                 this.addExpense();
-                this.setState({ item: "" });
-                this.setState({ amount: "" });
+                this.setState({
+                  item: "",
+                  amount: "",
+                  description: ""
+                });
 
                 Toast.show({
                   text: "Update successful!",
