@@ -4,7 +4,6 @@ import { Container, Header, Title, Content, List, ListItem } from "native-base";
 import { YellowBox } from "react-native";
 import firebase from "../../../firebaseDb";
 import DateList from "./DateList";
-import TxnStackNavigator from "../../Routes/TxnStackNavigator";
 
 class TransactionScreen extends React.Component {
   constructor(props) {
@@ -27,13 +26,11 @@ class TransactionScreen extends React.Component {
       .collection(month)
       .orderBy("date", "desc")
       .onSnapshot((querySnapshot) => {
-        console.log("getting");
         const results = [];
         querySnapshot.docs.forEach((doc) => {
           results.push(doc.id);
         });
         this.setState({ dates: results });
-        console.log("state set");
       });
   }
 
@@ -44,11 +41,9 @@ class TransactionScreen extends React.Component {
           <Title style={{ fontSize: 20 }}>Transaction History</Title>
         </Header>
         <Content>
-          {
-            this.state.dates.map((date) => {
-              return <DateList key={date} date={date} />;
-            })
-          }
+          {this.state.dates.map((date) => {
+            return <DateList key={date} date={date} />;
+          })}
         </Content>
       </Container>
     );
