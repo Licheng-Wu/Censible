@@ -5,7 +5,7 @@ import { Dimensions } from "react-native";
 import firebase from "../../../firebaseDb";
 
 const DataPieChart = props => {
-  
+
   const screenWidth = Dimensions.get("window").width;
   const chartConfig = {
     backgroundGradientFrom: "#1E2923",
@@ -17,29 +17,6 @@ const DataPieChart = props => {
     barPercentage: 0.5,
     useShadowColorFromDataset: false, // optional
   };
-
-  // let uid = firebase.auth().currentUser.uid;
-  // let month = new Date().toString().substr(4, 3);
-
-  // React.useEffect(() => {
-  //   firebase
-  //     .firestore()
-  //     .collection("Users")
-  //     .doc(uid)
-  //     .collection(month)
-  //     .where("isCategory", "==", true)
-  //     .onSnapshot(querySnapshot => {
-  //       const results = [];
-  //       querySnapshot.docs.forEach(doc => {
-  //         results.push(doc.data().total);
-  //       })
-  //       setPrices(results);
-  //     }, error => {
-  //       console.error(error);
-  //     })
-  //   }, [prices])
-
-  // const prices = props.prices;
 
   const data = [
     {

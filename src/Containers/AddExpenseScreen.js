@@ -15,7 +15,7 @@ import {
   DatePicker,
   Toast,
 } from "native-base";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import firebase from "../../firebaseDb";
 import CategoryPicker from "../Component/CategoryPicker";
 
@@ -38,25 +38,22 @@ export default class AddExpenseScreen extends Component {
       item,
       amount,
       category,
-      paymentMode,
       description,
       chosenDate,
       user,
     } = this.state;
 
-    console.log("here");
-    console.log(this.state.item);
-
     let uid = user.uid;
     let month = chosenDate.toString().substr(4, 3);
-    let exactDate = chosenDate.toString().substr(4, 12);
-
-    // 1. Add expense to daily
-    firebase
+    let exactDate = chosenDate.toString().substr(4, 11);
+    let collectionRef = firebase
       .firestore()
       .collection("Users")
       .doc(uid)
-      .collection(month)
+      .collection(month);
+
+    // 1. Adds each daily transaction
+    collectionRef
       .doc(exactDate)
       .collection("All Expenses")
       .add({
@@ -64,6 +61,7 @@ export default class AddExpenseScreen extends Component {
         price: amount,
         category: category,
         description: description,
+        date: chosenDate.toString()
       })
       .then(function (docRef) {
         console.log("Document successfully written!");
@@ -73,11 +71,7 @@ export default class AddExpenseScreen extends Component {
       });
 
     // 2. Update monthly total in Info AND category expense in Info
-    firebase
-      .firestore()
-      .collection("Users")
-      .doc(uid)
-      .collection(month)
+    collectionRef
       .doc("Info")
       .set(
         {
@@ -94,16 +88,13 @@ export default class AddExpenseScreen extends Component {
       });
 
     // 3. Update daily total
-    firebase
-      .firestore()
-      .collection("Users")
-      .doc(uid)
-      .collection(month)
+    collectionRef
       .doc(exactDate)
-      .collection("All Expenses")
-      .doc("Daily Info")
       .set(
-        { dailyTotal: firebase.firestore.FieldValue.increment(amount) },
+        { 
+          dailyTotal: firebase.firestore.FieldValue.increment(amount),
+          date: exactDate
+        },
         { merge: true }
       )
       .then(function (docRef) {
@@ -112,33 +103,11 @@ export default class AddExpenseScreen extends Component {
       .catch(function (error) {
         console.error("Error writing document: ", error);
       });
-
-    // // 4. Update monthly category expense
-    // firebase
-    //   .firestore()
-    //   .collection("Users")
-    //   .doc(uid)
-    //   .collection(month)
-    //   .doc(category)
-    //   .set(
-    //     {
-    //       isCategory: true,
-    //       category: category,
-    //       total: firebase.firestore.FieldValue.increment(amount),
-    //     },
-    //     { merge: true }
-    //   )
-    //   .then(function (docRef) {
-    //     console.log("Monthly category total updated!");
-    //   })
-    //   .catch(function (error) {
-    //     console.error("Error writing document: ", error);
-    //   });
   };
 
   handleItem = (text) => this.setState({ item: text });
 
-  handleAmount = (number) => this.setState({ amount: parseFloat(number) });
+  handleAmount = (number) => this.setState({ amount: number });
 
   handleCategory = (value) => this.setState({ category: value });
 
@@ -174,16 +143,16 @@ export default class AddExpenseScreen extends Component {
                 value={amount}
               />
             </Item>
-            <View style={{ marginTop: 10 }}>
-              <CategoryPicker handleCategory={this.handleCategory.bind(this)} />
-            </View>
-            {/* <Item picker style={styles.picker}>
+            {/* <View style={{ marginTop: 10 }}>
+              <CategoryPicker category={category} handleCategory={this.handleCategory.bind(this)} />
+            </View> */}
+            <Item picker style={styles.picker}>
               <Picker
-                mode="dropdown"
                 style={{ width: undefined }}
-                placeholder="Category"
-                placeholderStyle={{ color: "#bfc6ea", marginLeft: 4 }}
-                placeholderIconColor="#007aff"
+                // placeholder="Category"
+                // placeholderStyle={{ color: "#bfc6ea", marginLeft: 4 }}
+                // placeholderIconColor="#007aff"
+                textStyle={{marginLeft: 5}}
                 selectedValue={category}
                 onValueChange={this.handleCategory.bind(this)}
               >
@@ -194,24 +163,7 @@ export default class AddExpenseScreen extends Component {
                 <Picker.Item label="Sports" value="Sports" />
                 <Picker.Item label="Others" value="Others" />
               </Picker>
-            </Item> */}
-            {/* <Item picker style={styles.picker}>
-              <Picker
-                mode="dropdown"
-                style={{ width: undefined }}
-                placeholder="Mode of Payment"
-                placeholderStyle={{ color: "#bfc6ea", marginLeft: 4 }}
-                placeholderIconColor="#007aff"
-                selectedValue={paymentMode}
-                onValueChange={this.handlePaymentMode.bind(this)}
-              >
-                <Picker.Item label="Wallet" value="key0" />
-                <Picker.Item label="PayNow/PayLah" value="key1" />
-                <Picker.Item label="Debit Card" value="key2" />
-                <Picker.Item label="Credit Card" value="key3" />
-                <Picker.Item label="iBanking" value="key4" />
-              </Picker>
-            </Item> */}
+            </Item>           
             <Item last>
               <Input
                 placeholder="Description (Optional)"
@@ -323,3 +275,39 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+{/* <Item picker style={styles.picker}>
+              <Picker
+                mode="dropdown"
+                style={{ width: undefined }}
+                placeholder="Category"
+                placeholderStyle={{ color: "#bfc6ea", marginLeft: 4 }}
+                placeholderIconColor="#007aff"
+                selectedValue={category}
+                onValueChange={this.handleCategory.bind(this)}
+              >
+                <Picker.Item label="Food" value="Food" />
+                <Picker.Item label="Transport" value="Transport" />
+                <Picker.Item label="Education" value="Education" />
+                <Picker.Item label="Entertainment" value="Entertainment" />
+                <Picker.Item label="Sports" value="Sports" />
+                <Picker.Item label="Others" value="Others" />
+              </Picker>
+            </Item> */}
+            {/* <Item picker style={styles.picker}>
+              <Picker
+                mode="dropdown"
+                style={{ width: undefined }}
+                placeholder="Mode of Payment"
+                placeholderStyle={{ color: "#bfc6ea", marginLeft: 4 }}
+                placeholderIconColor="#007aff"
+                selectedValue={paymentMode}
+                onValueChange={this.handlePaymentMode.bind(this)}
+              >
+                <Picker.Item label="Wallet" value="key0" />
+                <Picker.Item label="PayNow/PayLah" value="key1" />
+                <Picker.Item label="Debit Card" value="key2" />
+                <Picker.Item label="Credit Card" value="key3" />
+                <Picker.Item label="iBanking" value="key4" />
+              </Picker>
+            </Item> */}

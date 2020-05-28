@@ -2,7 +2,9 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import firebase from "../../../firebaseDb";
 
-const MonthlyExpense = (props) => {
+
+const MonthlyExpense = props => {
+
   const [target, setTarget] = React.useState(500);
   const balance = target - props.expense;
 

@@ -4,7 +4,6 @@ import { View, StyleSheet, Text } from "react-native";
 import { Icon } from "react-native-elements";
 import DataPieChart from "./DataPieChart";
 import MonthlyExpense from "./MonthlyExpense";
-import { useNavigation } from "@react-navigation/native";
 import firebase from "../../../firebaseDb";
 
 const HomeScreen = ({ navigation }) => {
@@ -26,49 +25,34 @@ const HomeScreen = ({ navigation }) => {
     .doc(uid)
     .collection(month);
 
-  React.useEffect(() => {
-    // Updates monthly expense
-    collectionRef.doc("Info").onSnapshot(
-      (doc) => {
-        if (doc.exists) {
-          setExpense(doc.data().monthlyTotal);
+  // Updates monthly expense and pie chart
+  collectionRef
+    .doc("Info")
+    .onSnapshot(doc => {
+      if (doc.exists) {
+        setExpense(doc.data().monthlyTotal);
+        if (doc.data().Food) {
+          setFoodPrice(doc.data().Food);
         }
-      },
-      (error) => {
-        console.error(error);
+        if (doc.data().Transport) {
+          setTransportPrice(doc.data().Transport);
+        }
+        if (doc.data().Education) {
+          setEducationPrice(doc.data().Education);
+        }
+        if (doc.data().Entertainment) {
+          setEntertainmentPrice(doc.data().Entertainment);
+        }
+        if (doc.data().Sports) {
+          setSportsPrice(doc.data().Sports);
+        }
+        if (doc.data().Others) {
+          setOtherPrice(doc.data().Others);
+        }
       }
-    );
-
-    // Updates pie chart
-    collectionRef.where("isCategory", "==", true).onSnapshot(
-      (querySnapshot) => {
-        querySnapshot.docs.forEach((doc) => {
-          if (doc.id === "Food") {
-            // prices.splice(0, 1, doc.data().total)
-            setFoodPrice(doc.data().total);
-          } else if (doc.id === "Transport") {
-            // prices.splice(1, 1, doc.data().total)
-            setTransportPrice(doc.data().total);
-          } else if (doc.id === "Education") {
-            // prices.splice(2, 1, doc.data().total)
-            setEducationPrice(doc.data().total);
-          } else if (doc.id === "Entertainment") {
-            // prices.splice(3, 1, doc.data().total)
-            setEntertainmentPrice(doc.data().total);
-          } else if (doc.id === "Sports") {
-            // prices.splice(4, 1, doc.data().total)
-            setSportsPrice(doc.data().total);
-          } else {
-            // prices.splice(5, 1, doc.data().total)
-            setOtherPrice(doc.data().total);
-          }
-        });
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }, []);
+    }, error => {
+      console.error(error);
+    })
 
   return (
     <Container>
@@ -127,3 +111,32 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+
+// Updates pie chart
+  // collectionRef
+  //   .doc("Info")
+  //   .onSnapshot(querySnapshot => {
+  //     querySnapshot.docs.forEach(doc => {
+  //       if (doc.id === "Food") {
+  //         // prices.splice(0, 1, doc.data().total)
+  //         setFoodPrice(doc.data().total);
+  //       } else if (doc.id === "Transport") {
+  //         // prices.splice(1, 1, doc.data().total)
+  //         setTransportPrice(doc.data().total);
+  //       } else if (doc.id === "Education") {
+  //         // prices.splice(2, 1, doc.data().total)
+  //         setEducationPrice(doc.data().total);
+  //       } else if (doc.id === "Entertainment") {
+  //         // prices.splice(3, 1, doc.data().total)
+  //         setEntertainmentPrice(doc.data().total);
+  //       } else if (doc.id === "Sports") {
+  //         // prices.splice(4, 1, doc.data().total)
+  //         setSportsPrice(doc.data().total);
+  //       } else {
+  //         // prices.splice(5, 1, doc.data().total)
+  //         setOtherPrice(doc.data().total);
+  //       }
+  //     })
+  //   }, error => {
+  //     console.error(error);
+  //   })

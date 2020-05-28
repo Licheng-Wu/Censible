@@ -19,8 +19,7 @@ export default class CategoryPicker extends Component {
           { label: "Sports", value: "Sports" },
           { label: "Others", value: "Others" },
         ]}
-        defaultIndex={0}
-        dropDownStyle={{ backgroundColor: "#fafafa" }}
+        dropDownStyle={{ backgroundColor: "#fafafa",  }}
         // style={{ marginTop: 10, paddingVertical: 20 }}
         containerStyle={{ height: 50 }}
         itemStyle={{ alignItems: "flex-start" }}
@@ -28,6 +27,7 @@ export default class CategoryPicker extends Component {
         // activeItemStyle={{ alignItems: "flex-end" }}
         activeLabelStyle={{ alignItems: "flex-start" }}
         onChangeItem={(item) => this.props.handleCategory(item.value)}
+        value={this.props.category}
       />
     );
   }
