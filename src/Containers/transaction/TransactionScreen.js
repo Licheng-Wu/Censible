@@ -14,40 +14,27 @@ class TransactionScreen extends React.Component {
       dates: [],
     };
   }
-  unsubscribe = null;
 
   componentDidMount() {
-    console.log("component transaction screen mounted");
     YellowBox.ignoreWarnings(["Setting a timer"]);
-    unsubscribe = this.props.navigation.addListener("focus", (e) => {
-      let uid = firebase.auth().currentUser.uid;
-      let month = new Date().toString().substr(4, 3);
-      let getOptions = {
-        source: "cache",
-      };
+    let uid = firebase.auth().currentUser.uid;
+    let month = new Date().toString().substr(4, 3);
 
-      firebase
-        .firestore()
-        .collection("Users")
-        .doc(uid)
-        .collection(month)
-        .orderBy("date", "desc")
-        .get()
-        .then((querySnapshot) => {
-          const results = [];
-          querySnapshot.docs.forEach((doc) => {
-            results.push(doc.id);
-          });
-          this.setState({ dates: results });
-        })
-        .catch((error) => {
-          console.error(error);
+    firebase
+      .firestore()
+      .collection("Users")
+      .doc(uid)
+      .collection(month)
+      .orderBy("date", "desc")
+      .onSnapshot((querySnapshot) => {
+        console.log("getting");
+        const results = [];
+        querySnapshot.docs.forEach((doc) => {
+          results.push(doc.id);
         });
-    });
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
+        this.setState({ dates: results });
+        console.log("state set");
+      });
   }
 
   render() {

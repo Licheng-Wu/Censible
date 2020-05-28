@@ -25,35 +25,25 @@ const DateList = props => {
   React.useEffect(() => {
     let uid = firebase.auth().currentUser.uid;
     let month = new Date().toString().substr(4, 3);
-    let getOptions = {
-      source: "cache",
-    };
-    const unsubscribe = navigation.addListener("focus", () => {
-      firebase
-        .firestore()
-        .collection("Users")
-        .doc(uid)
-        .collection(month)
-        .doc(props.date)
-        .collection("All Expenses")
-        .orderBy("date", "desc")
-        .get()
-        .then((querySnapshot) => {
-          const results = [];
-          querySnapshot.docs.forEach(documentSnapshot => {
+
+    firebase
+      .firestore()
+      .collection("Users")
+      .doc(uid)
+      .collection(month)
+      .doc(props.date)
+      .collection("All Expenses")
+      .onSnapshot((querySnapshot) => {
+        const results = [];
+       querySnapshot.docs.forEach(documentSnapshot => {
             results.push({
               ...documentSnapshot.data(),
               id: documentSnapshot.id
             });
-          });
-          setData(results);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    });
-    return unsubscribe;
-  }, [navigation]);
+        setData(results);
+      });
+  }, []);
+
 
   return (
     <List>
