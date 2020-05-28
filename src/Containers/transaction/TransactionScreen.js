@@ -19,7 +19,7 @@ class TransactionScreen extends React.Component {
   componentDidMount() {
     console.log("component transaction screen mounted");
     YellowBox.ignoreWarnings(["Setting a timer"]);
-    const unsubscribe = this.props.navigation.addListener("focus", (e) => {
+    unsubscribe = this.props.navigation.addListener("focus", (e) => {
       let uid = firebase.auth().currentUser.uid;
       let month = new Date().toString().substr(4, 3);
       let getOptions = {
@@ -57,12 +57,11 @@ class TransactionScreen extends React.Component {
           <Title style={{ fontSize: 20 }}>Transaction History</Title>
         </Header>
         <Content>
-          {/* <TouchableOpacity onPress={() => this.props.navigation.navigate("Details")}>
-              <Text>Press here</Text>
-            </TouchableOpacity> */}
-          {this.state.dates.map((date) => {
-            return <DateList key={date} date={date} />;
-          })}
+          {
+            this.state.dates.map((date) => {
+              return <DateList key={date} date={date} />;
+            })
+          }
         </Content>
       </Container>
     );
