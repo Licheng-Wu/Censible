@@ -1,11 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableHighlight, TouchableOpacity } from "react-native";
-import { Container, Header, Title, Content, List, ListItem } from "native-base";
+import { Container, Header, Title, Content, List, ListItem, Separator } from "native-base";
 import firebase from "../../../firebaseDb"
 import { useNavigation } from "@react-navigation/native"
 
 const DateList = props => {
-  
+
   const [data, setData] = React.useState([]);
   const navigation = useNavigation();
 
@@ -21,43 +21,50 @@ const DateList = props => {
       .collection(month)
       .doc(props.date)
       .collection("All Expenses")
+      .orderBy("date", "desc")
       .get()
       .then(querySnapshot => {
         const results = [];
-        querySnapshot.docs.forEach(doc => {
-          results.push(doc.data())
+        querySnapshot.docs.forEach(documentSnapshot => {
+          results.push({
+            ...documentSnapshot.data(),
+            id: documentSnapshot.id
+          })
         })
         setData(results);
       })
       .catch(error => {
         console.error(error);
       });
-  })
+  }, []);
 
-    return (
-      <List keyExtractor={index => index.toString()}>
-        <ListItem itemDivider>
-          <Title>{props.date.substring(0, 6)}</Title>
-        </ListItem>
-        {
-          data.map((txn, index) => {
-            return (
-              <ListItem
-                style={styles.item}
-                onPress={() => navigation.navigate("Details")}
-                key={index}
-              >
-                <View style={styles.itemDetails}>
-                  <Text style={{ fontSize: 20 }}>{txn.name}</Text>
-                  <Text style={{ color: 'grey' }}>{txn.category}</Text>
-                </View>
-                <Text style={{ color: 'red', fontSize: 25 }}>{parseFloat(-txn.price).toFixed(2)}</Text>
-              </ListItem>
-            )
-          })
-        }
-      </List>
-    )
+  return (
+    <List>
+      <Separator bordered style={{height: 45}}>
+        <Text style={{fontSize: 15}}>
+          {props.date.substring(0, 6)}
+        </Text>
+      </Separator>
+      {
+        data.map(txn => {
+          return (
+            <ListItem
+              style={styles.item}
+              button={true}
+              onPress={() => navigation.navigate("Details")}
+              key={txn.id}
+            >
+              <View style={styles.itemDetails}>
+                <Text style={{ fontSize: 20 }}>{txn.name}</Text>
+                <Text style={{ color: 'grey' }}>{txn.category}</Text>
+              </View>
+              <Text style={{ color: 'red', fontSize: 25 }}>{parseFloat(-txn.price).toFixed(2)}</Text>
+            </ListItem>
+          )
+        })
+      }
+    </List>
+  )
 }
 
 const styles = StyleSheet.create({

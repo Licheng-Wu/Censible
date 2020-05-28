@@ -8,6 +8,7 @@ import ExploreScreen from "../Containers/ExploreScreen";
 import AddExpenseScreen from "../Containers/AddExpenseScreen";
 import TransactionScreen from "../Containers/transaction/TransactionScreen"
 import Settings from "../Containers/SettingsScreen";
+import TxnStackNavigator from "./TxnStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +41,7 @@ export default function TabNavigator() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Explore" component={ExploreScreen} />
         <Tab.Screen name="Add Expense" component={AddExpenseScreen} />
-        <Tab.Screen name="Transactions" component={TransactionScreen} />
+        <Tab.Screen name="Transactions" component={TxnStackNavigator} />
         <Tab.Screen name="Settings" component={Settings} />
       </Tab.Navigator>
   );

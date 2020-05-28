@@ -16,6 +16,13 @@ const TxnStackNavigator = () => {
     //   headerStyle: { backgroundColor: "tomato" },
     // }}
     >
+       <TxnStack.Screen
+        name="TransactionScreen"
+        component={TransactionScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <TxnStack.Screen
         name="DateList"
         component={DateList}
@@ -27,13 +34,6 @@ const TxnStackNavigator = () => {
         component={TransactionDetails}
         options={{
           title: "Details",
-        }}
-      />
-      <TxnStack.Screen
-        name="TransactionScreen"
-        component={TransactionScreen}
-        options={{
-          headerShown: false,
         }}
       />
     </TxnStack.Navigator>
