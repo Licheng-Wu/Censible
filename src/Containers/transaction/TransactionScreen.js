@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Container, Header, Title, Content, List, ListItem } from "native-base";
 import firebase from "../../../firebaseDb"
 import DateList from "./DateList"
@@ -36,25 +36,30 @@ class TransactionScreen extends React.Component {
   }
   
   render() {
-  return (
-    <Container>
-        <Header>
-          <Title style={{fontSize: 20}}>Transaction History</Title>
-        </Header>
-        <Content>
-          { 
-            this.state.dates.map(date => {
-              return(
-              <DateList 
-                date={date}
-              />
-              )
-            })
-            
-          }
-        </Content>
-      </Container>
-  )}
+    return (
+      <Container>
+          <Header>
+            <Title style={{fontSize: 20}}>Transaction History</Title>
+          </Header>
+          <Content>
+            {/* <TouchableOpacity onPress={() => this.props.navigation.navigate("Details")}>
+              <Text>Press here</Text>
+            </TouchableOpacity> */}
+            { 
+              this.state.dates.map(date => {
+                return(
+                <DateList
+                  key={date} 
+                  date={date}
+                />
+                )
+              })
+              
+            }
+          </Content>
+        </Container>
+    )
+  }
 }
 
 export default TransactionScreen;
