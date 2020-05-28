@@ -6,7 +6,7 @@ import TransactionScreen from "../Containers/transaction/TransactionScreen";
 
 const TxnStack = createStackNavigator();
 
-const TxnStackNavigator = (props) => {
+const TxnStackNavigator = () => {
   return (
     <TxnStack.Navigator
     // initialRouteName="TransactionScreen"
@@ -23,17 +23,18 @@ const TxnStackNavigator = (props) => {
           headerShown: false,
         }}
       />
-      <TxnStack.Screen
+      {/* <TxnStack.Screen
         name="DateList"
         component={DateList}
         options={{ headerShown: false }}
-      />
+      /> */}
       <TxnStack.Screen
-        mode="modal"
         name="Details"
         component={TransactionDetails}
         options={{
-          title: "Details",
+          title: "",
+          headerBackTitle: "Back"
+                    
         }}
       />
     </TxnStack.Navigator>

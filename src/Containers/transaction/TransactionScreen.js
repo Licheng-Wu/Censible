@@ -44,12 +44,11 @@ class TransactionScreen extends React.Component {
           <Title style={{ fontSize: 20 }}>Transaction History</Title>
         </Header>
         <Content>
-          {/* <TouchableOpacity onPress={() => this.props.navigation.navigate("Details")}>
-              <Text>Press here</Text>
-            </TouchableOpacity> */}
-          {this.state.dates.map((date) => {
-            return <DateList key={date} date={date} />;
-          })}
+          {
+            this.state.dates.map((date) => {
+              return <DateList key={date} date={date} />;
+            })
+          }
         </Content>
       </Container>
     );
