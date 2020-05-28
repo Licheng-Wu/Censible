@@ -61,7 +61,7 @@ export default class AddExpenseScreen extends Component {
         price: amount,
         category: category,
         description: description,
-        date: chosenDate.toString()
+        date: chosenDate.toString(),
       })
       .then(function (docRef) {
         console.log("Document successfully written!");
@@ -91,9 +91,9 @@ export default class AddExpenseScreen extends Component {
     collectionRef
       .doc(exactDate)
       .set(
-        { 
+        {
           dailyTotal: firebase.firestore.FieldValue.increment(amount),
-          date: exactDate
+          date: exactDate,
         },
         { merge: true }
       )
@@ -107,7 +107,7 @@ export default class AddExpenseScreen extends Component {
 
   handleItem = (text) => this.setState({ item: text });
 
-  handleAmount = (number) => this.setState({ amount: number });
+  handleAmount = (number) => this.setState({ amount: parseFloat(number) });
 
   handleCategory = (value) => this.setState({ category: value });
 
@@ -152,7 +152,7 @@ export default class AddExpenseScreen extends Component {
                 // placeholder="Category"
                 // placeholderStyle={{ color: "#bfc6ea", marginLeft: 4 }}
                 // placeholderIconColor="#007aff"
-                textStyle={{marginLeft: 5}}
+                textStyle={{ marginLeft: 5 }}
                 selectedValue={category}
                 onValueChange={this.handleCategory.bind(this)}
               >
@@ -163,7 +163,7 @@ export default class AddExpenseScreen extends Component {
                 <Picker.Item label="Sports" value="Sports" />
                 <Picker.Item label="Others" value="Others" />
               </Picker>
-            </Item>           
+            </Item>
             <Item last>
               <Input
                 placeholder="Description (Optional)"
@@ -276,7 +276,8 @@ const styles = StyleSheet.create({
   },
 });
 
-{/* <Item picker style={styles.picker}>
+{
+  /* <Item picker style={styles.picker}>
               <Picker
                 mode="dropdown"
                 style={{ width: undefined }}
@@ -293,8 +294,10 @@ const styles = StyleSheet.create({
                 <Picker.Item label="Sports" value="Sports" />
                 <Picker.Item label="Others" value="Others" />
               </Picker>
-            </Item> */}
-            {/* <Item picker style={styles.picker}>
+            </Item> */
+}
+{
+  /* <Item picker style={styles.picker}>
               <Picker
                 mode="dropdown"
                 style={{ width: undefined }}
@@ -310,4 +313,5 @@ const styles = StyleSheet.create({
                 <Picker.Item label="Credit Card" value="key3" />
                 <Picker.Item label="iBanking" value="key4" />
               </Picker>
-            </Item> */}
+            </Item> */
+}

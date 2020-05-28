@@ -2,11 +2,11 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import DateList from "../Containers/transaction/DateList";
 import TransactionDetails from "../Containers/transaction/TransactionDetails";
-import TransactionScreen from "../Containers/transaction/TransactionScreen"
+import TransactionScreen from "../Containers/transaction/TransactionScreen";
 
 const TxnStack = createStackNavigator();
 
-const TxnStackNavigator = () => {
+const TxnStackNavigator = (props) => {
   return (
     <TxnStack.Navigator
     // initialRouteName="TransactionScreen"
@@ -16,11 +16,14 @@ const TxnStackNavigator = () => {
     //   headerStyle: { backgroundColor: "tomato" },
     // }}
     >
-      <TxnStack.Screen
+      {/* <TxnStack.Screen
         name="DateList"
         component={DateList}
         options={{ headerShown: false }}
-      />
+      /> */}
+      <TxnStack.Screen name="DateList">
+        {(props) => <DateList {...props} />}
+      </TxnStack.Screen>
       <TxnStack.Screen
         mode="modal"
         name="Details"
@@ -38,6 +41,6 @@ const TxnStackNavigator = () => {
       />
     </TxnStack.Navigator>
   );
-}
+};
 
 export default TxnStackNavigator;
