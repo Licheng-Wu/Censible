@@ -6,7 +6,15 @@ import {
   TouchableHighlight,
   TouchableOpacity,
 } from "react-native";
-import { Container, Header, Title, Content, List, ListItem } from "native-base";
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  List,
+  ListItem,
+  Separator,
+} from "native-base";
 import firebase from "../../../firebaseDb";
 import { useNavigation } from "@react-navigation/native";
 

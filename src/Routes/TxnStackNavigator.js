@@ -16,27 +16,24 @@ const TxnStackNavigator = (props) => {
     //   headerStyle: { backgroundColor: "tomato" },
     // }}
     >
-      {/* <TxnStack.Screen
+      <TxnStack.Screen
+        name="TransactionScreen"
+        component={TransactionScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <TxnStack.Screen
         name="DateList"
         component={DateList}
         options={{ headerShown: false }}
-      /> */}
-      <TxnStack.Screen name="DateList">
-        {(props) => <DateList {...props} />}
-      </TxnStack.Screen>
+      />
       <TxnStack.Screen
         mode="modal"
         name="Details"
         component={TransactionDetails}
         options={{
           title: "Details",
-        }}
-      />
-      <TxnStack.Screen
-        name="TransactionScreen"
-        component={TransactionScreen}
-        options={{
-          headerShown: false,
         }}
       />
     </TxnStack.Navigator>

@@ -36,12 +36,12 @@ export default class AddExpenseScreen extends Component {
   addExpense = () => {
     const {
       item,
-      amount,
       category,
       description,
       chosenDate,
       user,
     } = this.state;
+    const amount = parseFloat(this.state.amount);
 
     let uid = user.uid;
     let month = chosenDate.toString().substr(4, 3);
