@@ -25,6 +25,7 @@ const DateList = props => {
   React.useEffect(() => {
     let uid = firebase.auth().currentUser.uid;
     let month = new Date().toString().substr(4, 3);
+
     var unsubscribe = firebase
       .firestore()
       .collection("Users")
