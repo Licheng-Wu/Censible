@@ -18,7 +18,7 @@ import {
 import firebase from "../../../firebaseDb";
 import { useNavigation } from "@react-navigation/native";
 
-const DateList = props => {
+const DateList = (props) => {
   const [data, setData] = React.useState([]);
   const navigation = useNavigation();
 
@@ -36,6 +36,7 @@ const DateList = props => {
       .orderBy("date", "desc")
       .onSnapshot((querySnapshot) => {
         const results = [];
+
         querySnapshot.docs.forEach(documentSnapshot => {
           results.push({
             ...documentSnapshot.data(),
@@ -85,6 +86,7 @@ const DateList = props => {
     return null;
   }
 }
+
 
 const styles = StyleSheet.create({
   item: {

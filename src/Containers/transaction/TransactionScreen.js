@@ -41,11 +41,9 @@ class TransactionScreen extends React.Component {
           <Title style={{ fontSize: 20 }}>Transaction History</Title>
         </Header>
         <Content>
-          {
-            this.state.dates.map((date) => {
-              return <DateList key={date} date={date} />;
-            })
-          }
+          {this.state.dates.map((date) => {
+            return <DateList key={date} date={date} />;
+          })}
         </Content>
       </Container>
     );

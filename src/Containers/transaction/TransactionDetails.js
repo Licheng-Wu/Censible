@@ -1,35 +1,38 @@
 import React from "react";
-import { StyleSheet, View, Text, Alert } from "react-native"
+import { StyleSheet, View, Text, Alert } from "react-native";
 import { Container, Title, Content, Button } from "native-base";
-import { Icon } from 'react-native-elements';
-import firebase from "../../../firebaseDb"
+import { Icon } from "react-native-elements";
+import firebase from "../../../firebaseDb";
 
 const TransactionDetails = ({ route, navigation }) => {
-
   const { id, name, price, category, date, description } = route.params;
 
   const confirmDelete = () => {
-    Alert.alert("Delete transaction",
+    Alert.alert(
+      "Delete transaction",
       "Delete this transaction?",
       [
-        { text: "Delete", onPress: () => handleDeleteTransaction(), style: "destructive" },
-        { text: "Cancel" }
+        {
+          text: "Delete",
+          onPress: () => handleDeleteTransaction(),
+          style: "destructive",
+        },
+        { text: "Cancel" },
       ],
       {
-        cancelable: true
+        cancelable: true,
       }
-    )
-  }
+    );
+  };
 
   const handleDeleteTransaction = () => {
-
     let uid = firebase.auth().currentUser.uid;
     let month = new Date().toString().substr(4, 3);
     let collectionRef = firebase
       .firestore()
       .collection("Users")
       .doc(uid)
-      .collection(month)
+      .collection(month);
 
     // 1. Delete specific transaction
     collectionRef
@@ -41,21 +44,21 @@ const TransactionDetails = ({ route, navigation }) => {
         console.log("Delete successful!");
         navigation.goBack();
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
-      })
+      });
 
     // 2. Update monthly total in Info AND category expense in Info
     collectionRef
       .doc("Info")
       .update({
         monthlyTotal: firebase.firestore.FieldValue.increment(-price),
-        [category]: firebase.firestore.FieldValue.increment(-price)
+        [category]: firebase.firestore.FieldValue.increment(-price),
       })
-      .then(docRef => {
+      .then((docRef) => {
         console.log("Total expense updated!");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error writing document: ", error);
       });
 
@@ -65,14 +68,13 @@ const TransactionDetails = ({ route, navigation }) => {
       .update({
         dailyTotal: firebase.firestore.FieldValue.increment(-price),
       })
-      .then(docRef => {
+      .then((docRef) => {
         console.log("Daily total updated!");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error writing document: ", error);
       });
-
-  }
+  };
 
   return (
     <Container style={styles.container}>
@@ -140,6 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     textAlign: "left",
     fontSize: 40,
+    color: "#3F6DB3",
   },
   detailsContainer: {
     backgroundColor: "white",
@@ -154,7 +157,7 @@ const styles = StyleSheet.create({
   },
   textLeft: {
     fontSize: 20,
-    color: "#bfc6ea"
+    color: "#bfc6ea",
   },
   textRight: {
     fontSize: 20,
@@ -164,6 +167,6 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 50
-  }
-})
+    marginTop: 50,
+  },
+});
