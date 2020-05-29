@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import TransactionDetails from "../Containers/transaction/TransactionDetails";
 import TransactionScreen from "../Containers/transaction/TransactionScreen";
+import UpdateExpenseScreen from "../Containers/transaction/UpdateExpenseScreen";
 
 const TxnStack = createStackNavigator();
 
@@ -27,8 +28,15 @@ const TxnStackNavigator = () => {
         component={TransactionDetails}
         options={{
           title: "",
-          headerBackTitle: "Back"
-                    
+          headerBackTitle: "Back",
+        }}
+      />
+      <TxnStack.Screen
+        name="UpdateExpenseScreen"
+        component={UpdateExpenseScreen}
+        options={{
+          title: "",
+          headerBackTitle: "Back",
         }}
       />
     </TxnStack.Navigator>

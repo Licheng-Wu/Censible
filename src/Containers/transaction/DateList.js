@@ -37,14 +37,14 @@ const DateList = (props) => {
       .onSnapshot((querySnapshot) => {
         const results = [];
 
-        querySnapshot.docs.forEach(documentSnapshot => {
+        querySnapshot.docs.forEach((documentSnapshot) => {
           results.push({
             ...documentSnapshot.data(),
-            id: documentSnapshot.id
+            id: documentSnapshot.id,
           });
         });
         setData(results);
-      })
+      });
     return unsubscribe;
   }, []);
 
@@ -54,39 +54,38 @@ const DateList = (props) => {
         <Separator bordered style={{ height: 45 }}>
           <Text style={{ fontSize: 15 }}>{props.date.substring(0, 6)}</Text>
         </Separator>
-        {
-          data.map(txn => {
-            return (
-              <ListItem
-                style={styles.item}
-                onPress={() => navigation.navigate("Details", {
+        {data.map((txn) => {
+          return (
+            <ListItem
+              style={styles.item}
+              onPress={() =>
+                navigation.navigate("Details", {
                   id: txn.id,
                   name: txn.name,
                   price: txn.price,
                   category: txn.category,
                   date: txn.date,
-                  description: txn.description
-                })}
-                key={txn.id}
-              >
-                <View style={styles.itemDetails}>
-                  <Text style={{ fontSize: 20 }}>{txn.name}</Text>
-                  <Text style={{ color: "grey" }}>{txn.category}</Text>
-                </View>
-                <Text style={{ color: "red", fontSize: 25 }}>
-                  {parseFloat(-txn.price).toFixed(2)}
-                </Text>
-              </ListItem>
-            );
-          })
-        }
+                  description: txn.description,
+                })
+              }
+              key={txn.id}
+            >
+              <View style={styles.itemDetails}>
+                <Text style={{ fontSize: 20 }}>{txn.name}</Text>
+                <Text style={{ color: "grey" }}>{txn.category}</Text>
+              </View>
+              <Text style={{ color: "red", fontSize: 25 }}>
+                {parseFloat(-txn.price).toFixed(2)}
+              </Text>
+            </ListItem>
+          );
+        })}
       </List>
     );
   } else {
     return null;
   }
-}
-
+};
 
 const styles = StyleSheet.create({
   item: {

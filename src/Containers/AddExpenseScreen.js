@@ -34,13 +34,7 @@ export default class AddExpenseScreen extends Component {
   }
 
   addExpense = () => {
-    const {
-      item,
-      category,
-      description,
-      chosenDate,
-      user,
-    } = this.state;
+    const { item, category, description, chosenDate, user } = this.state;
     const amount = parseFloat(this.state.amount);
 
     let uid = user.uid;
@@ -87,12 +81,13 @@ export default class AddExpenseScreen extends Component {
         console.error("Error writing document: ", error);
       });
 
-    // 3. Update daily total
+    // 3. Update daily total and daily transaction number
     collectionRef
       .doc(exactDate)
       .set(
         {
           dailyTotal: firebase.firestore.FieldValue.increment(amount),
+          dailyTransactions: firebase.firestore.FieldValue.increment(1),
           date: exactDate,
         },
         { merge: true }
@@ -115,7 +110,9 @@ export default class AddExpenseScreen extends Component {
 
   handleDescription = (text) => this.setState({ description: text });
 
-  handleDate = (date) => this.setState({ chosenDate: date });
+  handleDate = (date) => {
+    this.setState({ chosenDate: date });
+  };
   render() {
     const { item, amount, category, paymentMode, description } = this.state;
     const { navigation } = this.props;
@@ -200,7 +197,7 @@ export default class AddExpenseScreen extends Component {
                 this.setState({
                   item: "",
                   amount: "",
-                  description: ""
+                  description: "",
                 });
 
                 Toast.show({

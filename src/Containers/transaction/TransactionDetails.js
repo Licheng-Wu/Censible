@@ -5,7 +5,15 @@ import { Icon } from "react-native-elements";
 import firebase from "../../../firebaseDb";
 
 const TransactionDetails = ({ route, navigation }) => {
-  const { id, name, price, category, date, description } = route.params;
+  const {
+    id,
+    name,
+    price,
+    category,
+    date,
+    description,
+    defaultDateFormat,
+  } = route.params;
 
   const confirmDelete = () => {
     Alert.alert(
@@ -62,11 +70,12 @@ const TransactionDetails = ({ route, navigation }) => {
         console.error("Error writing document: ", error);
       });
 
-    // 3. Update daily total
+    // 3. Update daily total and daily transaction number
     collectionRef
       .doc(date.substr(4, 11))
       .update({
         dailyTotal: firebase.firestore.FieldValue.increment(-price),
+        dailyTransactions: firebase.firestore.FieldValue.increment(-1),
       })
       .then((docRef) => {
         console.log("Daily total updated!");
@@ -110,7 +119,16 @@ const TransactionDetails = ({ route, navigation }) => {
             size={40}
             color="#529FF3"
             type="ionicon"
-            onPress={() => alert("")}
+            onPress={() =>
+              navigation.navigate("UpdateExpenseScreen", {
+                id: id,
+                name: name,
+                price: price,
+                category: category,
+                date: date,
+                description: description,
+              })
+            }
           />
           <Icon
             name="ios-trash"
@@ -122,8 +140,8 @@ const TransactionDetails = ({ route, navigation }) => {
         </View>
       </Content>
     </Container>
-  )
-}
+  );
+};
 
 export default TransactionDetails;
 
@@ -162,7 +180,7 @@ const styles = StyleSheet.create({
   textRight: {
     fontSize: 20,
     flexShrink: 1,
-    textAlign: "right"
+    textAlign: "right",
   },
   buttons: {
     flexDirection: "row",

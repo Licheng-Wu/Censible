@@ -28,7 +28,10 @@ class TransactionScreen extends React.Component {
       .onSnapshot((querySnapshot) => {
         const results = [];
         querySnapshot.docs.forEach((doc) => {
-          results.push(doc.id);
+          if (doc.data().dailyTransactions > 0) {
+            // Only push if the date has more than 0 transactions
+            results.push(doc.id);
+          }
         });
         this.setState({ dates: results });
       });
