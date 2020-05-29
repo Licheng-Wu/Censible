@@ -36,6 +36,8 @@ const TransactionDetails = ({ route, navigation }) => {
   const handleDeleteTransaction = () => {
     let uid = firebase.auth().currentUser.uid;
     let month = new Date().toString().substr(4, 3);
+    // console.log("delete: " + month);
+    // console.log("date: " + date);
     let collectionRef = firebase
       .firestore()
       .collection("Users")
@@ -44,7 +46,7 @@ const TransactionDetails = ({ route, navigation }) => {
 
     // 1. Delete specific transaction
     collectionRef
-      .doc(date.substr(4, 11))
+      .doc(date.substr(0, 11))
       .collection("All Expenses")
       .doc(id)
       .delete()
@@ -72,7 +74,7 @@ const TransactionDetails = ({ route, navigation }) => {
 
     // 3. Update daily total and daily transaction number
     collectionRef
-      .doc(date.substr(4, 11))
+      .doc(date.substr(0, 11))
       .update({
         dailyTotal: firebase.firestore.FieldValue.increment(-price),
         dailyTransactions: firebase.firestore.FieldValue.increment(-1),
@@ -105,7 +107,7 @@ const TransactionDetails = ({ route, navigation }) => {
           </View>
           <View style={styles.field}>
             <Text style={styles.textLeft}>Payment Date</Text>
-            <Text style={styles.textRight}>{date.substr(4, 11)}</Text>
+            <Text style={styles.textRight}>{date.substr(0, 11)}</Text>
           </View>
           <View style={styles.field}>
             <Text style={styles.textLeft}>Description</Text>

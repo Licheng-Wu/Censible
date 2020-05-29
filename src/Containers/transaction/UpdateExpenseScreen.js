@@ -26,7 +26,7 @@ export default class UpdateExpenseScreen extends Component {
       item: props.route.params.name,
       amount: props.route.params.price,
       newAmount: props.route.params.price,
-      category: props.route.params.category, // Need to preset
+      category: props.route.params.category,
       newCategory: props.route.params.category,
       paymentMode: undefined,
       description: props.route.params.description,
@@ -54,171 +54,36 @@ export default class UpdateExpenseScreen extends Component {
     const newAmount = parseFloat(this.state.newAmount);
     const amount = parseFloat(this.state.amount);
     let uid = user.uid;
-    let previousMonth = chosenDate.substr(4, 3);
-    let month = newChosenDate.substr(4, 3);
-    let previousDate = chosenDate.substr(4, 11);
-    let newDate = newChosenDate.substr(4, 11);
     let documentId = this.props.route.params.id;
-    // console.log(previousDate);
-    // console.log(newDate);
-    // console.log(chosenDate);
-    // console.log(newChosenDate);
+
+    // Month format is Eg. May. To be used as Collection title
+    let previousMonth = chosenDate.substr(0, 3);
+    let newMonth = newChosenDate.substr(0, 3);
+
+    // Exact date format is Eg. May 11 2020. To be used as Date Document title
+    let oldExactDate = chosenDate.substr(0, 11);
+    let newExactDate = newChosenDate.substr(0, 11);
+
+    // previousDate and newDate format is Eg. May 13 2020 00:00:00 GMT+0800 (+08). To be used for ordering
+    let previousDate = chosenDate;
+    let newDate = newChosenDate;
+
     let collectionRef = firebase
       .firestore()
       .collection("Users")
       .doc(uid)
-      .collection(month);
+      .collection(previousMonth);
 
-    if (previousMonth === month) {
-      if (category === newCategory) {
-        // Month and category are the same, so update monthly total AND category expense in Info
-        collectionRef
-          .doc("Info")
-          .update({
-            monthlyTotal: firebase.firestore.FieldValue.increment(
-              newAmount - amount
-            ),
-            [category]: firebase.firestore.FieldValue.increment(
-              newAmount - amount
-            ),
-          })
-          .then(function (docRef) {
-            console.log("Total expense updated!");
-          })
-          .catch(function (error) {
-            console.error("Error updating document: ", error);
-          });
-      } else {
-        // Month is the same but category is different,
-        // so update monthly total and SET category expense in Info
-        collectionRef
-          .doc("Info")
-          .update({
-            monthlyTotal: firebase.firestore.FieldValue.increment(
-              newAmount - amount
-            ),
-            [category]: firebase.firestore.FieldValue.increment(-amount),
-            [newCategory]: firebase.firestore.FieldValue.increment(newAmount),
-          })
-          .then(function (docRef) {
-            console.log("Total expense updated!");
-          })
-          .catch(function (error) {
-            console.error("Error updating document: ", error);
-          });
-      }
-      // THEN
-      if (previousDate === newDate) {
-        // 1. Dates are the same, so we just have to update the same document
-        collectionRef
-          .doc(previousDate)
-          .collection("All Expenses")
-          .doc(documentId)
-          .update({
-            name: item,
-            price: newAmount,
-            category: newCategory,
-            description: description,
-            date: newChosenDate.toString(),
-          })
-          .then(function (docRef) {
-            console.log("Document successfully updated!");
-          })
-          .catch(function (error) {
-            console.error("Error updating document: ", error);
-          });
+    let newCollectionRef = firebase
+      .firestore()
+      .collection("Users")
+      .doc(uid)
+      .collection(newMonth);
 
-        // 2. Then update daily total
-        collectionRef
-          .doc(previousDate)
-          .update({
-            dailyTotal: firebase.firestore.FieldValue.increment(
-              newAmount - amount
-            ),
-            date: newChosenDate,
-          })
-          .then(function (docRef) {
-            console.log("Daily total updated!");
-          })
-          .catch(function (error) {
-            console.error("Error writing document: ", error);
-          });
-      } else {
-        // Dates are different but month is the same. So we need to 1. delete the original document,
-        // 2. Decrease daily total and transactions, 3. add a new document in new Date,
-        // 4. Increase new daily total and transactions
-
-        // 1. Delete original document
-        collectionRef
-          .doc(previousDate)
-          .collection("All Expenses")
-          .doc(documentId)
-          .delete()
-          .then(() => {
-            console.log("Delete successful!");
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-
-        // 2. Decrease original daily total and daily transactions
-        collectionRef
-          .doc(previousDate)
-          .update({
-            dailyTotal: firebase.firestore.FieldValue.increment(-amount),
-            dailyTransactions: firebase.firestore.FieldValue.increment(-1),
-            date: newChosenDate,
-          })
-          .then(function (docRef) {
-            console.log("Daily total updated!");
-          })
-          .catch(function (error) {
-            console.error("Error writing document: ", error);
-          });
-
-        // 3. Add new document in new date
-        collectionRef
-          .doc(newDate)
-          .collection("All Expenses")
-          .add({
-            name: item,
-            price: newAmount,
-            category: newCategory,
-            description: description,
-            date: newChosenDate,
-          })
-          .then(function (docRef) {
-            console.log("Document successfully written!");
-          })
-          .catch(function (error) {
-            console.error("Error writing document: ", error);
-          });
-
-        // 4. Increase new daily total and transactions
-        collectionRef
-          .doc(newDate)
-          .set(
-            {
-              dailyTotal: firebase.firestore.FieldValue.increment(amount),
-              dailyTransactions: firebase.firestore.FieldValue.increment(1),
-              date: newChosenDate,
-            },
-            { merge: true }
-          )
-          .then(function (docRef) {
-            console.log("Daily total updated!");
-          })
-          .catch(function (error) {
-            console.error("Error writing document: ", error);
-          });
-      }
-    } else {
-      // Month and dates are both different. So 1. delete the document, 2. decrement the daily total,
-      // 3. Decrement the monthly total, and create add to new month.
-
-      // 1. Delete the original document
+    deleteOld = () => {
+      // 1. Delete previous document
       collectionRef
-        .doc(previousDate)
+        .doc(oldExactDate)
         .collection("All Expenses")
         .doc(documentId)
         .delete()
@@ -229,36 +94,39 @@ export default class UpdateExpenseScreen extends Component {
           console.error(error);
         });
 
-      // 2. Decrement original daily total and transactions
+      // 2. Update monthly total in Info AND category expense in Info
       collectionRef
-        .doc(previousDate)
+        .doc("Info")
         .update({
-          dailyTotal: firebase.firestore.FieldValue.increment(-amount),
-          dailyTransactions: firebase.firestore.FieldValue.increment(-1),
-          date: newChosenDate,
+          monthlyTotal: firebase.firestore.FieldValue.increment(-amount),
+          [category]: firebase.firestore.FieldValue.increment(-amount),
         })
-        .then(function (docRef) {
-          console.log("Daily total updated!");
+        .then((docRef) => {
+          console.log("Total expense updated!");
         })
-        .catch(function (error) {
+        .catch((error) => {
           console.error("Error writing document: ", error);
         });
 
-      // 3. Decrement monthly total and category amount
-      collectionRef.doc("Info").update({
-        monthlyTotal: firebase.firestore.FieldValue.increment(-amount),
-        [category]: firebase.firestore.FieldValue.increment(-amount),
-      });
+      // 3. Update daily total and daily transaction number
+      collectionRef
+        .doc(oldExactDate)
+        .update({
+          dailyTotal: firebase.firestore.FieldValue.increment(-amount),
+          dailyTransactions: firebase.firestore.FieldValue.increment(-1),
+        })
+        .then((docRef) => {
+          console.log("Daily total updated!");
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+        });
+    };
 
-      // 4a. Add to new month
-      let newMonthRef = firebase
-        .firestore()
-        .collection("Users")
-        .doc(uid)
-        .collection(newMonth);
-
-      newMonthRef
-        .doc(newDate)
+    addNew = () => {
+      // 1. Add new daily transaction
+      newCollectionRef
+        .doc(newExactDate)
         .collection("All Expenses")
         .add({
           name: item,
@@ -274,8 +142,8 @@ export default class UpdateExpenseScreen extends Component {
           console.error("Error writing document: ", error);
         });
 
-      // 4b. Update monthly total in Info AND category expense in Info
-      newMonthRef
+      // 2. Update monthly total in Info AND category expense in Info
+      newCollectionRef
         .doc("Info")
         .set(
           {
@@ -291,14 +159,14 @@ export default class UpdateExpenseScreen extends Component {
           console.error("Error writing document: ", error);
         });
 
-      // 4c. Update daily total and daily transaction number
-      newMonthRef
-        .doc(newDate)
+      // 3. Update daily total and daily transaction number
+      collectionRef
+        .doc(newExactDate)
         .set(
           {
             dailyTotal: firebase.firestore.FieldValue.increment(newAmount),
             dailyTransactions: firebase.firestore.FieldValue.increment(1),
-            date: newChosenDate,
+            date: newDate,
           },
           { merge: true }
         )
@@ -308,7 +176,10 @@ export default class UpdateExpenseScreen extends Component {
         .catch(function (error) {
           console.error("Error writing document: ", error);
         });
-    }
+    };
+
+    this.deleteOld();
+    this.addNew();
   };
 
   handleItem = (text) => this.setState({ item: text });
@@ -323,7 +194,7 @@ export default class UpdateExpenseScreen extends Component {
 
   handleDate = (date) => {
     this.setState({
-      newChosenDate: date.toString(),
+      newChosenDate: date.toString().substr(4),
     });
   };
   render() {

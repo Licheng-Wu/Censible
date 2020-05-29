@@ -36,10 +36,13 @@ export default class AddExpenseScreen extends Component {
   addExpense = () => {
     const { item, category, description, chosenDate, user } = this.state;
     const amount = parseFloat(this.state.amount);
+    // console.log(chosenDate);
+    // console.log(chosenDate.toString());
 
     let uid = user.uid;
     let month = chosenDate.toString().substr(4, 3);
     let exactDate = chosenDate.toString().substr(4, 11);
+    let dateWithoutDay = chosenDate.toString().substr(4);
     let collectionRef = firebase
       .firestore()
       .collection("Users")
@@ -55,7 +58,7 @@ export default class AddExpenseScreen extends Component {
         price: amount,
         category: category,
         description: description,
-        date: chosenDate.toString(),
+        date: dateWithoutDay,
       })
       .then(function (docRef) {
         console.log("Document successfully written!");
@@ -88,7 +91,7 @@ export default class AddExpenseScreen extends Component {
         {
           dailyTotal: firebase.firestore.FieldValue.increment(amount),
           dailyTransactions: firebase.firestore.FieldValue.increment(1),
-          date: exactDate,
+          date: dateWithoutDay,
         },
         { merge: true }
       )
