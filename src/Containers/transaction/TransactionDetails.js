@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text, Alert } from "react-native";
 import { Container, Title, Content, Button } from "native-base";
 import { Icon } from "react-native-elements";
-import firebase from "../../../firebaseDb";
+import { deleteExpense } from "../../../ExpenseAPI";
 
 const TransactionDetails = ({ route, navigation }) => {
   const {
@@ -12,7 +12,6 @@ const TransactionDetails = ({ route, navigation }) => {
     category,
     date,
     description,
-    defaultDateFormat,
   } = route.params;
 
   const confirmDelete = () => {
@@ -22,7 +21,15 @@ const TransactionDetails = ({ route, navigation }) => {
       [
         {
           text: "Delete",
-          onPress: () => handleDeleteTransaction(),
+          onPress: () => {
+            deleteExpense({
+              id: id,
+              price: price,
+              category: category,
+              date: date,
+            })
+            navigation.goBack();
+          },
           style: "destructive",
         },
         { text: "Cancel" },
@@ -31,60 +38,6 @@ const TransactionDetails = ({ route, navigation }) => {
         cancelable: true,
       }
     );
-  };
-
-  const handleDeleteTransaction = () => {
-    let uid = firebase.auth().currentUser.uid;
-    let month = new Date().toString().substr(4, 3);
-    // console.log("delete: " + month);
-    // console.log("date: " + date);
-    let collectionRef = firebase
-      .firestore()
-      .collection("Users")
-      .doc(uid)
-      .collection(month);
-
-    // 1. Delete specific transaction
-    collectionRef
-      .doc(date.substr(0, 11))
-      .collection("All Expenses")
-      .doc(id)
-      .delete()
-      .then(() => {
-        console.log("Delete successful!");
-        navigation.goBack();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    // 2. Update monthly total in Info AND category expense in Info
-    collectionRef
-      .doc("Info")
-      .update({
-        monthlyTotal: firebase.firestore.FieldValue.increment(-price),
-        [category]: firebase.firestore.FieldValue.increment(-price),
-      })
-      .then((docRef) => {
-        console.log("Total expense updated!");
-      })
-      .catch((error) => {
-        console.error("Error writing document: ", error);
-      });
-
-    // 3. Update daily total and daily transaction number
-    collectionRef
-      .doc(date.substr(0, 11))
-      .update({
-        dailyTotal: firebase.firestore.FieldValue.increment(-price),
-        dailyTransactions: firebase.firestore.FieldValue.increment(-1),
-      })
-      .then((docRef) => {
-        console.log("Daily total updated!");
-      })
-      .catch((error) => {
-        console.error("Error writing document: ", error);
-      });
   };
 
   return (
