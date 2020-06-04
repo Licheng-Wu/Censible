@@ -26,40 +26,43 @@ const HomeScreen = ({ navigation }) => {
       .doc(uid)
       .collection(month)
       .doc("Info")
-      .onSnapshot(doc => {
-        if (doc.exists) {
-          setExpense(doc.data().monthlyTotal);
-          if (doc.data().Food !== undefined) {
-            setFoodPrice(doc.data().Food);
+      .onSnapshot(
+        (doc) => {
+          if (doc.exists) {
+            setExpense(doc.data().monthlyTotal);
+            if (doc.data().Food !== undefined) {
+              setFoodPrice(doc.data().Food);
+            }
+            if (doc.data().Transport !== undefined) {
+              setTransportPrice(doc.data().Transport);
+            }
+            if (doc.data().Education !== undefined) {
+              setEducationPrice(doc.data().Education);
+            }
+            if (doc.data().Entertainment !== undefined) {
+              setEntertainmentPrice(doc.data().Entertainment);
+            }
+            if (doc.data().Sports !== undefined) {
+              setSportsPrice(doc.data().Sports);
+            }
+            if (doc.data().Others !== undefined) {
+              setOtherPrice(doc.data().Others);
+            }
+          } else {
+            setExpense(0);
+            setFoodPrice(0);
+            setTransportPrice(0);
+            setEducationPrice(0);
+            setEntertainmentPrice(0);
+            setSportsPrice(0);
+            setOtherPrice(0);
           }
-          if (doc.data().Transport !== undefined) {
-            setTransportPrice(doc.data().Transport);
-          }
-          if (doc.data().Education !== undefined) {
-            setEducationPrice(doc.data().Education);
-          }
-          if (doc.data().Entertainment !== undefined) {
-            setEntertainmentPrice(doc.data().Entertainment);
-          }
-          if (doc.data().Sports !== undefined) {
-            setSportsPrice(doc.data().Sports);
-          }
-          if (doc.data().Others !== undefined) {
-            setOtherPrice(doc.data().Others);
-          }
-        } else {
-          setExpense(0);
-          setFoodPrice(0);
-          setTransportPrice(0);
-          setEducationPrice(0);
-          setEntertainmentPrice(0);
-          setSportsPrice(0);
-          setOtherPrice(0);
+        },
+        (error) => {
+          console.error(error);
         }
-      }, error => {
-        console.error(error);
-      });
-      return unsubscribe;
+      );
+    return unsubscribe;
   }, []);
 
   return (
@@ -121,30 +124,30 @@ const styles = StyleSheet.create({
 export default HomeScreen;
 
 // Updates pie chart
-  // collectionRef
-  //   .doc("Info")
-  //   .onSnapshot(querySnapshot => {
-  //     querySnapshot.docs.forEach(doc => {
-  //       if (doc.id === "Food") {
-  //         // prices.splice(0, 1, doc.data().total)
-  //         setFoodPrice(doc.data().total);
-  //       } else if (doc.id === "Transport") {
-  //         // prices.splice(1, 1, doc.data().total)
-  //         setTransportPrice(doc.data().total);
-  //       } else if (doc.id === "Education") {
-  //         // prices.splice(2, 1, doc.data().total)
-  //         setEducationPrice(doc.data().total);
-  //       } else if (doc.id === "Entertainment") {
-  //         // prices.splice(3, 1, doc.data().total)
-  //         setEntertainmentPrice(doc.data().total);
-  //       } else if (doc.id === "Sports") {
-  //         // prices.splice(4, 1, doc.data().total)
-  //         setSportsPrice(doc.data().total);
-  //       } else {
-  //         // prices.splice(5, 1, doc.data().total)
-  //         setOtherPrice(doc.data().total);
-  //       }
-  //     })
-  //   }, error => {
-  //     console.error(error);
-  //   })
+// collectionRef
+//   .doc("Info")
+//   .onSnapshot(querySnapshot => {
+//     querySnapshot.docs.forEach(doc => {
+//       if (doc.id === "Food") {
+//         // prices.splice(0, 1, doc.data().total)
+//         setFoodPrice(doc.data().total);
+//       } else if (doc.id === "Transport") {
+//         // prices.splice(1, 1, doc.data().total)
+//         setTransportPrice(doc.data().total);
+//       } else if (doc.id === "Education") {
+//         // prices.splice(2, 1, doc.data().total)
+//         setEducationPrice(doc.data().total);
+//       } else if (doc.id === "Entertainment") {
+//         // prices.splice(3, 1, doc.data().total)
+//         setEntertainmentPrice(doc.data().total);
+//       } else if (doc.id === "Sports") {
+//         // prices.splice(4, 1, doc.data().total)
+//         setSportsPrice(doc.data().total);
+//       } else {
+//         // prices.splice(5, 1, doc.data().total)
+//         setOtherPrice(doc.data().total);
+//       }
+//     })
+//   }, error => {
+//     console.error(error);
+//   })

@@ -13,7 +13,7 @@ import {
   Toast,
 } from "native-base";
 import { StyleSheet, Text, View, Platform } from "react-native";
-import { addExpense } from "../../ExpenseAPI"
+import { addExpense } from "../../ExpenseAPI";
 
 export default class AddExpenseScreen extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ export default class AddExpenseScreen extends Component {
       amount: "",
       category: "Food",
       description: "",
-      chosenDate: new Date()
+      chosenDate: new Date(),
     };
   }
 
@@ -117,7 +117,7 @@ export default class AddExpenseScreen extends Component {
                     price: parseFloat(amount),
                     category: category,
                     description: description,
-                    date: chosenDate.toString().substr(4)
+                    date: chosenDate.toString().substr(4),
                   });
                   this.setState({
                     item: "",
@@ -139,7 +139,7 @@ export default class AddExpenseScreen extends Component {
                     buttonText: "Okay",
                     duration: 3000,
                     type: "warning",
-                    stlye: { marginBottom: 40 }
+                    stlye: { marginBottom: 40 },
                   });
                 }
               } else {
@@ -189,5 +189,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     color: "white",
-  }
+  },
 });
