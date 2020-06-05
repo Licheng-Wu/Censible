@@ -4,9 +4,46 @@ import { API_KEY } from "react-native-dotenv";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { Button } from "native-base";
 import { Icon } from "react-native-elements";
-// import { Icon } from "react-native-vector-icons/FontAwesome";
 
 export default class ExploreScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      places: ["1"],
+    };
+  }
+
+  getNearbyPlaces = () => {
+    return fetch(
+      "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=" +
+        API_KEY
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        const tempHolder = [];
+        json.results.forEach((place) => {
+          tempHolder.push(place);
+        });
+        this.setState({ places: tempHolder });
+        console.log(this.state.places);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  testingAPI = () => {
+    return fetch("https://reactnative.dev/movies.json")
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -38,7 +75,7 @@ export default class ExploreScreen extends Component {
             reverse
             name="explore"
             color="#378BE5"
-            onPress={() => console.log("Button Pressed")}
+            onPress={this.testingAPI}
           />
         </View>
       </View>
