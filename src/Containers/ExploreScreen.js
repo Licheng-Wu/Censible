@@ -1,17 +1,53 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import { API_KEY } from "react-native-dotenv";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import { Button } from "native-base";
+import { Button, ActionSheet } from "native-base";
 import { Icon } from "react-native-elements";
+import { request, PERMISSIONS } from "react-native-permissions";
+import Geolocation from '@react-native-community/geolocation';
 
 export default class ExploreScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      initialRegion: undefined,
       places: [],
     };
+  }
+
+  componentDidMount() {
+    this.requestLocationPermission();
+  }
+
+  requestLocationPermission = async () => {
+    if (Platform.OS === "ios") {
+      var response = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      if (response === "granted") {
+        this.locateCurrentPosition();
+      }
+    } else {
+      var response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      if (response === "granted") {
+        this.locateCurrentPosition();
+      }
+    }
+  }
+
+  locateCurrentPosition = () => {
+    Geolocation.getCurrentPosition(position => {
+      console.log(JSON.stringify(position));
+
+      let initialRegion = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.05
+      }
+
+      this.setState({ initialRegion })
+    })
   }
 
   getNearbyPlaces = () => {
@@ -74,6 +110,29 @@ export default class ExploreScreen extends Component {
       });
   };
 
+  chooseCategory = () => {
+    var BUTTONS = ["Food", "Education", "Entertainment", "Sports", "Cancel"];
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: 4,
+        destructiveButtonIndex: 4,
+        title: "Choose a category"
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          this.getNearbyPlaces();
+        } else if (buttonIndex === 1) {
+
+        } else if (buttonIndex === 2) {
+
+        } else {
+
+        } 
+      }
+    )
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -81,12 +140,7 @@ export default class ExploreScreen extends Component {
           style={{ flex: 1, zIndex: -1 }}
           provider={PROVIDER_GOOGLE}
           showsUserLocation
-          initialRegion={{
-            latitude: 1.3521,
-            longitude: 103.8198,
-            latitudeDelta: 0.8922,
-            longitudeDelta: 0.2421,
-          }}
+          initialRegion={this.state.initialRegion}
         >
           {this.state.places.map((place) => {
             return (
@@ -117,7 +171,7 @@ export default class ExploreScreen extends Component {
             reverse
             name="explore"
             color="#378BE5"
-            onPress={this.getNearbyPlaces}
+            onPress={this.chooseCategory}
             // onPress={this.testingAPI}
           />
         </View>
