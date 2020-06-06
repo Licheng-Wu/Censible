@@ -10,20 +10,50 @@ export default class ExploreScreen extends Component {
     super(props);
 
     this.state = {
-      places: ["1"],
+      places: [],
     };
   }
 
   getNearbyPlaces = () => {
+    console.log("get");
+    // Buangkok MRT
+    // lat:  1.3829, long: 103.8934
+
+    // Orchard Road
+    // lat: 1.304833, long: 103.831833
     return fetch(
-      "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=" +
+      "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
+        "location=1.304833,103.831833&" +
+        "radius=1500&" +
+        "type=shopping_mall&" +
+        "maxprice=2&" +
+        "key=" +
         API_KEY
     )
       .then((response) => response.json())
       .then((json) => {
         const tempHolder = [];
+        let id = 0;
+        let latitude;
+        let longitude;
+        let name;
+        let vicinity;
+        let obj;
+
         json.results.forEach((place) => {
-          tempHolder.push(place);
+          latitude = place.geometry.location.lat;
+          longitude = place.geometry.location.lng;
+          name = place.name;
+          vicinity = place.vicinity;
+          obj = {
+            id: id,
+            latitude: latitude,
+            longitude: longitude,
+            name: name,
+            vicinity: vicinity,
+          };
+          id++;
+          tempHolder.push(obj);
         });
         this.setState({ places: tempHolder });
         console.log(this.state.places);
@@ -58,7 +88,19 @@ export default class ExploreScreen extends Component {
             longitudeDelta: 0.2421,
           }}
         >
-          <Marker coordinate={{ latitude: 1.2521, longitude: 103.8198 }} />
+          {this.state.places.map((place) => {
+            return (
+              <Marker
+                key={place.id}
+                coordinate={{
+                  latitude: place.latitude,
+                  longitude: place.longitude,
+                }}
+                title={place.name}
+                description={place.vicinity}
+              />
+            );
+          })}
         </MapView>
         <View
           style={{
@@ -75,7 +117,8 @@ export default class ExploreScreen extends Component {
             reverse
             name="explore"
             color="#378BE5"
-            onPress={this.testingAPI}
+            onPress={this.getNearbyPlaces}
+            // onPress={this.testingAPI}
           />
         </View>
       </View>
