@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import { API_KEY } from "react-native-dotenv";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { Button } from "native-base";
 import { Icon } from "react-native-elements";
+import * as Permissions from "expo-permissions";
+import * as Location from "expo-location";
 
 export default class ExploreScreen extends Component {
   constructor(props) {
@@ -11,8 +13,32 @@ export default class ExploreScreen extends Component {
 
     this.state = {
       places: [],
+      errorMessage: "",
+      userLocation: {},
     };
+
+    this.requestLocationPermission();
   }
+
+  // componentWillMount() {
+  //   this.requestLocationPermission();
+  // }
+
+  requestLocationPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+
+    if (status !== "granted") {
+      console.log("Permission not granted");
+
+      this.setState({ errorMessage: "Permission not granted" });
+    }
+
+    const userLocation = await Location.getCurrentPositionAsync();
+
+    this.setState({ userLocation: userLocation });
+    // console.log(JSON.stringify(this.state.userLocation.coords.latitude));
+    // console.log(JSON.stringify(this.state.userLocation.coords.longitude));
+  };
 
   getNearbyPlaces = () => {
     console.log("get");
@@ -23,9 +49,13 @@ export default class ExploreScreen extends Component {
     // lat: 1.304833, long: 103.831833
     return fetch(
       "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
-        "location=1.304833,103.831833&" +
+        "location=" +
+        this.state.userLocation.coords.latitude +
+        "," +
+        this.state.userLocation.coords.longitude +
+        "&" +
         "radius=1500&" +
-        "type=shopping_mall&" +
+        "type=restaurants&" +
         "maxprice=2&" +
         "key=" +
         API_KEY
@@ -57,17 +87,6 @@ export default class ExploreScreen extends Component {
         });
         this.setState({ places: tempHolder });
         console.log(this.state.places);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  testingAPI = () => {
-    return fetch("https://reactnative.dev/movies.json")
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
       })
       .catch((error) => {
         console.error(error);
@@ -117,6 +136,7 @@ export default class ExploreScreen extends Component {
             reverse
             name="explore"
             color="#378BE5"
+            // onPress={this.requestLocationPermission}
             onPress={this.getNearbyPlaces}
             // onPress={this.testingAPI}
           />
