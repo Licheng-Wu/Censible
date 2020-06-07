@@ -1,12 +1,9 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import firebase from "../../../firebaseDb";
-
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 const MonthlyExpense = props => {
 
-  const [target, setTarget] = React.useState(500);
-  const balance = target - props.expense;
+  const balance = props.target - props.expense;
 
   return (
     <View style={styles.container}>
@@ -30,15 +27,17 @@ const MonthlyExpense = props => {
         </View>
       </View>
 
-      <View style={styles.items}>
-        <Text style={{ color: "black", fontSize: 16, textAlign: "center" }}>
-          Target
+      <TouchableOpacity onPress={() => props.setModalVisible(! props.modalVisible)}>
+        <View style={styles.items}>
+          <Text style={{ color: "black", fontSize: 16, textAlign: "center" }}>
+            Target
         </Text>
-        <View style={styles.text}>
-          <Text style={{ color: "grey" }}>$</Text>
-          <Text style={styles.amount}>{target.toFixed(2)}</Text>
+          <View style={styles.text}>
+            <Text style={{ color: "grey" }}>$</Text>
+            <Text style={styles.amount}>{props.target.toFixed(2)}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

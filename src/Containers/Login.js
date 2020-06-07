@@ -1,7 +1,7 @@
 import * as React from "react";
 import ValidationComponent from "react-native-form-validator";
 import firebase from "../../firebaseDb";
-import { StyleSheet, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 import {
   Container,
   Content,
@@ -12,6 +12,7 @@ import {
   Icon,
   Toast,
 } from "native-base";
+import { Ionicons } from "@expo/vector-icons";
 import { GlobalStyle } from "../styles/GlobalStyles";
 
 export default class Login extends ValidationComponent {
@@ -91,7 +92,8 @@ export default class Login extends ValidationComponent {
           />
           <Form>
             <Item floatingLabel style={GlobalStyle.authTextField}>
-              <Icon name="mail" style={GlobalStyle.authIconStyle} />
+              <Ionicons name="ios-mail" size={30} style={GlobalStyle.authIconStyle} />
+
               <Input
                 placeholder="Email"
                 autoCorrect={false}
@@ -106,8 +108,7 @@ export default class Login extends ValidationComponent {
             )}
 
             <Item floatingLabel style={GlobalStyle.authTextField}>
-              {/* <Label>Password</Label> */}
-              <Icon name="lock" style={GlobalStyle.authIconStyle} />
+              <Ionicons name="ios-lock" size={30} style={GlobalStyle.authIconStyle} />
               <Input
                 placeholder="Password"
                 autoCorrect={false}
