@@ -1,25 +1,21 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { Container, Header, Title, Content, List, ListItem } from "native-base";
+import { StyleSheet, Text, View } from "react-native";
+import { Container, Content } from "native-base";
 import { YellowBox } from "react-native";
+import RNPickerSelect from 'react-native-picker-select';
 import firebase from "../../../firebaseDb";
 import DateList from "./DateList";
 
-class TransactionScreen extends React.Component {
-  constructor(props) {
-    super(props);
+const TransactionScreen = () => {
 
-    this.state = {
-      dates: [],
-    };
-  }
+  const [month, setMonth] = React.useState(new Date().toString().substr(4, 3));
+  const [dates, setDates] = React.useState([]);
 
-  componentDidMount() {
+  React.useEffect(() => {
     YellowBox.ignoreWarnings(["Setting a timer"]);
     let uid = firebase.auth().currentUser.uid;
-    let month = new Date().toString().substr(4, 3);
 
-    firebase
+    var unsubscribe = firebase
       .firestore()
       .collection("Users")
       .doc(uid)
@@ -33,24 +29,88 @@ class TransactionScreen extends React.Component {
             results.push(doc.id);
           }
         });
-        this.setState({ dates: results });
+        setDates(results);
       });
-  }
+    return unsubscribe;
+  }, [month]);
 
-  render() {
-    return (
-      <Container>
-        <Header>
-          <Title style={{ fontSize: 20 }}>Transaction History</Title>
-        </Header>
-        <Content>
-          {this.state.dates.map((date) => {
-            return <DateList key={date} date={date} />;
+  return (
+    <Container style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Your monthly expense</Text>
+        <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+          <Text style={styles.text}>Select a month:</Text>
+          <RNPickerSelect
+            placeholder={{}}
+            textInputProps={styles.picker}
+            onValueChange={value => setMonth(value)}
+            items={[
+              { label: "Jun", value: "Jun" },
+              { label: "May", value: "May" },
+              { label: "Apr", value: "Apr" }
+            ]}
+          />
+        </View>
+        <Text style={styles.subtitle}>At a glance...</Text>
+      </View>
+      <Content>
+        <View style={styles.list}>
+          {dates.map((date) => {
+            return <DateList key={date} month={month} date={date} />;
           })}
-        </Content>
-      </Container>
-    );
-  }
+        </View>
+      </Content>
+    </Container>
+  );
+
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "ghostwhite"
+  },
+  header: {
+    paddingLeft: 30,
+    marginTop: 40,
+    marginBottom: 10
+  },
+  title: {
+    fontSize: 33,
+    fontWeight: "bold",
+    color: "maroon",
+    marginTop: 30,
+    shadowColor: "salmon",
+    shadowOpacity: 0.25,
+    shadowRadius: 2.8
+  },
+  subtitle: {
+    fontSize: 22,
+    fontStyle: "italic",
+    color: "gray",
+    marginTop: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowRadius: 3.8
+  },
+  text: {
+    fontSize: 20,
+    marginTop: 20
+  },
+  picker: {
+    marginLeft: 20,
+    marginTop: 21,
+    fontSize: 20
+  },
+  list: {
+    padding: 10,
+    margin: 15,
+    backgroundColor: "white",
+    shadowColor: "#000",
+    borderRadius: 20,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.8,
+    elevation: 5
+  }
+})
 
 export default TransactionScreen;
