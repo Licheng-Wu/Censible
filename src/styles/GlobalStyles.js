@@ -17,7 +17,7 @@ export const GlobalStyle = StyleSheet.create({
     color: "white",
   },
   authIconStyle: {
-    marginBottom: 2,
+    marginRight: 10,
     color: "#3F6DB3",
   },
   error: {

@@ -91,9 +91,8 @@ export default class Login extends ValidationComponent {
             source={require("../Images/logo3x.png")}
           />
           <Form>
-            <Item floatingLabel style={GlobalStyle.authTextField}>
+            <Item style={GlobalStyle.authTextField}>
               <Ionicons name="ios-mail" size={30} style={GlobalStyle.authIconStyle} />
-
               <Input
                 placeholder="Email"
                 autoCorrect={false}
@@ -107,7 +106,7 @@ export default class Login extends ValidationComponent {
               </Text>
             )}
 
-            <Item floatingLabel style={GlobalStyle.authTextField}>
+            <Item style={GlobalStyle.authTextField}>
               <Ionicons name="ios-lock" size={30} style={GlobalStyle.authIconStyle} />
               <Input
                 placeholder="Password"
