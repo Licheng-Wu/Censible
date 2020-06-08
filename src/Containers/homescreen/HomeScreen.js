@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Container, Content, Footer } from "native-base";
-import { View, StyleSheet, Text } from "react-native";
-import { Icon } from "react-native-elements";
+import { Container, Content, Form, Item, Input, Footer, Toast } from "native-base";
+import { View, StyleSheet, Text, Modal, TouchableHighlight } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import DataPieChart from "./DataPieChart";
-import MonthlyExpense from "./MonthlyExpense";
+import MonthlyExpense, { } from "./MonthlyExpense";
 import firebase from "../../../firebaseDb";
 
 const HomeScreen = ({ navigation }) => {
@@ -16,6 +16,10 @@ const HomeScreen = ({ navigation }) => {
   const [entertainmentPrice, setEntertainmentPrice] = React.useState(0);
   const [sportsPrice, setSportsPrice] = React.useState(0);
   const [otherPrice, setOtherPrice] = React.useState(0);
+
+  const [targetText, setTargetText] = React.useState("0");
+  const [target, setTarget] = React.useState(0);
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   React.useEffect(() => {
     let uid = firebase.auth().currentUser.uid;
@@ -68,7 +72,11 @@ const HomeScreen = ({ navigation }) => {
   return (
     <Container>
       <Content contentContainerStyle={{ backgroundColor: "#F4FCFF", flex: 1 }}>
-        <MonthlyExpense expense={expense} />
+        <MonthlyExpense
+          expense={expense}
+          target={parseFloat(target)}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible} />
         <View style={styles.chart}>
           <DataPieChart
             style={styles.chart}
@@ -80,13 +88,70 @@ const HomeScreen = ({ navigation }) => {
             others={parseFloat(otherPrice.toFixed(2))}
           />
         </View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => null}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Set your monthly target!</Text>
+              <Form>
+                <Item style={{ width: 150, height: 30 }}>
+                  <Input
+                    keyboardType="numeric"
+                    placeholder="Target"
+                    placeholderTextColor="#bfc6ea"
+                    onChangeText={text => setTargetText(text)}
+                    value={targetText}
+                  />
+                </Item>
+              </Form>
+              <View style={{ flexDirection: "row"}}>
+                <TouchableHighlight
+                  style={styles.button}
+                  onPress={() => {
+                    if (targetText > 0) {
+                      setTarget(parseFloat(targetText));
+                      setModalVisible(!modalVisible);
+                      Toast.show({
+                        text: "Update successful!",
+                        duration: 3000,
+                        buttonText: "Okay",
+                        type: "success",
+                        style: { marginBottom: 40 }
+                      });
+                    } else {
+                      Toast.show({
+                        text: "Invalid amount.",
+                        buttonText: "Okay",
+                        duration: 3000,
+                        type: "warning",
+                        position: "top",
+                        style: { marginTop: 100 }
+                      });
+                    }
+                  }}
+                >
+                  <Text style={styles.textStyle}>Update</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  style={{ ...styles.button, backgroundColor: "red" }}
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text style={styles.textStyle}>Cancel</Text>
+                </TouchableHighlight>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </Content>
       <Footer style={styles.footer}>
-        <Icon
-          reverse
-          name="ios-add"
+        <Ionicons
+          name="ios-add-circle-outline"
           color="#529FF3"
-          type="ionicon"
+          size={45}
+          style={{ marginTop: 10 }}
           onPress={() => navigation.navigate("Add Expense")}
         />
       </Footer>
@@ -109,6 +174,49 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     margin: 12,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 20,
+    color: "gray"
+  },
+  button: {
+    backgroundColor: "#2196F3",
+    borderRadius: 20,
+    width: 100,
+    padding: 12,
+    elevation: 2,
+    marginTop: 20,
+    marginLeft: 10,
+    marginRight: 10
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18
   },
   footer: {
     marginBottom: 20,

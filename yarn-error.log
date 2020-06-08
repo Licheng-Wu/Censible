@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add react-native-chart-kit
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add react-native-permissions
 
 PATH: 
   C:\Python38\Scripts\;C:\Python38\;C:\Program Files\Java\jdk-11.0.6\bin;C:\Program Files (x86)\Vim\vim82;c:\WINDOWS\System32\WBem;C:\ProgramData\chocolatey\bin;C:\Windows\System32\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files (x86)\Yarn\bin\;C:\Users\nicho\AppData\Local\Microsoft\WindowsApps;C:\Users\nicho\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\nicho\AppData\Local\GitHubDesktop\bin;C:\Users\nicho\AppData\Roaming\npm;C:\Users\nicho\AppData\Local\Yarn\bin
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: EPERM: operation not permitted, unlink 'C:\Users\nicho\OneDrive\Documents\NUS\Orbital\Censible\node_modules\@babel\generator\node_modules\.bin'
+  Error: EPERM: operation not permitted, unlink 'C:\Users\nicho\OneDrive\Desktop\Censible\node_modules\@babel\generator\node_modules\.bin'
 
 npm manifest: 
   {
@@ -41,9 +41,12 @@ npm manifest:
       "react-dom": "~16.9.0",
       "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz",
       "react-native-chart-kit": "^5.6.0",
+      "react-native-dotenv": "^0.2.0",
+      "react-native-dropdown-picker": "^2.1.4",
       "react-native-elements": "^2.0.0",
       "react-native-form-validator": "^0.3.2",
       "react-native-gesture-handler": "^1.6.1",
+      "react-native-maps": "0.27.1",
       "react-native-reanimated": "^1.7.1",
       "react-native-safe-area-context": "^0.7.3",
       "react-native-screens": "^2.2.0",
@@ -1997,6 +2000,13 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
     integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
   
+  babel-plugin-dotenv@0.1.1:
+    version "0.1.1"
+    resolved "https://registry.yarnpkg.com/babel-plugin-dotenv/-/babel-plugin-dotenv-0.1.1.tgz#9c8faea67a7c034fe7e94099187ab2e7573400bc"
+    integrity sha1-nI+upnp8A0/n6UCZGHqy51c0ALw=
+    dependencies:
+      dotenv "^2.0.0"
+  
   babel-plugin-dynamic-import-node@^2.3.3:
     version "2.3.3"
     resolved "https://registry.yarnpkg.com/babel-plugin-dynamic-import-node/-/babel-plugin-dynamic-import-node-2.3.3.tgz#84fda19c976ec5c6defef57f9427b3def66e17a3"
@@ -2849,6 +2859,11 @@ Lockfile:
     dependencies:
       dom-serializer "0"
       domelementtype "1"
+  
+  dotenv@^2.0.0:
+    version "2.0.0"
+    resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-2.0.0.tgz#bd759c357aaa70365e01c96b7b0bec08a6e0d949"
+    integrity sha1-vXWcNXqqcDZeAclrewvsCKbg2Uk=
   
   ee-first@1.1.1:
     version "1.1.1"
@@ -5520,6 +5535,13 @@ Lockfile:
       paths-js "^0.4.10"
       point-in-polygon "^1.0.1"
   
+  react-native-dotenv@^0.2.0:
+    version "0.2.0"
+    resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-0.2.0.tgz#311551cb6a35a3dcfede648bded55c0e3ece579d"
+    integrity sha1-MRVRy2o1o9z+3mSL3tVcDj7OV50=
+    dependencies:
+      babel-plugin-dotenv "0.1.1"
+  
   react-native-drawer@2.5.1:
     version "2.5.1"
     resolved "https://registry.yarnpkg.com/react-native-drawer/-/react-native-drawer-2.5.1.tgz#08b9314184f48c724f1b467f8859797369798654"
@@ -5527,6 +5549,14 @@ Lockfile:
     dependencies:
       prop-types "^15.5.8"
       tween-functions "^1.0.1"
+  
+  react-native-dropdown-picker@^2.1.4:
+    version "2.1.4"
+    resolved "https://registry.yarnpkg.com/react-native-dropdown-picker/-/react-native-dropdown-picker-2.1.4.tgz#8931c624e4d56c4546e89c185246ef4a9f887fd5"
+    integrity sha512-tb38IbCgM1ZuXaaugnD/hfGz0W39KNEuZMS4u+Qe+jnEnWHB8dNYYe+ci5mOpdc1O3cuArCktujNADFeEu3XZA==
+    dependencies:
+      prop-types "^15.7.2"
+      react-native-vector-icons "^6.6.0"
   
   react-native-easy-grid@0.2.2:
     version "0.2.2"
@@ -5579,6 +5609,11 @@ Lockfile:
     dependencies:
       prop-types "^15.6.2"
       react-native-iphone-x-helper "^1.0.3"
+  
+  react-native-maps@0.27.1:
+    version "0.27.1"
+    resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.27.1.tgz#2f10cd417bb2fd938c9e015b1c9b6d9b1a44b97f"
+    integrity sha512-HygBkZBecTnIVRYrSiLRAvu4OmXOYso/A7c6Cy73HkOh9CgGV8Ap5eBea24tvmFGptjj5Hg8AJ94/YbmWK1Okw==
   
   react-native-ratings@^6.5.0:
     version "6.5.0"

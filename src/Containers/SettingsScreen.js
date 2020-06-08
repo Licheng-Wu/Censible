@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import firebase from 'firebase';
-import { Icon } from 'react-native-elements';
+import { Ionicons } from "@expo/vector-icons";
+
 const Settings = () => {
 
   signOut = () =>
@@ -19,11 +20,10 @@ const Settings = () => {
 
   return (
     <View style={styles.container}>
-      <Icon
-        reverse
+      <Ionicons
         name="ios-log-out"
         color="#529FF3"
-        type="ionicon"
+        size={40}
         onPress={signOut}
       />
     </View>
