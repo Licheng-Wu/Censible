@@ -1,9 +1,23 @@
 import * as React from "react";
-import { Container, Content, Form, Item, Input, Footer, Toast } from "native-base";
-import { View, StyleSheet, Text, Modal, TouchableHighlight } from "react-native";
+import {
+  Container,
+  Content,
+  Form,
+  Item,
+  Input,
+  Footer,
+  Toast,
+} from "native-base";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Modal,
+  TouchableHighlight,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DataPieChart from "./DataPieChart";
-import MonthlyExpense, { } from "./MonthlyExpense";
+import MonthlyExpense from "./MonthlyExpense";
 import firebase from "../../../firebaseDb";
 
 const HomeScreen = ({ navigation }) => {
@@ -76,7 +90,8 @@ const HomeScreen = ({ navigation }) => {
           expense={expense}
           target={parseFloat(target)}
           modalVisible={modalVisible}
-          setModalVisible={setModalVisible} />
+          setModalVisible={setModalVisible}
+        />
         <View style={styles.chart}>
           <DataPieChart
             style={styles.chart}
@@ -103,12 +118,12 @@ const HomeScreen = ({ navigation }) => {
                     keyboardType="numeric"
                     placeholder="Target"
                     placeholderTextColor="#bfc6ea"
-                    onChangeText={text => setTargetText(text)}
+                    onChangeText={(text) => setTargetText(text)}
                     value={targetText}
                   />
                 </Item>
               </Form>
-              <View style={{ flexDirection: "row"}}>
+              <View style={{ flexDirection: "row" }}>
                 <TouchableHighlight
                   style={styles.button}
                   onPress={() => {
@@ -120,7 +135,7 @@ const HomeScreen = ({ navigation }) => {
                         duration: 3000,
                         buttonText: "Okay",
                         type: "success",
-                        style: { marginBottom: 40 }
+                        style: { marginBottom: 40 },
                       });
                     } else {
                       Toast.show({
@@ -129,7 +144,7 @@ const HomeScreen = ({ navigation }) => {
                         duration: 3000,
                         type: "warning",
                         position: "top",
-                        style: { marginTop: 100 }
+                        style: { marginTop: 100 },
                       });
                     }
                   }}
@@ -138,7 +153,8 @@ const HomeScreen = ({ navigation }) => {
                 </TouchableHighlight>
                 <TouchableHighlight
                   style={{ ...styles.button, backgroundColor: "red" }}
-                  onPress={() => setModalVisible(!modalVisible)}>
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
                   <Text style={styles.textStyle}>Cancel</Text>
                 </TouchableHighlight>
               </View>
@@ -179,7 +195,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: 22,
   },
   modalView: {
     margin: 20,
@@ -190,17 +206,17 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
     fontSize: 20,
-    color: "gray"
+    color: "gray",
   },
   button: {
     backgroundColor: "#2196F3",
@@ -210,13 +226,13 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginTop: 20,
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 18
+    fontSize: 18,
   },
   footer: {
     marginBottom: 20,

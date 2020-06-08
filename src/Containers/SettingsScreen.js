@@ -1,10 +1,9 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import firebase from 'firebase';
+import React from "react";
+import { StyleSheet, View, Text } from "react-native";
+import firebase from "firebase";
 import { Ionicons } from "@expo/vector-icons";
 
 const Settings = () => {
-
   signOut = () =>
     firebase
       .auth()
@@ -13,7 +12,7 @@ const Settings = () => {
         // Sign-out successful.
         console.log("Signed out");
       })
-      .catch(error => {
+      .catch((error) => {
         // An error happened.
         console.log(error.toString());
       });
@@ -27,15 +26,15 @@ const Settings = () => {
         onPress={signOut}
       />
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default Settings;

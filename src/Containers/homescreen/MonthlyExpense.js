@@ -1,8 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
-const MonthlyExpense = props => {
-
+const MonthlyExpense = (props) => {
   const balance = props.target - props.expense;
 
   return (
@@ -27,11 +26,13 @@ const MonthlyExpense = props => {
         </View>
       </View>
 
-      <TouchableOpacity onPress={() => props.setModalVisible(! props.modalVisible)}>
+      <TouchableOpacity
+        onPress={() => props.setModalVisible(!props.modalVisible)}
+      >
         <View style={styles.items}>
           <Text style={{ color: "black", fontSize: 16, textAlign: "center" }}>
             Target
-        </Text>
+          </Text>
           <View style={styles.text}>
             <Text style={{ color: "grey" }}>$</Text>
             <Text style={styles.amount}>{props.target.toFixed(2)}</Text>

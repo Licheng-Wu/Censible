@@ -5,14 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { deleteExpense } from "../../../ExpenseAPI";
 
 const TransactionDetails = ({ route, navigation }) => {
-  const {
-    id,
-    name,
-    price,
-    category,
-    date,
-    description,
-  } = route.params;
+  const { id, name, price, category, date, description } = route.params;
 
   const confirmDelete = () => {
     Alert.alert(
@@ -27,7 +20,7 @@ const TransactionDetails = ({ route, navigation }) => {
               price: price,
               category: category,
               date: date,
-            })
+            });
             navigation.goBack();
           },
           style: "destructive",

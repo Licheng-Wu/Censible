@@ -31,14 +31,13 @@ export default class ExploreScreen extends Component {
 
     const userLocation = await Location.getCurrentPositionAsync();
 
-    this.setState({ 
+    this.setState({
       initialRegion: {
         latitude: userLocation.coords.latitude,
         longitude: userLocation.coords.longitude,
         latitudeDelta: 0.01,
-        longitudeDelta: 0.005
-      }
-       
+        longitudeDelta: 0.005,
+      },
     });
 
     console.log(JSON.stringify(this.state.initialRegion.latitude));
@@ -52,21 +51,18 @@ export default class ExploreScreen extends Component {
         options: BUTTONS,
         cancelButtonIndex: 4,
         destructiveButtonIndex: 4,
-        title: "Choose a category"
+        title: "Choose a category",
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (buttonIndex === 0) {
           this.getNearbyPlaces();
         } else if (buttonIndex === 1) {
-
         } else if (buttonIndex === 2) {
-
         } else {
-
-        } 
+        }
       }
-    )
-  }
+    );
+  };
 
   getNearbyPlaces = () => {
     console.log("get");
@@ -83,11 +79,18 @@ export default class ExploreScreen extends Component {
 
     return fetch(
       "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
-        "location=" + latitude + "," + longitude +
-        "&radius=" + radius +
-        "&type=" + placeType +
-        "&maxprice=" + price +
-        "&key=" + API_KEY
+        "location=" +
+        latitude +
+        "," +
+        longitude +
+        "&radius=" +
+        radius +
+        "&type=" +
+        placeType +
+        "&maxprice=" +
+        price +
+        "&key=" +
+        API_KEY
     )
       .then((response) => response.json())
       .then((json) => {
@@ -118,7 +121,7 @@ export default class ExploreScreen extends Component {
         <MapView
           style={{ flex: 1, zIndex: -1 }}
           provider={PROVIDER_GOOGLE}
-          ref={map => this.map = map}
+          ref={(map) => (this.map = map)}
           showsUserLocation
           initialRegion={this.state.initialRegion}
         >
@@ -152,7 +155,7 @@ export default class ExploreScreen extends Component {
             name="md-compass"
             color="#378BE5"
             size={55}
-            style={{borderRadius: 10}}
+            style={{ borderRadius: 10 }}
             onPress={this.chooseCategory}
             // onPress={this.testingAPI}
           />

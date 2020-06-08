@@ -92,7 +92,11 @@ export default class Login extends ValidationComponent {
           />
           <Form>
             <Item floatingLabel style={GlobalStyle.authTextField}>
-              <Ionicons name="ios-mail" size={30} style={GlobalStyle.authIconStyle} />
+              <Ionicons
+                name="ios-mail"
+                size={30}
+                style={GlobalStyle.authIconStyle}
+              />
 
               <Input
                 placeholder="Email"
@@ -108,7 +112,11 @@ export default class Login extends ValidationComponent {
             )}
 
             <Item floatingLabel style={GlobalStyle.authTextField}>
-              <Ionicons name="ios-lock" size={30} style={GlobalStyle.authIconStyle} />
+              <Ionicons
+                name="ios-lock"
+                size={30}
+                style={GlobalStyle.authIconStyle}
+              />
               <Input
                 placeholder="Password"
                 autoCorrect={false}
