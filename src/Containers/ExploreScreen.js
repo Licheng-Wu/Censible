@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, Platform } from "react-native";
 import { API_KEY } from "react-native-dotenv";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import { Button } from "native-base";
-import { Icon } from "react-native-elements";
+import { Button, ActionSheet } from "native-base";
+import { Ionicons } from "@expo/vector-icons";
 import * as Permissions from "expo-permissions";
 import * as Location from "expo-location";
 
@@ -12,17 +12,13 @@ export default class ExploreScreen extends Component {
     super(props);
 
     this.state = {
+      userLocation: {},
       places: [],
       errorMessage: "",
-      userLocation: {},
     };
 
     this.requestLocationPermission();
   }
-
-  // componentWillMount() {
-  //   this.requestLocationPermission();
-  // }
 
   requestLocationPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -35,10 +31,42 @@ export default class ExploreScreen extends Component {
 
     const userLocation = await Location.getCurrentPositionAsync();
 
-    this.setState({ userLocation: userLocation });
-    // console.log(JSON.stringify(this.state.userLocation.coords.latitude));
-    // console.log(JSON.stringify(this.state.userLocation.coords.longitude));
+    this.setState({ 
+      initialRegion: {
+        latitude: userLocation.coords.latitude,
+        longitude: userLocation.coords.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.005
+      }
+       
+    });
+
+    console.log(JSON.stringify(this.state.initialRegion.latitude));
+    console.log(JSON.stringify(this.state.initialRegion.longitude));
   };
+
+  chooseCategory = () => {
+    var BUTTONS = ["Food", "Education", "Entertainment", "Sports", "Cancel"];
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: 4,
+        destructiveButtonIndex: 4,
+        title: "Choose a category"
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          this.getNearbyPlaces();
+        } else if (buttonIndex === 1) {
+
+        } else if (buttonIndex === 2) {
+
+        } else {
+
+        } 
+      }
+    )
+  }
 
   getNearbyPlaces = () => {
     console.log("get");
@@ -47,40 +75,31 @@ export default class ExploreScreen extends Component {
 
     // Orchard Road
     // lat: 1.304833, long: 103.831833
+
+    const { latitude, longitude } = this.state.initialRegion;
+    let radius = 1500;
+    let placeType = "restaurant";
+    let price = 4;
+
     return fetch(
       "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
-        "location=" +
-        this.state.userLocation.coords.latitude +
-        "," +
-        this.state.userLocation.coords.longitude +
-        "&" +
-        "radius=1500&" +
-        "type=restaurants&" +
-        "maxprice=2&" +
-        "key=" +
-        API_KEY
+        "location=" + latitude + "," + longitude +
+        "&radius=" + radius +
+        "&type=" + placeType +
+        "&maxprice=" + price +
+        "&key=" + API_KEY
     )
       .then((response) => response.json())
       .then((json) => {
         const tempHolder = [];
         let id = 0;
-        let latitude;
-        let longitude;
-        let name;
-        let vicinity;
-        let obj;
-
         json.results.forEach((place) => {
-          latitude = place.geometry.location.lat;
-          longitude = place.geometry.location.lng;
-          name = place.name;
-          vicinity = place.vicinity;
-          obj = {
+          let obj = {
             id: id,
-            latitude: latitude,
-            longitude: longitude,
-            name: name,
-            vicinity: vicinity,
+            latitude: place.geometry.location.lat,
+            longitude: place.geometry.location.lng,
+            name: place.name,
+            vicinity: place.vicinity,
           };
           id++;
           tempHolder.push(obj);
@@ -99,13 +118,9 @@ export default class ExploreScreen extends Component {
         <MapView
           style={{ flex: 1, zIndex: -1 }}
           provider={PROVIDER_GOOGLE}
+          ref={map => this.map = map}
           showsUserLocation
-          initialRegion={{
-            latitude: 1.3521,
-            longitude: 103.8198,
-            latitudeDelta: 0.8922,
-            longitudeDelta: 0.2421,
-          }}
+          initialRegion={this.state.initialRegion}
         >
           {this.state.places.map((place) => {
             return (
@@ -126,18 +141,19 @@ export default class ExploreScreen extends Component {
             flex: 1,
             position: "absolute",
             width: 50,
-            height: 50,
+            height: 60,
             top: "90%", // to align vertically at the bottom
             alignSelf: "center", // to align horizontally center
             zIndex: 10,
           }}
         >
-          <Icon
+          <Ionicons
             reverse
-            name="explore"
+            name="md-compass"
             color="#378BE5"
-            // onPress={this.requestLocationPermission}
-            onPress={this.getNearbyPlaces}
+            size={55}
+            style={{borderRadius: 10}}
+            onPress={this.chooseCategory}
             // onPress={this.testingAPI}
           />
         </View>

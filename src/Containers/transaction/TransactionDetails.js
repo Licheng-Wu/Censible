@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text, Alert } from "react-native";
 import { Container, Title, Content, Button } from "native-base";
-import { Icon } from "react-native-elements";
+import { Ionicons } from "@expo/vector-icons";
 import { deleteExpense } from "../../../ExpenseAPI";
 
 const TransactionDetails = ({ route, navigation }) => {
@@ -69,11 +69,10 @@ const TransactionDetails = ({ route, navigation }) => {
         </View>
 
         <View style={styles.buttons}>
-          <Icon
+          <Ionicons
             name="ios-create"
             size={40}
             color="#529FF3"
-            type="ionicon"
             onPress={() =>
               navigation.navigate("UpdateExpenseScreen", {
                 id: id,
@@ -85,11 +84,10 @@ const TransactionDetails = ({ route, navigation }) => {
               })
             }
           />
-          <Icon
+          <Ionicons
             name="ios-trash"
             size={40}
             color="red"
-            type="ionicon"
             onPress={() => confirmDelete()}
           />
         </View>
