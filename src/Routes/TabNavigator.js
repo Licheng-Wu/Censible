@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../Containers/homescreen/HomeScreen";
-import ExploreScreen from "../Containers/ExploreScreen";
+import ExploreScreen from "../Containers/explore/ExploreScreen";
 import AddExpenseScreen from "../Containers/AddExpenseScreen";
 import TransactionScreen from "../Containers/transaction/TransactionScreen"
 import Settings from "../Containers/SettingsScreen";

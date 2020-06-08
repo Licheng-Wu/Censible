@@ -1,6 +1,6 @@
 import * as React from "react";
 import ValidationComponent from "react-native-form-validator";
-import firebase from "../../firebaseDb";
+import firebase from "../../../firebaseDb";
 import { StyleSheet, View, Text, Image } from "react-native";
 import {
   Container,
@@ -13,7 +13,7 @@ import {
   Toast,
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
-import { GlobalStyle } from "../styles/GlobalStyles";
+import { GlobalStyle } from "../../styles/GlobalStyles";
 
 export default class Login extends ValidationComponent {
   constructor(props) {
@@ -88,7 +88,7 @@ export default class Login extends ValidationComponent {
           {/* <Text style={styles.censible}>Censible</Text> */}
           <Image
             style={styles.image}
-            source={require("../Images/logo3x.png")}
+            source={require("../../Images/logo3x.png")}
           />
           <Form>
             <Item style={GlobalStyle.authTextField}>

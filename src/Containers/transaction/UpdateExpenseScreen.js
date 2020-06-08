@@ -13,6 +13,7 @@ import {
   Toast,
 } from "native-base";
 import { StyleSheet, Text, View, Platform } from "react-native";
+import RNPickerSelect from 'react-native-picker-select';
 import { addExpense, deleteExpense } from "../../../ExpenseAPI"
 
 export default class UpdateExpenseScreen extends Component {
@@ -70,7 +71,7 @@ export default class UpdateExpenseScreen extends Component {
   handleDescription = (text) => this.setState({ description: text });
 
   handleDate = (date) => this.setState({ newChosenDate: date.toString().substr(4) });
-  
+
   render() {
     const {
       item,
@@ -96,21 +97,6 @@ export default class UpdateExpenseScreen extends Component {
                 value={newAmount.toString()}
               />
             </Item>
-            <Item picker style={styles.picker}>
-              <Picker
-                style={{ width: undefined }}
-                textStyle={{ marginLeft: 5 }}
-                selectedValue={newCategory}
-                onValueChange={this.handleCategory.bind(this)}
-              >
-                <Picker.Item label="Food" value="Food" />
-                <Picker.Item label="Transport" value="Transport" />
-                <Picker.Item label="Education" value="Education" />
-                <Picker.Item label="Entertainment" value="Entertainment" />
-                <Picker.Item label="Sports" value="Sports" />
-                <Picker.Item label="Others" value="Others" />
-              </Picker>
-            </Item>
             <Item last>
               <Input
                 placeholder="Description (Optional)"
@@ -120,7 +106,23 @@ export default class UpdateExpenseScreen extends Component {
                 value={description}
               />
             </Item>
-            <Item last style={styles.picker}>
+            <Item picker style={{ height: 50 }}>
+              <RNPickerSelect
+                placeholder={{ label: "Category", value: null }}
+                textInputProps={styles.pickerText}
+                value={newCategory}
+                onValueChange={this.handleCategory.bind(this)}
+                items={[
+                  { label: 'Food', value: 'Food' },
+                  { label: 'Transport', value: 'Transport' },
+                  { label: 'Education', value: 'Education' },
+                  { label: 'Entertainment', value: 'Entertainment' },
+                  { label: 'Sports', value: 'Sports' },
+                  { label: 'Others', value: 'Others' },
+                ]}
+              />
+            </Item>
+            <Item last style={styles.datePicker}>
               <DatePicker
                 defaultDate={new Date(chosenDate)}
                 minimumDate={new Date(2010, 0, 1)}
@@ -197,7 +199,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#3F6DB3",
   },
-  picker: {
+  pickerText: {
+    marginLeft: 19,
+    marginTop: 15,
+    fontSize: 17,
+    color: "black"
+  },
+  datePicker: {
     marginTop: 7,
   },
   button: {
@@ -210,3 +218,19 @@ const styles = StyleSheet.create({
     color: "white",
   }
 });
+
+{/* <Item picker style={styles.picker}>
+  <Picker
+    style={{ width: undefined }}
+    textStyle={{ marginLeft: 5 }}
+    selectedValue={newCategory}
+    onValueChange={this.handleCategory.bind(this)}
+  >
+    <Picker.Item label="Food" value="Food" />
+    <Picker.Item label="Transport" value="Transport" />
+    <Picker.Item label="Education" value="Education" />
+    <Picker.Item label="Entertainment" value="Entertainment" />
+    <Picker.Item label="Sports" value="Sports" />
+    <Picker.Item label="Others" value="Others" />
+  </Picker>
+</Item> */}
