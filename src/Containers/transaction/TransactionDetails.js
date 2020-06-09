@@ -93,7 +93,7 @@ export default TransactionDetails;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F4FCFF",
+    backgroundColor: "ghostwhite",
     flex: 1,
     justifyContent: "center",
     padding: 20,
@@ -113,6 +113,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-around",
     marginTop: 30,
+    margin: 5,
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowRadius: 3.8,
+    elevation: 5
   },
   field: {
     flexDirection: "row",

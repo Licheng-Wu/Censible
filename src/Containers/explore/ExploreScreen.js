@@ -6,19 +6,22 @@ import { Button, ActionSheet } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import * as Permissions from "expo-permissions";
 import * as Location from "expo-location";
+import PlaceFilteringModal from "./PlaceFilteringModal";
 
 export default class ExploreScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      userLocation: {},
       places: [],
       errorMessage: "",
+      modalVisible: false,
     };
 
     this.requestLocationPermission();
   }
+
+  setModalVisible = (modalVisible) => this.setState({ modalVisible });
 
   requestLocationPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -64,7 +67,7 @@ export default class ExploreScreen extends Component {
     );
   };
 
-  getNearbyPlaces = () => {
+  getNearbyPlaces = (rad, placeType, price) => {
     console.log("get");
     // Buangkok MRT
     // lat:  1.3829, long: 103.8934
@@ -73,25 +76,24 @@ export default class ExploreScreen extends Component {
     // lat: 1.304833, long: 103.831833
 
     const { latitude, longitude } = this.state.initialRegion;
-    let radius = 1500;
-    let placeType = "restaurant";
-    let price = 4;
+    let radius = rad * 1000;
 
-    return fetch(
+    let url =
       "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
-        "location=" +
-        latitude +
-        "," +
-        longitude +
-        "&radius=" +
-        radius +
-        "&type=" +
-        placeType +
-        "&maxprice=" +
-        price +
-        "&key=" +
-        API_KEY
-    )
+      "location=" +
+      latitude +
+      "," +
+      longitude +
+      "&radius=" +
+      radius +
+      "&type=" +
+      placeType +
+      "&maxprice=" +
+      price +
+      "&key=" +
+      API_KEY;
+
+    return fetch(url)
       .then((response) => response.json())
       .then((json) => {
         const tempHolder = [];
@@ -116,13 +118,15 @@ export default class ExploreScreen extends Component {
   };
 
   render() {
+    const { modalVisible } = this.state;
+
     return (
       <View style={{ flex: 1 }}>
         <MapView
           style={{ flex: 1, zIndex: -1 }}
           provider={PROVIDER_GOOGLE}
           ref={(map) => (this.map = map)}
-          showsUserLocation
+          showsUserLocation={true}
           initialRegion={this.state.initialRegion}
         >
           {this.state.places.map((place) => {
@@ -139,27 +143,22 @@ export default class ExploreScreen extends Component {
             );
           })}
         </MapView>
-        <View
-          style={{
-            flex: 1,
-            position: "absolute",
-            width: 50,
-            height: 60,
-            top: "90%", // to align vertically at the bottom
-            alignSelf: "center", // to align horizontally center
-            zIndex: 10,
-          }}
-        >
+        <View style={styles.icon}>
           <Ionicons
             reverse
             name="md-compass"
             color="#378BE5"
             size={55}
             style={{ borderRadius: 10 }}
-            onPress={this.chooseCategory}
+            onPress={() => this.setModalVisible(!modalVisible)}
             // onPress={this.testingAPI}
           />
         </View>
+        <PlaceFilteringModal
+          modalVisible={modalVisible}
+          setModalVisible={this.setModalVisible}
+          getNearbyPlaces={this.getNearbyPlaces}
+        />
       </View>
     );
   }
@@ -168,5 +167,14 @@ export default class ExploreScreen extends Component {
 const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  icon: {
+    flex: 1,
+    position: "absolute",
+    width: 50,
+    height: 60,
+    top: "90%", // to align vertically at the bottom
+    alignSelf: "center", // to align horizontally center
+    zIndex: 10,
   },
 });

@@ -1,14 +1,11 @@
 import React from "react";
-import { AppLoading } from "expo";
 import { Spinner, Root } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import TabNavigator from "./src/Routes/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
-import LoginStack from "./src/Routes/StackNavigator";
+import AuthStackNavigator from "./src/Routes/AuthStackNavigator";
 import firebase from "./firebaseDb";
-import SplashScreen from "./src/Containers/SplashScreen";
-import ModalStackNavigator from "./src/Routes/ModalStackNavigator";
 import ImageRecognition from "./src/Containers/ImageRecognition";
 
 export default class App extends React.Component {
@@ -59,7 +56,7 @@ export default class App extends React.Component {
       // <ImageRecognition />
       <Root>
         <NavigationContainer>
-          {this.state.isLoggedIn ? <TabNavigator /> : <LoginStack />}
+          {this.state.isLoggedIn ? <TabNavigator /> : <AuthStackNavigator />}
         </NavigationContainer>
       </Root>
     );

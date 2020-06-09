@@ -11,18 +11,18 @@ export const GlobalStyle = StyleSheet.create({
   authButton: {
     backgroundColor: "#3F6DB3",
     margin: 10,
-    marginTop: 30
+    marginTop: 30,
   },
   authButtonText: {
     color: "white",
   },
   authIconStyle: {
-    marginBottom: 2,
+    marginRight: 10,
     color: "#3F6DB3",
   },
   error: {
     justifyContent: "center",
     textAlign: "center",
-    color: "red"
-  }
+    color: "red",
+  },
 });
