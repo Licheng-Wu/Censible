@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ValidationComponent from 'react-native-form-validator';
-import firebase from "../../firebaseDb";
+import firebase from "../../../firebaseDb";
 import { StyleSheet, Text } from "react-native";
 import {
   Container,
@@ -12,7 +12,7 @@ import {
   Button,
   Label,
 } from "native-base";
-import { GlobalStyle } from "../styles/GlobalStyles";
+import { GlobalStyle } from "../../styles/GlobalStyles";
 
 export default class SignUp extends ValidationComponent {
   constructor(props) {

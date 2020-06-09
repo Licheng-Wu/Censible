@@ -1,20 +1,6 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableHighlight,
-  TouchableOpacity,
-} from "react-native";
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  List,
-  ListItem,
-  Separator,
-} from "native-base";
+import { StyleSheet, Text, View } from "react-native";
+import { List, ListItem, Separator } from "native-base";
 import firebase from "../../../firebaseDb";
 import { useNavigation } from "@react-navigation/native";
 
@@ -24,13 +10,12 @@ const DateList = (props) => {
 
   React.useEffect(() => {
     let uid = firebase.auth().currentUser.uid;
-    let month = new Date().toString().substr(4, 3);
 
     var unsubscribe = firebase
       .firestore()
       .collection("Users")
       .doc(uid)
-      .collection(month)
+      .collection(props.month)
       .doc(props.date)
       .collection("All Expenses")
       .orderBy("date", "desc")
@@ -51,8 +36,8 @@ const DateList = (props) => {
   if (data.length) {
     return (
       <List>
-        <Separator bordered style={{ height: 45 }}>
-          <Text style={{ fontSize: 15 }}>{props.date.substring(0, 6)}</Text>
+        <Separator style={styles.separator}>
+          <Text style={styles.separatorText}>{props.date.substring(0, 6)}</Text>
         </Separator>
         {data.map((txn) => {
           return (
@@ -88,6 +73,15 @@ const DateList = (props) => {
 };
 
 const styles = StyleSheet.create({
+  separator: {
+    height: 45,
+    marginTop: 10,
+    backgroundColor: "white"
+  },
+  separatorText: {
+    fontSize: 22,
+    fontWeight: "bold"
+  },
   item: {
     flexDirection: "row",
     justifyContent: "space-between",
