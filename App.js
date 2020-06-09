@@ -9,6 +9,7 @@ import LoginStack from "./src/Routes/StackNavigator";
 import firebase from "./firebaseDb";
 import SplashScreen from "./src/Containers/SplashScreen";
 import ModalStackNavigator from "./src/Routes/ModalStackNavigator";
+import ImageRecognition from "./src/Containers/ImageRecognition";
 
 export default class App extends React.Component {
   unsubscribe = null;
@@ -55,13 +56,10 @@ export default class App extends React.Component {
     }
 
     return (
+      // <ImageRecognition />
       <Root>
         <NavigationContainer>
-          {this.state.isLoggedIn ? (
-            <TabNavigator />
-          ) : (
-            <LoginStack />
-          )}
+          {this.state.isLoggedIn ? <TabNavigator /> : <LoginStack />}
         </NavigationContainer>
       </Root>
     );
