@@ -7,7 +7,6 @@ import * as Permissions from "expo-permissions";
 import * as ImagePicker from 'expo-image-picker';
 import * as jpeg from "jpeg-js";
 import * as mobilenet from "@tensorflow-models/mobilenet";
-import * as ImagePicker from "expo-image-picker";
 import cat from "../../assets/cat.jpg";
 import { Camera } from "expo-camera";
 
@@ -45,8 +44,8 @@ export default class ImageRecognition extends React.Component {
     // if (status !== "granted") {
     //   alert("Sorry, we need camera roll permissions to make this work!");
     // }
-    const { cameraStatus } = await Permissions.askAsync(Permissions.CAMERA);
-    if (cameraStatus !== "granted") {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    if (status !== "granted") {
       this.setState({ cameraStatus: false });
       alert("Sorry, we need camera permissions to make this work!");
     } else {
@@ -88,16 +87,11 @@ export default class ImageRecognition extends React.Component {
       console.log("Classifying");
       console.log(this.state.image);
       // References the image object which has the properties uri, width, and height
-      // const imageAssetPath = Image.resolveAssetSource(this.state.image);
+      const imageAssetPath = Image.resolveAssetSource(this.state.image);
       // console.log(imageAssetPath);
       // fetch returns a response
-      // const response = await fetch(imageAssetPath.uri, {}, { isBinary: true });
+      const response = await fetch(imageAssetPath.uri, {}, { isBinary: true });
 
-      const response = await fetch(
-        this.state.image.uri,
-        {},
-        { isBinary: true }
-      );
       console.log(response);
       // const response = await fetch(this.state.image, {}, { isBinary: true });
       // turn the response into an ArrayBuffer (binary data)
