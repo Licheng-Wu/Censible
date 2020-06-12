@@ -1,10 +1,16 @@
 import * as React from "react";
-import { View, StyleSheet, Text, Modal, TouchableHighlight, Slider } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Modal,
+  TouchableHighlight,
+  Slider,
+} from "react-native";
 import { Toast } from "native-base";
-import RNPickerSelect from 'react-native-picker-select';
+import RNPickerSelect from "react-native-picker-select";
 
-const PlaceFilteringModal = props => {
-
+const PlaceFilteringModal = (props) => {
   const [radius, setRadius] = React.useState(0);
   const [placeType, setPlaceType] = React.useState("");
   const [price, setPrice] = React.useState(1);
@@ -22,27 +28,29 @@ const PlaceFilteringModal = props => {
           <RNPickerSelect
             placeholder={{ label: "Category", value: null }}
             textInputProps={styles.pickerText}
-            onValueChange={value => setPlaceType(value)}
+            onValueChange={(value) => setPlaceType(value)}
             items={[
               { label: "Food", value: "restaurant" },
               { label: "Education", value: "book_store" },
-              { label: "Entertainment", value: "night_club" },
-              { label: "Sports", value: "gym" },
+              { label: "Cafe", value: "cafe" },
+              { label: "Groceries", value: "supermarket" },
             ]}
           />
-          <Text style={styles.modalText}>Search radius: {radius.toFixed(1)} km </Text>
+          <Text style={styles.modalText}>
+            Search radius: {radius.toFixed(1)} km{" "}
+          </Text>
           <Slider
-            style={{width: 250, height: 40}}
+            style={{ width: 250, height: 40 }}
             minimumValue={0}
             maximumValue={5}
-            onValueChange={value => setRadius(value)}
+            onValueChange={(value) => setRadius(value)}
           />
           <Text style={styles.modalText}>Price range: {price.toFixed(0)}</Text>
           <Slider
-            style={{width: 250, height: 40}}
+            style={{ width: 250, height: 40 }}
             minimumValue={1}
             maximumValue={4}
-            onValueChange={value => setPrice(value)}
+            onValueChange={(value) => setPrice(value)}
           />
           <View style={{ flexDirection: "row" }}>
             <TouchableHighlight
@@ -60,7 +68,7 @@ const PlaceFilteringModal = props => {
                     buttonText: "Okay",
                     duration: 3000,
                     type: "warning",
-                    style: { marginBottom: 84 }
+                    style: { marginBottom: 84 },
                   });
                 }
               }}
@@ -70,7 +78,7 @@ const PlaceFilteringModal = props => {
             <TouchableHighlight
               style={{ ...styles.button, backgroundColor: "red" }}
               onPress={() => {
-                props.setModalVisible(!props.modalVisible)
+                props.setModalVisible(!props.modalVisible);
                 setPlaceType("");
                 setRadius(0);
                 setPrice(1);
@@ -81,16 +89,16 @@ const PlaceFilteringModal = props => {
           </View>
         </View>
       </View>
-    </Modal >
-  )
-}
+    </Modal>
+  );
+};
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: 22,
   },
   modalView: {
     margin: 20,
@@ -101,18 +109,18 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
   },
   modalText: {
     marginTop: 10,
     marginBottom: 15,
     textAlign: "center",
     fontSize: 20,
-    color: "gray"
+    color: "gray",
   },
   button: {
     backgroundColor: "#2196F3",
@@ -122,17 +130,17 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginTop: 20,
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 18
+    fontSize: 18,
   },
   pickerText: {
     fontSize: 18,
-    alignSelf: "center"
+    alignSelf: "center",
   },
 });
 
