@@ -73,7 +73,6 @@ export default class AddExpenseScreen extends Component {
                 value={description}
               />
             </Item>
-            {/* <Item picker style={{ height: 50 }}> */}
             <RNPickerSelect
               placeholder={{ label: "Category", value: null }}
               textInputProps={styles.pickerText}
@@ -88,24 +87,19 @@ export default class AddExpenseScreen extends Component {
                 { label: "Others", value: "Others" },
               ]}
             />
-            {/* </Item> */}
-
-            <Item last style={styles.datePicker}>
-              <DatePicker
-                defaultDate={new Date()}
-                minimumDate={new Date(2010, 0, 1)}
-                maximumDate={new Date()}
-                locale={"en"}
-                modalTransparent={true}
-                animationType={"fade"}
-                androidMode={"default"}
-                placeHolderTextStyle={{ color: "#bfc6ea" }}
-                onDateChange={this.handleDate.bind(this)}
-                disabled={false}
-              />
-            </Item>
+            <DatePicker
+              textStyle={styles.datePicker}
+              defaultDate={new Date()}
+              minimumDate={new Date(2010, 0, 1)}
+              maximumDate={new Date()}
+              locale={"en"}
+              modalTransparent={true}
+              animationType={"fade"}
+              androidMode={"default"}
+              onDateChange={this.handleDate.bind(this)}
+              disabled={false}
+            />
           </Form>
-
           <Button
             full
             rounded
@@ -183,12 +177,13 @@ const styles = StyleSheet.create({
   },
   pickerText: {
     marginLeft: 19,
-    marginTop: 15,
+    marginTop: 20,
     fontSize: 17,
     color: "black",
   },
   datePicker: {
-    marginTop: 7,
+    marginTop: 10,
+    marginLeft: 10
   },
   button: {
     marginTop: 50,

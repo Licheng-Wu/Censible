@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, Platform } from "react-native";
 import { API_KEY } from "react-native-dotenv";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import { Button, ActionSheet } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import * as Permissions from "expo-permissions";
 import * as Location from "expo-location";
@@ -45,26 +44,6 @@ export default class ExploreScreen extends Component {
 
     console.log(JSON.stringify(this.state.initialRegion.latitude));
     console.log(JSON.stringify(this.state.initialRegion.longitude));
-  };
-
-  chooseCategory = () => {
-    var BUTTONS = ["Food", "Education", "Entertainment", "Sports", "Cancel"];
-    ActionSheet.show(
-      {
-        options: BUTTONS,
-        cancelButtonIndex: 4,
-        destructiveButtonIndex: 4,
-        title: "Choose a category",
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          this.getNearbyPlaces();
-        } else if (buttonIndex === 1) {
-        } else if (buttonIndex === 2) {
-        } else {
-        }
-      }
-    );
   };
 
   getNearbyPlaces = (rad, placeType, price) => {

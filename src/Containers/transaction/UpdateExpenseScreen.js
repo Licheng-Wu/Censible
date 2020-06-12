@@ -112,7 +112,6 @@ export default class UpdateExpenseScreen extends Component {
                 value={description}
               />
             </Item>
-            <Item picker style={{ height: 50 }}>
               <RNPickerSelect
                 placeholder={{ label: "Category", value: null }}
                 textInputProps={styles.pickerText}
@@ -127,9 +126,8 @@ export default class UpdateExpenseScreen extends Component {
                   { label: "Others", value: "Others" },
                 ]}
               />
-            </Item>
-            <Item last style={styles.datePicker}>
               <DatePicker
+                textStyle={styles.datePicker}
                 defaultDate={new Date(chosenDate)}
                 minimumDate={new Date(2010, 0, 1)}
                 maximumDate={new Date()}
@@ -141,7 +139,6 @@ export default class UpdateExpenseScreen extends Component {
                 onDateChange={this.handleDate.bind(this)}
                 disabled={false}
               />
-            </Item>
           </Form>
 
           <Button
@@ -207,12 +204,13 @@ const styles = StyleSheet.create({
   },
   pickerText: {
     marginLeft: 19,
-    marginTop: 15,
+    marginTop: 20,
     fontSize: 17,
     color: "black",
   },
   datePicker: {
-    marginTop: 7,
+    marginTop: 10,
+    marginLeft: 10
   },
   button: {
     marginTop: 50,
