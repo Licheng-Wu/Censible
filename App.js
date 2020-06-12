@@ -7,6 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthStackNavigator from "./src/Routes/AuthStackNavigator";
 import firebase from "./firebaseDb";
 import ImageRecognition from "./src/Containers/ImageRecognition";
+// import Testing from "./src/Containers/Testing";
 
 export default class App extends React.Component {
   unsubscribe = null;
@@ -54,6 +55,7 @@ export default class App extends React.Component {
 
     return (
       <ImageRecognition />
+      // <Testing />
       // <Root>
       //   <NavigationContainer>
       //     {this.state.isLoggedIn ? <TabNavigator /> : <AuthStackNavigator />}

@@ -7,7 +7,9 @@ import * as Permissions from "expo-permissions";
 import * as ImagePicker from 'expo-image-picker';
 import * as jpeg from "jpeg-js";
 import * as mobilenet from "@tensorflow-models/mobilenet";
+import * as ImagePicker from "expo-image-picker";
 import cat from "../../assets/cat.jpg";
+import { Camera } from "expo-camera";
 
 export default class ImageRecognition extends React.Component {
   constructor(props) {
@@ -17,7 +19,10 @@ export default class ImageRecognition extends React.Component {
       isTfReady: false,
       isModelReady: false,
       predictions: null,
-      image: null,
+      // image: cat,
+      image: false,
+      cameraStatus: null,
+      cameraRef: null,
     };
   }
 
@@ -31,16 +36,27 @@ export default class ImageRecognition extends React.Component {
     this.setState({ isModelReady: true });
     //Output in Expo console
     console.log(this.state.isModelReady);
+    // this.classifyImage();
     this.getPermissionAsync();
   }
 
   getPermissionAsync = async () => {
-    const { status, canAskAgain } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (status !== "granted") {
-      alert("Sorry, we need camera roll permissions to make this work!");
-      canAskAgain = true;
+    // const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    // if (status !== "granted") {
+    //   alert("Sorry, we need camera roll permissions to make this work!");
+    // }
+    const { cameraStatus } = await Permissions.askAsync(Permissions.CAMERA);
+    if (cameraStatus !== "granted") {
+      this.setState({ cameraStatus: false });
+      alert("Sorry, we need camera permissions to make this work!");
+    } else {
+      this.setState({ cameraStatus: true });
     }
-    console.log(status);
+
+    // const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    // if (status !== "granted") {
+    //   alert("Sorry, we need camera roll permissions to make this work!");
+    // }
   };
 
   imageToTensor(rawImageData) {
@@ -69,10 +85,21 @@ export default class ImageRecognition extends React.Component {
 
   classifyImage = async () => {
     try {
-      // References the imgae object which has the properties uri, width, and height
-      const imageAssetPath = Image.resolveAssetSource(this.state.image);
+      console.log("Classifying");
+      console.log(this.state.image);
+      // References the image object which has the properties uri, width, and height
+      // const imageAssetPath = Image.resolveAssetSource(this.state.image);
+      // console.log(imageAssetPath);
       // fetch returns a response
-      const response = await fetch(imageAssetPath.uri, {}, { isBinary: true });
+      // const response = await fetch(imageAssetPath.uri, {}, { isBinary: true });
+
+      const response = await fetch(
+        this.state.image.uri,
+        {},
+        { isBinary: true }
+      );
+      console.log(response);
+      // const response = await fetch(this.state.image, {}, { isBinary: true });
       // turn the response into an ArrayBuffer (binary data)
       const rawImageData = await response.arrayBuffer();
       const imageTensor = this.imageToTensor(rawImageData);
@@ -80,21 +107,22 @@ export default class ImageRecognition extends React.Component {
       this.setState({ predictions });
       console.log(predictions);
     } catch (error) {
+      console.log("error classifying");
       console.log(error);
     }
   };
 
   selectImage = async () => {
     try {
+      console.log("select image");
       let response = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
-        aspect: [4, 3]
+        aspect: [4, 3],
       });
-  
+
       if (!response.cancelled) {
         const source = { uri: response.uri };
-        console.log(source);
         this.setState({ image: source });
         this.classifyImage();
       }
@@ -104,46 +132,104 @@ export default class ImageRecognition extends React.Component {
   };
 
   render() {
-    const { isTfReady, isModelReady, predictions, image } = this.state
-
+    // if (this.state.image) {
+    //   console.log("if");
+    //   console.log(this.state.image);
+    //   return (
+    //     <View>
+    //       <Image source={this.state.image} />
+    //     </View>
+    //   );
+    // }
     return (
-      <View style={styles.container}>
-        <StatusBar barStyle='light-content' />
-        <View style={styles.loadingContainer}>
-          <Text style={styles.commonTextStyles}>
-            TFJS ready? {isTfReady ? <Text>✅</Text> : ''}
-          </Text>
+      // <View style={styles.container}>
+      //   <Text>
+      //     Model ready?{" "}
+      //     {this.state.isModelReady ? (
+      //       <Text>Yes</Text>
+      //     ) : (
+      //       <Text>Loading Model...</Text>
+      //     )}
+      //   </Text>
+      //   <Text>TFJS ready? {this.state.isTfReady ? <Text>Yes</Text> : ""}</Text>
+      //   <TouchableOpacity
+      //     // style={styles.imageWrapper}
+      //     onPress={this.state.isModelReady ? this.selectImage() : undefined}
+      //   >
+      //     {this.state.image && (
+      //       <Image source={this.state.image} style={styles.imageContainer} />
+      //     )}
 
-          <View style={styles.loadingModelContainer}>
-            <Text style={styles.text}>Model ready? </Text>
-            {isModelReady ? (
-              <Text style={styles.text}>✅</Text>
-            ) : (
-              <ActivityIndicator size='small' />
-            )}
-          </View>
+      //     {this.state.isModelReady && !this.state.image && (
+      //       <Text style={styles.transparentText}>Tap to choose image</Text>
+      //     )}
+      //   </TouchableOpacity>
+      // </View>
+      // <View>
+      <Camera
+        style={{ flex: 1 }}
+        type={Camera.Constants.Type.back}
+        ref={(ref) => {
+          this.camera = ref;
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "transparent",
+            justifyContent: "flex-end",
+          }}
+        >
+          <TouchableOpacity
+            style={{ alignSelf: "center" }}
+            onPress={async () => {
+              if (this.camera) {
+                const options = {
+                  quality: 1,
+                  base64: false,
+                  // fixOrientation: true,
+                  // exif: true,
+                };
+                let photo = await this.camera.takePictureAsync(options);
+                console.log(photo);
+                photo.height = 800;
+                photo.width = 600;
+                // console.log(photo.uri);
+                // photo.uri = "data:image/jpg;base64," + photo.uri;
+                // console.log("+++++++++++++++++++++++++++++++++++++++");
+                this.setState({ image: photo });
+                this.classifyImage();
+              }
+            }}
+          >
+            <View
+              style={{
+                borderWidth: 2,
+                // borderRadius: "50%",
+                borderColor: "white",
+                height: 50,
+                width: 50,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  borderWidth: 2,
+                  // borderRadius: "50%",
+                  borderColor: "white",
+                  height: 40,
+                  width: 40,
+                  backgroundColor: "white",
+                }}
+              ></View>
+            </View>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.imageWrapper}
-          onPress={isModelReady ? this.selectImage : undefined}>
-          {image && <Image source={image} style={styles.imageContainer} />}
-
-          {isModelReady && !image && (
-            <Text style={styles.transparentText}>Tap to choose image</Text>
-          )}
-        </TouchableOpacity>
-        <View style={styles.predictionWrapper}>
-          {isModelReady && image && (
-            <Text style={styles.text}>
-              Predictions: {predictions ? predictions[0].className : 'Predicting...'}
-            </Text>
-          )}
-        </View>
-        <View style={styles.footer}>
-          <Text style={styles.poweredBy}>Powered by:</Text>
-        </View>
-      </View>
-    )
+      </Camera>
+      // </View>
+    );
   }
 }
 
