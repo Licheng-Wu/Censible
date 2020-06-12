@@ -90,7 +90,7 @@ export default class ImageRecognition extends React.Component {
       // const imageAssetPath = Image.resolveAssetSource(this.state.image);
       // console.log(imageAssetPath);
       // fetch returns a response
-      const response = await fetch(imageAssetPath.uri, {}, { isBinary: true });
+      // const response = await fetch(imageAssetPath.uri, {}, { isBinary: true });
 
       const response = await fetch(
         this.state.image.uri,
