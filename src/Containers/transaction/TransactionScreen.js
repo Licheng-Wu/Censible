@@ -1,12 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Container, Content } from "native-base";
+import { Container, Content, Spinner } from "native-base";
 import { YellowBox } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import firebase from "../../../firebaseDb";
 import DateList from "./DateList";
 
 const TransactionScreen = () => {
+  const [loading, setLoading] = React.useState(true);
   const [month, setMonth] = React.useState(new Date().toString().substr(4, 3));
   const [dates, setDates] = React.useState([]);
 
@@ -29,11 +30,16 @@ const TransactionScreen = () => {
           }
         });
         setDates(results);
+        setLoading(false);
       });
     return unsubscribe;
   }, [month]);
 
   const renderDates = () => {
+    if (loading) {
+      return <Spinner style={{ flex: 1 }} />;
+    }
+
     if (dates.length) {
       return (
         <Content>

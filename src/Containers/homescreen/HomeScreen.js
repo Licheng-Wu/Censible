@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Container, Content, Footer, ActionSheet, Spinner } from "native-base";
+import { Container, ActionSheet, Spinner, Fab, Button } from "native-base";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DataPieChart from "./DataPieChart";
@@ -32,6 +32,9 @@ const HomeScreen = ({ navigation }) => {
 
   // For updating of monthly target
   const [targetModalVisible, setTargetModalVisible] = React.useState(false);
+
+  // To show FAB for add expense options
+  const [activeFab, setActiveFab] = React.useState(false);
 
   // Updates monthly expense and pie chart
   React.useEffect(() => {
@@ -92,16 +95,6 @@ const HomeScreen = ({ navigation }) => {
 
   // Loads Tensorflow model
   React.useEffect(() => {
-    // const loadTFJS = async () => {
-    //   await tf.ready();
-    //   setTfReady(true);
-    //   console.log(tfReady);
-    //   let model = await mobilenet.load();
-    //   setModel(model);
-    //   setModelReady(true);
-    //   console.log(modelReady);
-    // };
-    // loadTFJS();
     tf.ready().then(() => {
       setTfReady(true);
       console.log(tfReady);
@@ -209,105 +202,101 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  const renderPredictions = () => {
-    return (
-      <PredictionModal
-        predictions={predictions[0].className}
-        setPredictions={setPredictions} />
-    )
-  }
-
   return (
-    <Container>
-      <Content contentContainerStyle={{ backgroundColor: "#F4FCFF", flex: 1 }}>
-        <MonthlyExpense
-          expense={expense}
-          target={parseFloat(target)}
-          // target={target}
-          modalVisible={targetModalVisible}
-          setModalVisible={setTargetModalVisible}
+    <Container style={styles.container}>
+      <MonthlyExpense
+        expense={expense}
+        target={parseFloat(target)}
+        modalVisible={targetModalVisible}
+        setModalVisible={setTargetModalVisible}
+      />
+      <View style={styles.chart}>
+        <DataPieChart
+          food={parseFloat(foodPrice.toFixed(2))}
+          transport={parseFloat(transportPrice.toFixed(2))}
+          education={parseFloat(educationPrice.toFixed(2))}
+          entertainment={parseFloat(entertainmentPrice.toFixed(2))}
+          sports={parseFloat(sportsPrice.toFixed(2))}
+          others={parseFloat(otherPrice.toFixed(2))}
         />
-        <View style={styles.chart}>
-          <DataPieChart
-            style={styles.chart}
-            food={parseFloat(foodPrice.toFixed(2))}
-            transport={parseFloat(transportPrice.toFixed(2))}
-            education={parseFloat(educationPrice.toFixed(2))}
-            entertainment={parseFloat(entertainmentPrice.toFixed(2))}
-            sports={parseFloat(sportsPrice.toFixed(2))}
-            others={parseFloat(otherPrice.toFixed(2))}
+      </View>
+      <MonthlyTargetModal
+        modalVisible={targetModalVisible}
+        setModalVisible={setTargetModalVisible}
+      />
+      {loading && <Spinner style={styles.spinner} />}
+      {
+        predictions &&
+        <PredictionModal
+          predictions={predictions[0].className}
+          setPredictions={setPredictions}
+        />
+      }
+      {
+        (!loading) &&
+        <Fab
+          active={activeFab}
+          direction="up"
+          style={{ backgroundColor: '#5067FF' }}
+          position="bottomRight"
+          onPress={() => setActiveFab(!activeFab)}
+        >
+          <Ionicons
+            name="ios-add"
           />
-        </View>
-        <MonthlyTargetModal
-          modalVisible={targetModalVisible}
-          setModalVisible={setTargetModalVisible}
-        />
-        {loading && <Spinner style={{ flex: 1 }} />}
-        {predictions && renderPredictions()}
-      </Content>
-      <Footer style={styles.footer}>
-        <Ionicons
-          name="ios-add-circle-outline"
-          color="#529FF3"
-          size={45}
-          style={{ marginTop: 10 }}
-          onPress={() => {
-            const BUTTONS = [
-              "Add expense manually",
-              "Take a photo",
-              "Select a photo",
-              "Cancel",
-            ];
-            ActionSheet.show(
-              {
-                options: BUTTONS,
-                cancelButtonIndex: 3,
-                destructiveButtonIndex: 3,
-                title: "Add an expense",
-              },
-              (buttonIndex) => {
-                if (buttonIndex === 0) {
-                  navigation.navigate("Add Expense", {
-                    item: ""
-                  });
-                } else if (buttonIndex === 1) {
-                  launchCamera();
-                } else if (buttonIndex === 2) {
-                  selectImage();
-                }
-              }
-            );
-          }}
-        />
-      </Footer>
+          <Button
+            style={{ backgroundColor: '#34A34F' }}
+            onPress={launchCamera}
+          >
+            <Ionicons name="ios-camera" size={22} />
+          </Button>
+          <Button
+            style={{ backgroundColor: '#3B5998' }}
+            onPress={selectImage}
+          >
+            <Ionicons name="ios-image" size={18} />
+          </Button>
+          <Button
+            style={{ backgroundColor: '#DD5144' }}
+            onPress={() => {
+              navigation.navigate("Add Expense", {
+                item: ""
+              });
+            }}
+          >
+            <Ionicons name="ios-create" size={20} />
+          </Button>
+        </Fab>
+      }
     </Container>
   );
 };
 
 const styles = StyleSheet.create({
-  bodyContainer: {
+  container: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
+    backgroundColor: "ghostwhite",
+    padding: 10
   },
   chart: {
     backgroundColor: "white",
-    borderRadius: 10,
-    elevation: 3,
     justifyContent: "center",
     alignItems: "center",
-    padding: 5,
-    margin: 12,
+    padding: 15,
+    margin: 8,
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowRadius: 3.8,
+    elevation: 5,
   },
-  footer: {
-    marginBottom: 20,
-    flexDirection: "row",
-    backgroundColor: "#F4FCFF",
-    justifyContent: "space-around",
-    alignItems: "flex-start",
-    elevation: 0,
-    borderWidth: 0,
+  spinner: {
+    flex: 1,
+  },
+  button: {
+    marginTop: 150,
+    padding: 20,
+    alignSelf: "flex-end"
   },
 });
 
