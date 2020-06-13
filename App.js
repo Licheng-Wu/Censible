@@ -54,13 +54,13 @@ export default class App extends React.Component {
     }
 
     return (
-      <ImageRecognition />
+      // <ImageRecognition />
       // <Testing />
-      // <Root>
-      //   <NavigationContainer>
-      //     {this.state.isLoggedIn ? <TabNavigator /> : <AuthStackNavigator />}
-      //   </NavigationContainer>
-      // </Root>
+      <Root>
+        <NavigationContainer>
+          {this.state.isLoggedIn ? <TabNavigator /> : <AuthStackNavigator />}
+        </NavigationContainer>
+      </Root>
     );
   }
 }

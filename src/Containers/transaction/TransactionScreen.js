@@ -33,6 +33,26 @@ const TransactionScreen = () => {
     return unsubscribe;
   }, [month]);
 
+  const renderDates = () => {
+    if (dates.length) {
+      return (
+        <Content>
+          <View style={styles.list}>
+            {dates.map((date) => {
+              return <DateList key={date} month={month} date={date} />;
+            })}
+          </View>
+        </Content>
+      )
+    } else {
+      return (
+        <Text style={styles.emptyText}>
+          No expense recorded for the month!
+        </Text>
+      )
+    }
+  }
+
   return (
     <Container style={styles.container}>
       <View style={styles.header}>
@@ -53,13 +73,7 @@ const TransactionScreen = () => {
         </View>
         <Text style={styles.subtitle}>At a glance...</Text>
       </View>
-      <Content>
-        <View style={styles.list}>
-          {dates.map((date) => {
-            return <DateList key={date} month={month} date={date} />;
-          })}
-        </View>
-      </Content>
+      {renderDates()}
     </Container>
   );
 };
@@ -110,6 +124,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.8,
     elevation: 5,
   },
+  emptyText: {
+    fontSize: 20,
+    padding: 30,
+
+  }
 });
 
 export default TransactionScreen;

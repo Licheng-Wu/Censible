@@ -1,12 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, StatusBar, ActivityIndicator } from "react-native";
 import * as tf from "@tensorflow/tfjs";
 import { fetch } from "@tensorflow/tfjs-react-native";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
+import * as ImagePicker from 'expo-image-picker';
 import * as jpeg from "jpeg-js";
 import * as mobilenet from "@tensorflow-models/mobilenet";
-import * as ImagePicker from "expo-image-picker";
 import cat from "../../assets/cat.jpg";
 import { Camera } from "expo-camera";
 
@@ -44,8 +44,8 @@ export default class ImageRecognition extends React.Component {
     // if (status !== "granted") {
     //   alert("Sorry, we need camera roll permissions to make this work!");
     // }
-    const { cameraStatus } = await Permissions.askAsync(Permissions.CAMERA);
-    if (cameraStatus !== "granted") {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    if (status !== "granted") {
       this.setState({ cameraStatus: false });
       alert("Sorry, we need camera permissions to make this work!");
     } else {
@@ -87,16 +87,11 @@ export default class ImageRecognition extends React.Component {
       console.log("Classifying");
       console.log(this.state.image);
       // References the image object which has the properties uri, width, and height
-      // const imageAssetPath = Image.resolveAssetSource(this.state.image);
+      const imageAssetPath = Image.resolveAssetSource(this.state.image);
       // console.log(imageAssetPath);
       // fetch returns a response
-      // const response = await fetch(imageAssetPath.uri, {}, { isBinary: true });
+      const response = await fetch(imageAssetPath.uri, {}, { isBinary: true });
 
-      const response = await fetch(
-        this.state.image.uri,
-        {},
-        { isBinary: true }
-      );
       console.log(response);
       // const response = await fetch(this.state.image, {}, { isBinary: true });
       // turn the response into an ArrayBuffer (binary data)
@@ -235,8 +230,63 @@ export default class ImageRecognition extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#171f24',
+    alignItems: 'center'
   },
+  loadingContainer: {
+    marginTop: 80,
+    justifyContent: 'center'
+  },
+  text: {
+    color: '#ffffff',
+    fontSize: 16
+  },
+  loadingModelContainer: {
+    flexDirection: 'row',
+    marginTop: 10
+  },
+  imageWrapper: {
+    width: 280,
+    height: 280,
+    padding: 10,
+    borderColor: '#cf667f',
+    borderWidth: 5,
+    borderStyle: 'dashed',
+    marginTop: 40,
+    marginBottom: 10,
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  imageContainer: {
+    width: 250,
+    height: 250,
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    bottom: 10,
+    right: 10
+  },
+  predictionWrapper: {
+    height: 100,
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  transparentText: {
+    color: '#ffffff',
+    opacity: 0.7
+  },
+  footer: {
+    marginTop: 40
+  },
+  poweredBy: {
+    fontSize: 20,
+    color: '#e69e34',
+    marginBottom: 6
+  },
+  tfLogo: {
+    width: 125,
+    height: 70
+  }
 });
