@@ -11,8 +11,9 @@ import { fetch } from "@tensorflow/tfjs-react-native";
 import * as mobilenet from "@tensorflow-models/mobilenet";
 import * as Permissions from "expo-permissions";
 import { Camera } from "expo-camera";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import * as jpeg from "jpeg-js";
+import * as FileSystem from "expo-file-system";
 
 const HomeScreen = ({ navigation }) => {
   // Monthly Expense
@@ -97,7 +98,7 @@ const HomeScreen = ({ navigation }) => {
       setModel(model);
       setModelReady(true);
       console.log(modelReady);
-    }
+    };
     loadTFJS();
   }, [tfReady, modelReady]);
 
@@ -123,19 +124,24 @@ const HomeScreen = ({ navigation }) => {
     // Buffer is the data. And [height, width, 3] specifies the shape of the tensor
     // Height and width is the dimensions of the 2D layer, 3 refers to the number of layers
     return tf.tensor3d(buffer, [height, width, 3]);
-  }
+  };
 
   const classifyImage = async (uri) => {
     try {
-      console.log("Classifying");
+      console.log("Classifying uri: " + uri);
+      const imgB64 = await FileSystem.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      const imgBuffer = tf.util.encodeString(imgB64, "base64").buffer;
+      const rawImageData = new Uint8Array(imgBuffer);
       // References the image object which has the properties uri, width, and height
       // const imageAssetPath = Image.resolveAssetSource(image);
       // console.log(imageAssetPath);
       // fetch returns a response
-      const response = await fetch(uri, {}, { isBinary: true });
-      console.log(response);
+      // const response = await fetch(uri, {}, { isBinary: true });
+      // console.log(response);
       // turn the response into an ArrayBuffer (binary data)
-      const rawImageData = await response.arrayBuffer();
+      // const rawImageData = await response.arrayBuffer();
       const imageTensor = imageToTensor(rawImageData);
       const predictions = await model.classify(imageTensor);
       setPredictions(predictions);
@@ -166,7 +172,7 @@ const HomeScreen = ({ navigation }) => {
     try {
       const options = {
         quality: 1,
-        base64: false
+        base64: false,
       };
 
       const result = await ImagePicker.launchCameraAsync(options);
@@ -179,7 +185,7 @@ const HomeScreen = ({ navigation }) => {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const selectImage = async () => {
     getGalleryPermission();
@@ -187,7 +193,7 @@ const HomeScreen = ({ navigation }) => {
     try {
       const options = {
         quality: 1,
-        base64: false
+        base64: false,
       };
 
       const result = await ImagePicker.launchImageLibraryAsync(options);
@@ -239,7 +245,8 @@ const HomeScreen = ({ navigation }) => {
               "Add expense manually",
               "Take a photo",
               "Select a photo",
-              "Cancel"];
+              "Cancel",
+            ];
             ActionSheet.show(
               {
                 options: BUTTONS,
@@ -247,7 +254,7 @@ const HomeScreen = ({ navigation }) => {
                 destructiveButtonIndex: 3,
                 title: "Add an expense",
               },
-              buttonIndex => {
+              (buttonIndex) => {
                 if (buttonIndex === 0) {
                   navigation.navigate("Add Expense");
                 } else if (buttonIndex === 1) {
@@ -256,7 +263,7 @@ const HomeScreen = ({ navigation }) => {
                   selectImage();
                 }
               }
-            )
+            );
           }}
         />
       </Footer>
