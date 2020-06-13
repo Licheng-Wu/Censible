@@ -1,12 +1,8 @@
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import HomeScreen from "../Containers/homescreen/HomeScreen";
+import HomeStackNavigator from "./HomeStackNavigator";
 import ExploreScreen from "../Containers/explore/ExploreScreen";
-import AddExpenseScreen from "../Containers/AddExpenseScreen";
-import TransactionScreen from "../Containers/transaction/TransactionScreen";
 import Settings from "../Containers/SettingsScreen";
 import TxnStackNavigator from "./TxnStackNavigator";
 
@@ -22,8 +18,6 @@ export default function TabNavigator() {
             iconName = "ios-home";
           } else if (route.name === "Explore") {
             iconName = "ios-search";
-          } else if (route.name === "Add Expense") {
-            iconName = "ios-add-circle";
           } else if (route.name === "Transactions") {
             iconName = "ios-paper";
           } else {
@@ -38,9 +32,8 @@ export default function TabNavigator() {
         showLabel: false,
       }}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Home" component={HomeStackNavigator} />
       <Tab.Screen name="Explore" component={ExploreScreen} />
-      <Tab.Screen name="Add Expense" component={AddExpenseScreen} />
       <Tab.Screen name="Transactions" component={TxnStackNavigator} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>

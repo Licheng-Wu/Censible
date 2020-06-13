@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Container, Content, Footer, ActionSheet } from "native-base";
-import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { Container, Content, Footer, ActionSheet, Spinner } from "native-base";
+import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DataPieChart from "./DataPieChart";
 import MonthlyExpense from "./MonthlyExpense";
@@ -9,11 +9,11 @@ import firebase from "../../../firebaseDb";
 import * as tf from "@tensorflow/tfjs";
 import { fetch } from "@tensorflow/tfjs-react-native";
 import * as mobilenet from "@tensorflow-models/mobilenet";
-import * as Permissions from "expo-permissions";
-import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import * as jpeg from "jpeg-js";
 import * as FileSystem from "expo-file-system";
+import { getCameraPermission, getGalleryPermission } from "../../../Permissions";
+import PredictionModal from "./PredictionModal";
 
 const HomeScreen = ({ navigation }) => {
   // Monthly Expense
@@ -31,7 +31,7 @@ const HomeScreen = ({ navigation }) => {
   const [otherPrice, setOtherPrice] = React.useState(0);
 
   // For updating of monthly target
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [targetModalVisible, setTargetModalVisible] = React.useState(false);
 
   // Updates monthly expense and pie chart
   React.useEffect(() => {
@@ -88,19 +88,30 @@ const HomeScreen = ({ navigation }) => {
   const [model, setModel] = React.useState(null);
   const [modelReady, setModelReady] = React.useState(false);
   const [predictions, setPredictions] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
 
+  // Loads Tensorflow model
   React.useEffect(() => {
-    const loadTFJS = async () => {
-      await tf.ready();
+    // const loadTFJS = async () => {
+    //   await tf.ready();
+    //   setTfReady(true);
+    //   console.log(tfReady);
+    //   let model = await mobilenet.load();
+    //   setModel(model);
+    //   setModelReady(true);
+    //   console.log(modelReady);
+    // };
+    // loadTFJS();
+    tf.ready().then(() => {
       setTfReady(true);
       console.log(tfReady);
-      let model = await mobilenet.load();
+    });
+    mobilenet.load().then(model => {
       setModel(model);
       setModelReady(true);
       console.log(modelReady);
-    };
-    loadTFJS();
-  }, [tfReady, modelReady]);
+    });
+  }, []);
 
   const imageToTensor = (rawImageData) => {
     // rawImageData refers to the binary data. rawImageData is a buffer
@@ -128,6 +139,7 @@ const HomeScreen = ({ navigation }) => {
 
   const classifyImage = async (uri) => {
     try {
+      setLoading(true);
       console.log("Classifying uri: " + uri);
       const imgB64 = await FileSystem.readAsStringAsync(uri, {
         encoding: FileSystem.EncodingType.Base64,
@@ -144,25 +156,14 @@ const HomeScreen = ({ navigation }) => {
       // const rawImageData = await response.arrayBuffer();
       const imageTensor = imageToTensor(rawImageData);
       const predictions = await model.classify(imageTensor);
+      setLoading(false);
       setPredictions(predictions);
       console.log(predictions);
     } catch (error) {
+      setLoading(false);
+      alert("Error predicting image");
       console.log("error classifying");
       console.log(error);
-    }
-  };
-
-  const getCameraPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    if (status !== "granted") {
-      alert("Sorry, we need camera permissions to make this work!");
-    }
-  };
-
-  const getGalleryPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (status !== "granted") {
-      alert("Sorry, we need camera roll permissions to make this work!");
     }
   };
 
@@ -208,6 +209,14 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+  const renderPredictions = () => {
+    return (
+      <PredictionModal
+        predictions={predictions[0].className}
+        setPredictions={setPredictions} />
+    )
+  }
+
   return (
     <Container>
       <Content contentContainerStyle={{ backgroundColor: "#F4FCFF", flex: 1 }}>
@@ -215,8 +224,8 @@ const HomeScreen = ({ navigation }) => {
           expense={expense}
           target={parseFloat(target)}
           // target={target}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
+          modalVisible={targetModalVisible}
+          setModalVisible={setTargetModalVisible}
         />
         <View style={styles.chart}>
           <DataPieChart
@@ -230,9 +239,11 @@ const HomeScreen = ({ navigation }) => {
           />
         </View>
         <MonthlyTargetModal
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
+          modalVisible={targetModalVisible}
+          setModalVisible={setTargetModalVisible}
         />
+        {loading && <Spinner style={{ flex: 1 }} />}
+        {predictions && renderPredictions()}
       </Content>
       <Footer style={styles.footer}>
         <Ionicons
@@ -256,7 +267,9 @@ const HomeScreen = ({ navigation }) => {
               },
               (buttonIndex) => {
                 if (buttonIndex === 0) {
-                  navigation.navigate("Add Expense");
+                  navigation.navigate("Add Expense", {
+                    item: ""
+                  });
                 } else if (buttonIndex === 1) {
                   launchCamera();
                 } else if (buttonIndex === 2) {
