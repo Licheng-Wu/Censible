@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Container, Content, Footer, ActionSheet } from "native-base";
-import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { Container, ActionSheet, Spinner, Fab, Button } from "native-base";
+import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DataPieChart from "./DataPieChart";
 import MonthlyExpense from "./MonthlyExpense";
@@ -9,11 +9,11 @@ import firebase from "../../../firebaseDb";
 import * as tf from "@tensorflow/tfjs";
 import { fetch } from "@tensorflow/tfjs-react-native";
 import * as mobilenet from "@tensorflow-models/mobilenet";
-import * as Permissions from "expo-permissions";
-import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import * as jpeg from "jpeg-js";
 import * as FileSystem from "expo-file-system";
+import { getCameraPermission, getGalleryPermission } from "../../../Permissions";
+import PredictionModal from "./PredictionModal";
 
 const HomeScreen = ({ navigation }) => {
   // Monthly Expense
@@ -31,7 +31,10 @@ const HomeScreen = ({ navigation }) => {
   const [otherPrice, setOtherPrice] = React.useState(0);
 
   // For updating of monthly target
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [targetModalVisible, setTargetModalVisible] = React.useState(false);
+
+  // To show FAB for add expense options
+  const [activeFab, setActiveFab] = React.useState(false);
 
   // Updates monthly expense and pie chart
   React.useEffect(() => {
@@ -88,19 +91,20 @@ const HomeScreen = ({ navigation }) => {
   const [model, setModel] = React.useState(null);
   const [modelReady, setModelReady] = React.useState(false);
   const [predictions, setPredictions] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
 
+  // Loads Tensorflow model
   React.useEffect(() => {
-    const loadTFJS = async () => {
-      await tf.ready();
+    tf.ready().then(() => {
       setTfReady(true);
       console.log(tfReady);
-      let model = await mobilenet.load();
+    });
+    mobilenet.load().then(model => {
       setModel(model);
       setModelReady(true);
       console.log(modelReady);
-    };
-    loadTFJS();
-  }, [tfReady, modelReady]);
+    });
+  }, []);
 
   const imageToTensor = (rawImageData) => {
     // rawImageData refers to the binary data. rawImageData is a buffer
@@ -128,6 +132,7 @@ const HomeScreen = ({ navigation }) => {
 
   const classifyImage = async (uri) => {
     try {
+      setLoading(true);
       console.log("Classifying uri: " + uri);
       const imgB64 = await FileSystem.readAsStringAsync(uri, {
         encoding: FileSystem.EncodingType.Base64,
@@ -144,25 +149,14 @@ const HomeScreen = ({ navigation }) => {
       // const rawImageData = await response.arrayBuffer();
       const imageTensor = imageToTensor(rawImageData);
       const predictions = await model.classify(imageTensor);
+      setLoading(false);
       setPredictions(predictions);
       console.log(predictions);
     } catch (error) {
+      setLoading(false);
+      alert("Error predicting image");
       console.log("error classifying");
       console.log(error);
-    }
-  };
-
-  const getCameraPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    if (status !== "granted") {
-      alert("Sorry, we need camera permissions to make this work!");
-    }
-  };
-
-  const getGalleryPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (status !== "granted") {
-      alert("Sorry, we need camera roll permissions to make this work!");
     }
   };
 
@@ -209,92 +203,100 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <Container>
-      <Content contentContainerStyle={{ backgroundColor: "#F4FCFF", flex: 1 }}>
-        <MonthlyExpense
-          expense={expense}
-          target={parseFloat(target)}
-          // target={target}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
+    <Container style={styles.container}>
+      <MonthlyExpense
+        expense={expense}
+        target={parseFloat(target)}
+        modalVisible={targetModalVisible}
+        setModalVisible={setTargetModalVisible}
+      />
+      <View style={styles.chart}>
+        <DataPieChart
+          food={parseFloat(foodPrice.toFixed(2))}
+          transport={parseFloat(transportPrice.toFixed(2))}
+          education={parseFloat(educationPrice.toFixed(2))}
+          entertainment={parseFloat(entertainmentPrice.toFixed(2))}
+          sports={parseFloat(sportsPrice.toFixed(2))}
+          others={parseFloat(otherPrice.toFixed(2))}
         />
-        <View style={styles.chart}>
-          <DataPieChart
-            style={styles.chart}
-            food={parseFloat(foodPrice.toFixed(2))}
-            transport={parseFloat(transportPrice.toFixed(2))}
-            education={parseFloat(educationPrice.toFixed(2))}
-            entertainment={parseFloat(entertainmentPrice.toFixed(2))}
-            sports={parseFloat(sportsPrice.toFixed(2))}
-            others={parseFloat(otherPrice.toFixed(2))}
+      </View>
+      <MonthlyTargetModal
+        modalVisible={targetModalVisible}
+        setModalVisible={setTargetModalVisible}
+      />
+      {loading && <Spinner style={styles.spinner} />}
+      {
+        predictions &&
+        <PredictionModal
+          predictions={predictions[0].className}
+          setPredictions={setPredictions}
+        />
+      }
+      {
+        (!loading) &&
+        <Fab
+          active={activeFab}
+          direction="up"
+          style={{ backgroundColor: '#5067FF' }}
+          position="bottomRight"
+          onPress={() => setActiveFab(!activeFab)}
+        >
+          <Ionicons
+            name="ios-add"
           />
-        </View>
-        <MonthlyTargetModal
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-        />
-      </Content>
-      <Footer style={styles.footer}>
-        <Ionicons
-          name="ios-add-circle-outline"
-          color="#529FF3"
-          size={45}
-          style={{ marginTop: 10 }}
-          onPress={() => {
-            const BUTTONS = [
-              "Add expense manually",
-              "Take a photo",
-              "Select a photo",
-              "Cancel",
-            ];
-            ActionSheet.show(
-              {
-                options: BUTTONS,
-                cancelButtonIndex: 3,
-                destructiveButtonIndex: 3,
-                title: "Add an expense",
-              },
-              (buttonIndex) => {
-                if (buttonIndex === 0) {
-                  navigation.navigate("Add Expense");
-                } else if (buttonIndex === 1) {
-                  launchCamera();
-                } else if (buttonIndex === 2) {
-                  selectImage();
-                }
-              }
-            );
-          }}
-        />
-      </Footer>
+          <Button
+            style={{ backgroundColor: '#34A34F' }}
+            onPress={launchCamera}
+          >
+            <Ionicons name="ios-camera" size={22} />
+          </Button>
+          <Button
+            style={{ backgroundColor: '#3B5998' }}
+            onPress={selectImage}
+          >
+            <Ionicons name="ios-image" size={18} />
+          </Button>
+          <Button
+            style={{ backgroundColor: '#DD5144' }}
+            onPress={() => {
+              navigation.navigate("Add Expense", {
+                item: ""
+              });
+            }}
+          >
+            <Ionicons name="ios-create" size={20} />
+          </Button>
+        </Fab>
+      }
     </Container>
   );
 };
 
 const styles = StyleSheet.create({
-  bodyContainer: {
+  container: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
+    backgroundColor: "ghostwhite",
+    padding: 10
   },
   chart: {
     backgroundColor: "white",
-    borderRadius: 10,
-    elevation: 3,
     justifyContent: "center",
     alignItems: "center",
-    padding: 5,
-    margin: 12,
+    padding: 15,
+    margin: 8,
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowRadius: 3.8,
+    elevation: 5,
   },
-  footer: {
-    marginBottom: 20,
-    flexDirection: "row",
-    backgroundColor: "#F4FCFF",
-    justifyContent: "space-around",
-    alignItems: "flex-start",
-    elevation: 0,
-    borderWidth: 0,
+  spinner: {
+    flex: 1,
+  },
+  button: {
+    marginTop: 150,
+    padding: 20,
+    alignSelf: "flex-end"
   },
 });
 

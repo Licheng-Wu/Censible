@@ -13,13 +13,13 @@ import {
 } from "native-base";
 import { StyleSheet, Text } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
-import { addExpense } from "../../ExpenseAPI";
+import { addExpense } from "../../../ExpenseAPI";
 
 export default class AddExpenseScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      item: "",
+      item: props.route.params.item,
       amount: "",
       category: "",
       description: "",
@@ -160,7 +160,7 @@ export default class AddExpenseScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F4FCFF",
+    backgroundColor: "ghostwhite",
     flex: 1,
     justifyContent: "center",
     padding: 20,

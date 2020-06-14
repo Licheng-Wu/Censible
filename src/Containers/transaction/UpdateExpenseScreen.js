@@ -187,7 +187,7 @@ export default class UpdateExpenseScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F4FCFF",
+    backgroundColor: "ghostwhite",
     flex: 1,
     justifyContent: "center",
     padding: 20,
