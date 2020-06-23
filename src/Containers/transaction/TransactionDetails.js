@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     textAlign: "left",
-    fontSize: 40,
+    fontSize: 34,
+    marginLeft: 10,
     color: "#3F6DB3",
   },
   detailsContainer: {
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowRadius: 3.8,
-    elevation: 5
+    elevation: 5,
   },
   field: {
     flexDirection: "row",

@@ -12,7 +12,10 @@ import * as mobilenet from "@tensorflow-models/mobilenet";
 import * as ImagePicker from "expo-image-picker";
 import * as jpeg from "jpeg-js";
 import * as FileSystem from "expo-file-system";
-import { getCameraPermission, getGalleryPermission } from "../../../Permissions";
+import {
+  getCameraPermission,
+  getGalleryPermission,
+} from "../../../Permissions";
 import PredictionModal from "./PredictionModal";
 
 const HomeScreen = ({ navigation }) => {
@@ -99,7 +102,7 @@ const HomeScreen = ({ navigation }) => {
       setTfReady(true);
       console.log(tfReady);
     });
-    mobilenet.load().then(model => {
+    mobilenet.load().then((model) => {
       setModel(model);
       setModelReady(true);
       console.log(modelReady);
@@ -225,49 +228,39 @@ const HomeScreen = ({ navigation }) => {
         setModalVisible={setTargetModalVisible}
       />
       {loading && <Spinner style={styles.spinner} />}
-      {
-        predictions &&
+      {predictions && (
         <PredictionModal
           predictions={predictions[0].className}
           setPredictions={setPredictions}
         />
-      }
-      {
-        (!loading) &&
+      )}
+      {!loading && (
         <Fab
           active={activeFab}
           direction="up"
-          style={{ backgroundColor: '#5067FF' }}
+          style={{ backgroundColor: "#5067FF" }}
           position="bottomRight"
           onPress={() => setActiveFab(!activeFab)}
         >
-          <Ionicons
-            name="ios-add"
-          />
-          <Button
-            style={{ backgroundColor: '#34A34F' }}
-            onPress={launchCamera}
-          >
+          <Ionicons name="ios-add" />
+          <Button style={{ backgroundColor: "#34A34F" }} onPress={launchCamera}>
             <Ionicons name="ios-camera" size={22} />
           </Button>
-          <Button
-            style={{ backgroundColor: '#3B5998' }}
-            onPress={selectImage}
-          >
+          <Button style={{ backgroundColor: "#3B5998" }} onPress={selectImage}>
             <Ionicons name="ios-image" size={18} />
           </Button>
           <Button
-            style={{ backgroundColor: '#DD5144' }}
+            style={{ backgroundColor: "#DD5144" }}
             onPress={() => {
               navigation.navigate("Add Expense", {
-                item: ""
+                item: "",
               });
             }}
           >
             <Ionicons name="ios-create" size={20} />
           </Button>
         </Fab>
-      }
+      )}
     </Container>
   );
 };
@@ -275,8 +268,8 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "ghostwhite",
-    padding: 10
+    backgroundColor: "#e2eeff",
+    padding: 10,
   },
   chart: {
     backgroundColor: "white",
@@ -296,7 +289,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 150,
     padding: 20,
-    alignSelf: "flex-end"
+    alignSelf: "flex-end",
   },
 });
 

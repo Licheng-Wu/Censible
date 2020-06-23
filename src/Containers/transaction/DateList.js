@@ -56,10 +56,12 @@ const DateList = (props) => {
               key={txn.id}
             >
               <View style={styles.itemDetails}>
-                <Text style={{ fontSize: 20 }}>{txn.name}</Text>
-                <Text style={{ color: "grey" }}>{txn.category}</Text>
+                <Text style={{ fontSize: 16 }}>{txn.name}</Text>
+                <Text style={{ color: "grey", fontSize: 12 }}>
+                  {txn.category}
+                </Text>
               </View>
-              <Text style={{ color: "red", fontSize: 25 }}>
+              <Text style={{ color: "red", fontSize: 20 }}>
                 {parseFloat(-txn.price).toFixed(2)}
               </Text>
             </ListItem>
@@ -75,17 +77,18 @@ const DateList = (props) => {
 const styles = StyleSheet.create({
   separator: {
     height: 45,
-    marginTop: 10,
+    marginTop: 25,
+    marginBottom: -10,
     backgroundColor: "white",
   },
   separatorText: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "bold",
   },
   item: {
     flexDirection: "row",
     justifyContent: "space-between",
-    height: 70,
+    height: 60,
   },
   itemDetails: {
     flex: 1,

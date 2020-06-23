@@ -5,6 +5,7 @@ import { YellowBox } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import firebase from "../../../firebaseDb";
 import DateList from "./DateList";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
 
 const TransactionScreen = () => {
   const [loading, setLoading] = React.useState(true);
@@ -44,31 +45,35 @@ const TransactionScreen = () => {
       return (
         <Content>
           <View style={styles.list}>
-            {dates.map((date) => {
-              return <DateList key={date} month={month} date={date} />;
-            })}
+            <ScrollView>
+              {dates.map((date) => {
+                return <DateList key={date} month={month} date={date} />;
+              })}
+            </ScrollView>
           </View>
         </Content>
-      )
+      );
     } else {
       return (
-        <Text style={styles.emptyText}>
-          No expense recorded for the month!
-        </Text>
-      )
+        <Text style={styles.emptyText}>No expense recorded for the month!</Text>
+      );
     }
-  }
+  };
 
   return (
     <Container style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Your monthly expense</Text>
-        {/* <View style={{ flexDirection: "row", justifyContent: "flex-start" }}> */}
+        <Text style={styles.title}>Monthly Transactions</Text>
+      </View>
+      <View style={styles.pickerContainer}>
         <View>
           <Text style={styles.text}>Select a month:</Text>
+        </View>
+        <View>
           <RNPickerSelect
             placeholder={{}}
-            textInputProps={styles.picker}
+            style={{ width: 10 }}
+            // textInputProps={styles.picker}
             onValueChange={(value) => setMonth(value)}
             items={[
               { label: "Jun", value: "Jun" },
@@ -86,40 +91,53 @@ const TransactionScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "ghostwhite",
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#e2eeff",
   },
   header: {
-    paddingLeft: 30,
-    marginTop: 40,
+    justifyContent: "center",
+    // alignItems: "center",
+    paddingLeft: 20,
+    paddingRight: 15,
+    marginTop: 20,
     marginBottom: 10,
   },
   title: {
-    fontSize: 33,
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: 34,
     fontWeight: "bold",
-    color: "maroon",
-    marginTop: 30,
+    color: "#3F6DB3",
+    marginTop: 10,
     shadowColor: "salmon",
     shadowOpacity: 0.25,
     shadowRadius: 2.8,
   },
   subtitle: {
-    fontSize: 22,
+    fontSize: 14,
     fontStyle: "italic",
     color: "gray",
-    marginTop: 20,
+    marginTop: 10,
     shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowRadius: 3.8,
   },
+  pickerContainer: {
+    // backgroundColor: "red",
+    marginLeft: 30,
+    marginRight: 30,
+  },
   text: {
     fontSize: 20,
-    marginTop: 20,
+    // marginTop: 20,
+    color: "#353535",
   },
-  picker: {
-    marginLeft: 20,
-    marginTop: 21,
-    fontSize: 20,
-  },
+  // picker: {
+  //   marginLeft: 50,
+  //   marginTop: 21,
+  //   fontSize: 20,
+  // },
   list: {
     padding: 10,
     margin: 15,
@@ -133,8 +151,7 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 20,
     padding: 30,
-
-  }
+  },
 });
 
 export default TransactionScreen;
