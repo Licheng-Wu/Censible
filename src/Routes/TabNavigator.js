@@ -31,6 +31,7 @@ export default function TabNavigator() {
         inactiveTintColor: "gray",
         showLabel: false,
       }}
+      initialRouteName="Home"
     >
       <Tab.Screen name="Home" component={HomeStackNavigator} />
       <Tab.Screen name="Explore" component={ExploreScreen} />
