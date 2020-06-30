@@ -31,7 +31,7 @@ const MonthlyExpense = (props) => {
       >
         <View style={styles.items}>
           <Text style={{ color: "black", ...styles.title}}>
-            Target
+            Budget
           </Text>
           <View style={styles.money}>
             <Text style={styles.dollarSign}>$</Text>
