@@ -11,7 +11,7 @@ import {
   DatePicker,
   Toast,
 } from "native-base";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { addExpense } from "../../../ExpenseAPI";
 
@@ -42,12 +42,12 @@ export default class AddExpenseScreen extends Component {
     const { navigation } = this.props;
     return (
       <Container style={styles.container}>
-        <Header style={styles.header}>
+        <View style={styles.header}>
           <Title style={styles.title}>Add Expense</Title>
-        </Header>
+        </View>
         <Content>
           <Form>
-            <Item last>
+            <Item>
               <Input
                 placeholder="Item Name"
                 placeholderTextColor="#bfc6ea"
@@ -55,7 +55,7 @@ export default class AddExpenseScreen extends Component {
                 value={item}
               />
             </Item>
-            <Item last>
+            <Item>
               <Input
                 keyboardType="numeric"
                 placeholder="Amount"
@@ -64,7 +64,7 @@ export default class AddExpenseScreen extends Component {
                 value={amount}
               />
             </Item>
-            <Item last>
+            <Item>
               <Input
                 placeholder="Description (Optional)"
                 placeholderTextColor="#bfc6ea"
@@ -160,15 +160,14 @@ export default class AddExpenseScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#e2eeff",
+    backgroundColor: "white",
     flex: 1,
     justifyContent: "center",
     padding: 20,
   },
   header: {
-    backgroundColor: "transparent",
-    borderWidth: 0,
-    elevation: 0,
+    marginTop: 10,
+    marginBottom: 10
   },
   title: {
     fontSize: 27,
