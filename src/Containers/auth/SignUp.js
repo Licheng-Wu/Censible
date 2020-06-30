@@ -28,9 +28,9 @@ export default class SignUp extends ValidationComponent {
     };
   }
 
-  signUpUser = (email, password) => {
+  handleSignUpUser = (email, password) => {
     this.validationCheck();
-    const { confirmPassword } = this.state;
+    const { name, confirmPassword } = this.state;
 
     if (password !== confirmPassword) {
       this.setState({ passwordMatch: false });
@@ -42,8 +42,16 @@ export default class SignUp extends ValidationComponent {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then(() => {
+        .then((res) => {
           console.log("User account created & signed in!");
+          // Update user details
+          res.user.updateProfile({ displayName: name })
+            .then(() => console.log("User profile updated!"))
+            .catch(error => console.error(error));        
+          // Email verification
+          res.user.sendEmailVerification()
+            .then(() => console.log("Email sent"))
+            .catch(error => console.error(error));
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
@@ -85,16 +93,6 @@ export default class SignUp extends ValidationComponent {
       },
     });
   };
-
-  // rules = {
-  //     passwordMatch(password, confirmPassword) {
-  //       if (password === confirmPassword) {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     }
-  // }
 
   messages = {
     en: {
@@ -187,7 +185,7 @@ export default class SignUp extends ValidationComponent {
               style={GlobalStyle.authButton}
               full
               rounded
-              onPress={() => this.signUpUser(email, password)}
+              onPress={() => this.handleSignUpUser(email, password)}
             >
               <Text style={GlobalStyle.authButtonText}>SIGN UP</Text>
             </Button>

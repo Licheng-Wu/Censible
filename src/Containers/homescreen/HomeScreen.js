@@ -52,8 +52,12 @@ const HomeScreen = ({ navigation }) => {
       .onSnapshot(
         (doc) => {
           if (doc.exists) {
-            setExpense(doc.data().monthlyTotal);
-            setTarget(doc.data().monthlyTarget);
+            if (doc.data().monthlyTotal !== undefined) {
+              setExpense(doc.data().monthlyTotal);
+            }
+            if (doc.data().monthlyTarget) {
+              setTarget(doc.data().monthlyTarget);
+            }
             if (doc.data().Food !== undefined) {
               setFoodPrice(doc.data().Food);
             }

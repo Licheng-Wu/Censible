@@ -93,7 +93,7 @@ export default TransactionDetails;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "ghostwhite",
+    backgroundColor: "#e2eeff",
     flex: 1,
     justifyContent: "center",
     padding: 20,
