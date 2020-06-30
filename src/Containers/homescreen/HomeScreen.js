@@ -174,6 +174,8 @@ const HomeScreen = ({ navigation }) => {
       const options = {
         quality: 1,
         base64: false,
+        allowsEditing: true,
+        aspect: [4, 3]
       };
 
       const result = await ImagePicker.launchCameraAsync(options);
@@ -195,6 +197,8 @@ const HomeScreen = ({ navigation }) => {
       const options = {
         quality: 1,
         base64: false,
+        allowsEditing: true,
+        aspect: [4, 3]
       };
 
       const result = await ImagePicker.launchImageLibraryAsync(options);
