@@ -55,7 +55,7 @@ const HomeScreen = ({ navigation }) => {
             if (doc.data().monthlyTotal !== undefined) {
               setExpense(doc.data().monthlyTotal);
             }
-            if (doc.data().monthlyTarget) {
+            if (doc.data().monthlyTarget !== undefined) {
               setTarget(doc.data().monthlyTarget);
             }
             if (doc.data().Food !== undefined) {
@@ -174,6 +174,8 @@ const HomeScreen = ({ navigation }) => {
       const options = {
         quality: 1,
         base64: false,
+        allowsEditing: true,
+        aspect: [4, 3]
       };
 
       const result = await ImagePicker.launchCameraAsync(options);
@@ -195,6 +197,8 @@ const HomeScreen = ({ navigation }) => {
       const options = {
         quality: 1,
         base64: false,
+        allowsEditing: true,
+        aspect: [4, 3]
       };
 
       const result = await ImagePicker.launchImageLibraryAsync(options);
@@ -247,10 +251,16 @@ const HomeScreen = ({ navigation }) => {
           onPress={() => setActiveFab(!activeFab)}
         >
           <Ionicons name="ios-add" />
-          <Button style={{ backgroundColor: "#34A34F" }} onPress={launchCamera}>
+          <Button
+            style={{ backgroundColor: "#34A34F" }}
+            onPress={launchCamera}
+          >
             <Ionicons name="ios-camera" size={22} />
           </Button>
-          <Button style={{ backgroundColor: "#3B5998" }} onPress={selectImage}>
+          <Button
+            style={{ backgroundColor: "#3B5998" }}
+            onPress={selectImage}
+          >
             <Ionicons name="ios-image" size={18} />
           </Button>
           <Button

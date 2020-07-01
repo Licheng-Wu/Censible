@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const MonthlyExpense = (props) => {
   const balance = props.target - props.expense;
@@ -7,7 +8,7 @@ const MonthlyExpense = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.items}>
-        <Text style={{ color: "#F43356", ...styles.title}}>
+        <Text style={{ color: "#F43356", ...styles.title }}>
           Expense
         </Text>
         <View style={styles.money}>
@@ -17,12 +18,25 @@ const MonthlyExpense = (props) => {
       </View>
 
       <View style={styles.items}>
-        <Text style={{ color: "#00C928", ...styles.title}}>
-          Balance
-        </Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+          <Text style={{ color: "#00C928", ...styles.title }}>
+            Balance
+          </Text>
+          {
+            balance < 0 && (
+              <Ionicons
+                name="ios-alert"
+                color="red"
+                size={20}
+              />
+            )
+          }
+        </View>
         <View style={styles.money}>
           <Text style={styles.dollarSign}>$</Text>
-          <Text style={styles.amount}>{balance.toFixed(2)}</Text>
+          <Text style={balance >= 0 ? styles.amount : styles.negativeAmount}>
+            {balance.toFixed(2)}
+          </Text>
         </View>
       </View>
 
@@ -30,8 +44,8 @@ const MonthlyExpense = (props) => {
         onPress={() => props.setModalVisible(!props.modalVisible)}
       >
         <View style={styles.items}>
-          <Text style={{ color: "black", ...styles.title}}>
-            Target
+          <Text style={{ color: "black", ...styles.title }}>
+            Budget
           </Text>
           <View style={styles.money}>
             <Text style={styles.dollarSign}>$</Text>
@@ -72,13 +86,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dollarSign: {
-    color: "grey" 
+    color: "grey"
   },
   amount: {
     color: "#262626",
     fontSize: 25,
     textAlign: "center",
   },
+  negativeAmount: {
+    color: "red",
+    fontSize: 25,
+    textAlign: "center"
+  }
 });
 
 export default MonthlyExpense;

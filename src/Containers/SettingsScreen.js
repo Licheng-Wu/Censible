@@ -4,7 +4,7 @@ import firebase from "firebase";
 import { Ionicons } from "@expo/vector-icons";
 
 const Settings = () => {
-  signOut = () =>
+  const signOut = () =>
     firebase
       .auth()
       .signOut()

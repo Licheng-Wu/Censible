@@ -9,6 +9,7 @@ const HomeStack = createStackNavigator();
 export default function HomeStackNavigator() {
   return (
     <HomeStack.Navigator
+      mode="modal"
     >
       <HomeStack.Screen
         name="HomeSreen"
@@ -19,8 +20,16 @@ export default function HomeStackNavigator() {
         name="Add Expense"
         component={AddExpenseScreen}
         options={{
-          title: "",
-          headerBackTitle: "Back",
+          headerShown: false,
+          cardStyle: {
+            marginTop: 150,
+            marginLeft: 8,
+            marginRight: 8,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          },
+          gestureEnabled: true,
+          
         }}
       />
     </HomeStack.Navigator>
