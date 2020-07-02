@@ -37,6 +37,8 @@ export default class ExploreScreen extends Component {
       initialRegion: {
         latitude: userLocation.coords.latitude,
         longitude: userLocation.coords.longitude,
+        // latitude: 1.3612,
+        // longitude: 103.8863,
         latitudeDelta: 0.01,
         longitudeDelta: 0.005,
       },

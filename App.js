@@ -6,7 +6,9 @@ import TabNavigator from "./src/Routes/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthStackNavigator from "./src/Routes/AuthStackNavigator";
 import firebase from "./firebaseDb";
-import ImageRecognition from "./src/Containers/ImageRecognition";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/es/integration/react";
+import { store, persistor } from "./src/redux/store";
 
 export default class App extends React.Component {
   unsubscribe = null;
@@ -54,11 +56,19 @@ export default class App extends React.Component {
 
     return (
       // <ImageRecognition />
-      <Root>
-        <NavigationContainer>
-          {this.state.isLoggedIn ? <TabNavigator /> : <AuthStackNavigator />}
-        </NavigationContainer>
-      </Root>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <Root>
+            <NavigationContainer>
+              {this.state.isLoggedIn ? (
+                <TabNavigator />
+              ) : (
+                <AuthStackNavigator />
+              )}
+            </NavigationContainer>
+          </Root>
+        </PersistGate>
+      </Provider>
     );
   }
 }

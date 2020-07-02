@@ -14,8 +14,9 @@ import {
 import { StyleSheet, Text, View } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { addExpense } from "../../../ExpenseAPI";
+import { connect } from "react-redux";
 
-export default class AddExpenseScreen extends Component {
+class AddExpenseScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,14 +79,10 @@ export default class AddExpenseScreen extends Component {
               textInputProps={styles.pickerText}
               value={category}
               onValueChange={this.handleCategory.bind(this)}
-              items={[
-                { label: "Food", value: "Food" },
-                { label: "Transport", value: "Transport" },
-                { label: "Education", value: "Education" },
-                { label: "Entertainment", value: "Entertainment" },
-                { label: "Sports", value: "Sports" },
-                { label: "Others", value: "Others" },
-              ]}
+              items={this.props.category.map((indvCategory) => ({
+                label: indvCategory,
+                value: indvCategory,
+              }))}
             />
             <DatePicker
               textStyle={styles.datePicker}
@@ -158,6 +155,15 @@ export default class AddExpenseScreen extends Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    category: state.category,
+    navigation: ownProps.navigation,
+  };
+};
+
+export default connect(mapStateToProps)(AddExpenseScreen);
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
@@ -167,7 +173,7 @@ const styles = StyleSheet.create({
   },
   header: {
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
   },
   title: {
     fontSize: 27,
@@ -182,7 +188,7 @@ const styles = StyleSheet.create({
   },
   datePicker: {
     marginTop: 10,
-    marginLeft: 10
+    marginLeft: 10,
   },
   button: {
     marginTop: 50,
@@ -194,21 +200,3 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
-
-{
-  /* <Item picker style={styles.picker}>
-  <Picker
-    style={{ width: undefined }}
-    textStyle={{ marginLeft: 5 }}
-    selectedValue={category}
-    onValueChange={this.handleCategory.bind(this)}
-  >
-    <Picker.Item label="Food" value="Food" />
-    <Picker.Item label="Transport" value="Transport" />
-    <Picker.Item label="Education" value="Education" />
-    <Picker.Item label="Entertainment" value="Entertainment" />
-    <Picker.Item label="Sports" value="Sports" />
-    <Picker.Item label="Others" value="Others" />
-  </Picker>
-</Item> */
-}

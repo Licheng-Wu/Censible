@@ -1,13 +1,18 @@
 import * as React from "react";
 import { Form, Item, Input, Toast } from "native-base";
-import { View, StyleSheet, Text, Modal, TouchableHighlight } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Modal,
+  TouchableHighlight,
+} from "react-native";
 import firebase from "../../../firebaseDb";
 
-const MonthlyTargetModal = props => {
-
+const MonthlyTargetModal = (props) => {
   const [target, setTarget] = React.useState("");
 
-  const handleUpdateTarget = target => {
+  const handleUpdateTarget = (target) => {
     let uid = firebase.auth().currentUser.uid;
     const month = new Date().toString().substr(4, 3);
 
@@ -19,19 +24,19 @@ const MonthlyTargetModal = props => {
       .doc("Info")
       .set(
         {
-          monthlyTarget: target
+          monthlyTarget: target,
         },
         {
-          merge: true
+          merge: true,
         }
       )
-      .then(docRef => {
+      .then((docRef) => {
         console.log("Monthly target updated!");
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error writing document: ", error);
       });
-  }
+  };
 
   return (
     <Modal
@@ -49,7 +54,7 @@ const MonthlyTargetModal = props => {
                 keyboardType="numeric"
                 placeholder="Target"
                 placeholderTextColor="#bfc6ea"
-                onChangeText={text => setTarget(text)}
+                onChangeText={(text) => setTarget(text)}
                 value={target}
               />
             </Item>
@@ -60,13 +65,13 @@ const MonthlyTargetModal = props => {
               onPress={() => {
                 if (target > 0) {
                   handleUpdateTarget(parseFloat(target));
-                  props.setModalVisible(! props.modalVisible);
+                  props.setModalVisible(!props.modalVisible);
                   Toast.show({
                     text: "Update successful!",
                     duration: 3000,
                     buttonText: "Okay",
                     type: "success",
-                    style: { marginBottom: 40 }
+                    style: { marginBottom: 40 },
                   });
                 } else {
                   Toast.show({
@@ -75,7 +80,7 @@ const MonthlyTargetModal = props => {
                     duration: 3000,
                     type: "warning",
                     position: "top",
-                    style: { marginTop: 100 }
+                    style: { marginTop: 100 },
                   });
                 }
               }}
@@ -84,22 +89,23 @@ const MonthlyTargetModal = props => {
             </TouchableHighlight>
             <TouchableHighlight
               style={{ ...styles.button, backgroundColor: "red" }}
-              onPress={() => props.setModalVisible(! props.modalVisible)}>
+              onPress={() => props.setModalVisible(!props.modalVisible)}
+            >
               <Text style={styles.textStyle}>Cancel</Text>
             </TouchableHighlight>
           </View>
         </View>
       </View>
     </Modal>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: 22,
   },
   modalView: {
     margin: 20,
@@ -110,17 +116,17 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
     fontSize: 20,
-    color: "gray"
+    color: "gray",
   },
   button: {
     backgroundColor: "#2196F3",
@@ -130,13 +136,13 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginTop: 20,
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 18
+    fontSize: 18,
   },
 });
 

@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import firebase from "firebase";
 import { Ionicons } from "@expo/vector-icons";
+import Category from "./Category";
 
 const Settings = () => {
   const signOut = () =>
@@ -25,6 +26,7 @@ const Settings = () => {
         size={40}
         onPress={signOut}
       />
+      <Category></Category>
     </View>
   );
 };
