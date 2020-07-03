@@ -7,7 +7,7 @@ import { addCategory, removeCategory } from "../redux/actions";
 class Category extends React.Component {
   handleAddCategory = () => {
     // dispatch actions to AddCategory
-    this.props.addCategory("TEst");
+    this.props.addCategory("Service");
   };
 
   handleRemoveCategory = () => {

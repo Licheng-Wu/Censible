@@ -26,12 +26,7 @@ const HomeScreen = ({ navigation }) => {
   const [target, setTarget] = React.useState(0);
 
   // Pie chart data
-  const [foodPrice, setFoodPrice] = React.useState(0);
-  const [transportPrice, setTransportPrice] = React.useState(0);
-  const [educationPrice, setEducationPrice] = React.useState(0);
-  const [entertainmentPrice, setEntertainmentPrice] = React.useState(0);
-  const [sportsPrice, setSportsPrice] = React.useState(0);
-  const [otherPrice, setOtherPrice] = React.useState(0);
+  const [data, setData] = React.useState({});
 
   // For updating of monthly target
   const [targetModalVisible, setTargetModalVisible] = React.useState(false);
@@ -52,38 +47,14 @@ const HomeScreen = ({ navigation }) => {
       .onSnapshot(
         (doc) => {
           if (doc.exists) {
+            const dataObj = doc.data();
+            setData(dataObj);
             if (doc.data().monthlyTotal !== undefined) {
               setExpense(doc.data().monthlyTotal);
             }
             if (doc.data().monthlyTarget !== undefined) {
               setTarget(doc.data().monthlyTarget);
             }
-            if (doc.data().Food !== undefined) {
-              setFoodPrice(doc.data().Food);
-            }
-            if (doc.data().Transport !== undefined) {
-              setTransportPrice(doc.data().Transport);
-            }
-            if (doc.data().Education !== undefined) {
-              setEducationPrice(doc.data().Education);
-            }
-            if (doc.data().Entertainment !== undefined) {
-              setEntertainmentPrice(doc.data().Entertainment);
-            }
-            if (doc.data().Sports !== undefined) {
-              setSportsPrice(doc.data().Sports);
-            }
-            if (doc.data().Others !== undefined) {
-              setOtherPrice(doc.data().Others);
-            }
-          } else {
-            setExpense(0);
-            setFoodPrice(0);
-            setTransportPrice(0);
-            setEducationPrice(0);
-            setEntertainmentPrice(0);
-            setSportsPrice(0);
-            setOtherPrice(0);
           }
         },
         (error) => {
@@ -222,14 +193,7 @@ const HomeScreen = ({ navigation }) => {
         setModalVisible={setTargetModalVisible}
       />
       <View style={styles.chart}>
-        <DataPieChart
-          food={parseFloat(foodPrice.toFixed(2))}
-          transport={parseFloat(transportPrice.toFixed(2))}
-          education={parseFloat(educationPrice.toFixed(2))}
-          entertainment={parseFloat(entertainmentPrice.toFixed(2))}
-          sports={parseFloat(sportsPrice.toFixed(2))}
-          others={parseFloat(otherPrice.toFixed(2))}
-        />
+        <DataPieChart data={data} />
       </View>
       <MonthlyTargetModal
         modalVisible={targetModalVisible}
