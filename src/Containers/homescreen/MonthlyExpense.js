@@ -39,20 +39,15 @@ const MonthlyExpense = (props) => {
           </Text>
         </View>
       </View>
-
-      <TouchableOpacity
-        onPress={() => props.setModalVisible(!props.modalVisible)}
-      >
-        <View style={styles.items}>
-          <Text style={{ color: "black", ...styles.title }}>
-            Budget
+      <View style={styles.items}>
+        <Text style={{ color: "black", ...styles.title }}>
+          Budget
           </Text>
-          <View style={styles.money}>
-            <Text style={styles.dollarSign}>$</Text>
-            <Text style={styles.amount}>{props.target.toFixed(2)}</Text>
-          </View>
+        <View style={styles.money}>
+          <Text style={styles.dollarSign}>$</Text>
+          <Text style={styles.amount}>{props.target.toFixed(2)}</Text>
         </View>
-      </TouchableOpacity>
+      </View>
     </View>
   );
 };
