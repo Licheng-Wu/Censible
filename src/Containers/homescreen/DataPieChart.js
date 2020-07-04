@@ -34,7 +34,7 @@ const DataPieChart = props => {
         }
       }
     }
-    console.log(results)
+    
     // Sorts data in descending order
     results.sort((obj1, obj2) => obj2.population - obj1.population);
 

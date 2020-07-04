@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text, Alert } from "react-native";
 import { Container, Header, Title, Content, List, Separator, ListItem } from "native-base";
-import firebase from "firebase";
+import firebase from "../../../firebaseDb";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import MonthlyTargetModal from "./MonthlyTargetModal"
@@ -28,10 +28,9 @@ const Settings = () => {
       }
     )
   }
-  const handleLogOutUser = () =>
-    firebase
-      .auth()
-      .signOut()
+
+  const handleLogOutUser = () => {
+    firebase.auth().signOut()
       .then(() => {
         // Sign-out successful.
         console.log("Signed out");
@@ -40,6 +39,44 @@ const Settings = () => {
         // An error happened.
         console.log(error.toString());
       });
+  }
+
+  const confirmDeleteAccount = () => {
+    Alert.alert(
+      "Delete account",
+      "Are you sure you want to delete your account? " + 
+      "This action is irreversible and you will lose all your data.",
+      [
+        {
+          text: "Delete",
+          onPress: handleDeleteAccount,
+          style: "destructive",
+        },
+        { text: "Cancel" }
+      ],
+      {
+        cancelable: true,
+      }
+    )
+  }
+
+  const handleDeleteAccount = () => {
+    const uid = firebase.auth().currentUser.uid;
+    handleDeleteData(uid);
+    firebase.auth().currentUser.delete()
+      .then(() => {
+        console.log("Account deleted");
+      })
+      .catch(error => console.error(error));
+  }
+
+  // Realised it does not work because deleting doc does not delete its subcollection
+  const handleDeleteData = uid => {
+    console.log(uid);
+    firebase.firestore().collection("Users").doc(uid).delete()
+      .then(() => console.log("User data deleted"))
+      .catch(error => console.error(error));
+  }
 
   return (
     // {/* <Ionicons
@@ -83,7 +120,9 @@ const Settings = () => {
           >
             <Text style={styles.itemText}>Logout</Text>
           </ListItem>
-          <ListItem key="delete" noBorder style={styles.item}>
+          <ListItem key="delete" noBorder style={styles.item}
+            onPress={confirmDeleteAccount}
+          >
             <Text style={styles.itemText}>Delete Account</Text>
           </ListItem>
         </List>
