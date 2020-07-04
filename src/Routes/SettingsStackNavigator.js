@@ -19,7 +19,8 @@ const SettingsStackNavigator = () => {
         name="CategoryScreen"
         component={CategoryScreen}
         options={{
-          title: "",
+          title: "Category Settings",
+          // headerTitleStyle: { fontWeight: "bold" },
           headerBackTitle: "Back",
         }}
       />
