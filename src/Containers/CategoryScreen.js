@@ -1,8 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { StyleSheet, View, Text, Modal } from "react-native";
+import { StyleSheet, View, Text, Modal, Alert } from "react-native";
 import {
   Button,
+  List,
   ListItem,
   Left,
   Right,
@@ -10,6 +11,7 @@ import {
   Body,
   Container,
   Item,
+  Toast,
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { addCategory, removeCategory } from "../redux/actions";
@@ -31,7 +33,22 @@ class Category extends React.Component {
 
   handleRemoveCategory = (category) => {
     // dispatch actions to RemoveCategory
-    this.props.removeCategory(category);
+    this.createRemoveCategoryAlert(category);
+  };
+
+  createRemoveCategoryAlert = (category) => {
+    Alert.alert(
+      "Delete",
+      "Do you really want to delete this category?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => this.props.removeCategory(category) },
+      ],
+      { cancelable: false }
+    );
   };
 
   setModalVisible = (modalVisible) => this.setState({ modalVisible });
@@ -39,38 +56,45 @@ class Category extends React.Component {
   render() {
     return (
       <Container style={styles.container}>
-        {/* <View style={styles.categoryList}> */}
-        {this.props.category.map((indvCategory) => {
-          return (
-            <ListItem icon key={indvCategory.key}>
-              <Left>
-                <Button
-                  transparent
-                  onPress={() => this.handleRemoveCategory(indvCategory)}
-                >
-                  <Ionicons name="md-close" size={32} color="red" />
-                </Button>
-              </Left>
-              <Body>
-                <Text>{indvCategory}</Text>
-              </Body>
-              {/* <Right>
-                <Switch value={false} />
-              </Right> */}
-            </ListItem>
-          );
-        })}
-        {/* </View> */}
+        <List style={styles.categoryList}>
+          {this.props.category.map((indvCategory) => {
+            return (
+              <ListItem icon key={indvCategory.key}>
+                <Left>
+                  <Button
+                    transparent
+                    onPress={() => this.handleRemoveCategory(indvCategory)}
+                  >
+                    <Ionicons name="md-close" size={32} color="red" />
+                  </Button>
+                </Left>
+                <Body>
+                  <Text>{indvCategory}</Text>
+                </Body>
+              </ListItem>
+            );
+          })}
+        </List>
         <Button
           full
           rounded
           info
           style={{ alignSelf: "flex-end" }}
           onPress={() => {
-            this.setModalVisible(!this.state.modalVisible);
+            if (this.props.category.length > 10) {
+              Toast.show({
+                text: "Too many categories",
+                duration: 3000,
+                buttonText: "Close",
+                type: "warning",
+                style: { marginBottom: 40 },
+              });
+            } else {
+              this.setModalVisible(!this.state.modalVisible);
+            }
           }}
         >
-          <Text>Add</Text>
+          <Text style={{ color: "white", fontSize: 16 }}>Add new category</Text>
         </Button>
         <AddCategoryModal
           modalVisible={this.state.modalVisible}
@@ -86,14 +110,18 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#e2eeff",
     flex: 1,
-    justifyContent: "center",
+    flexDirection: "column",
+    justifyContent: "space-between",
     padding: 20,
   },
   categoryList: {
-    backgroundColor: "yellow",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    alignSelf: "flex-start",
+    backgroundColor: "white",
+    justifyContent: "flex-end",
+    shadowColor: "#000",
+    borderRadius: 20,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.8,
+    elevation: 5,
   },
 });
 
