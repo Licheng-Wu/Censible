@@ -5,6 +5,7 @@ import HomeStackNavigator from "./HomeStackNavigator";
 import ExploreScreen from "../Containers/explore/ExploreScreen";
 import Settings from "../Containers/SettingsScreen";
 import TxnStackNavigator from "./TxnStackNavigator";
+import SettingsStackNavigator from "./SettingsStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -36,7 +37,7 @@ export default function TabNavigator() {
       <Tab.Screen name="Home" component={HomeStackNavigator} />
       <Tab.Screen name="Explore" component={ExploreScreen} />
       <Tab.Screen name="Transactions" component={TxnStackNavigator} />
-      <Tab.Screen name="Settings" component={Settings} />
+      <Tab.Screen name="Settings" component={SettingsStackNavigator} />
     </Tab.Navigator>
   );
 }

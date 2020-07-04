@@ -45,9 +45,7 @@ const PlaceFilteringModal = (props) => {
             maximumValue={5}
             onValueChange={(value) => setRadius(value)}
           />
-          <Text style={styles.modalText}>
-            Price range: {price.toFixed(0)}
-          </Text>
+          <Text style={styles.modalText}>Price range: {price.toFixed(0)}</Text>
           <Slider
             style={{ width: 250, height: 40 }}
             minimumValue={1}
@@ -59,7 +57,11 @@ const PlaceFilteringModal = (props) => {
               style={styles.button}
               onPress={() => {
                 if (placeType) {
-                  props.getNearbyPlaces(radius.toFixed(1), placeType, price.toFixed(0));
+                  props.getNearbyPlaces(
+                    radius.toFixed(1),
+                    placeType,
+                    price.toFixed(0)
+                  );
                   props.setModalVisible(!props.modalVisible);
                   setPlaceType("");
                   setRadius(0);
