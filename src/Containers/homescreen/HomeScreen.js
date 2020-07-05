@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DataPieChart from "./DataPieChart";
 import MonthlyExpense from "./MonthlyExpense";
-import MonthlyTargetModal from "./MonthlyTargetModal";
+import MonthlyTargetModal from "../settings/MonthlyTargetModal";
 import firebase from "../../../firebaseDb";
 import * as tf from "@tensorflow/tfjs";
 import { fetch } from "@tensorflow/tfjs-react-native";
@@ -27,9 +27,6 @@ const HomeScreen = ({ navigation }) => {
 
   // Pie chart data
   const [data, setData] = React.useState({});
-
-  // For updating of monthly target
-  const [targetModalVisible, setTargetModalVisible] = React.useState(false);
 
   // To show FAB for add expense options
   const [activeFab, setActiveFab] = React.useState(false);
@@ -189,16 +186,10 @@ const HomeScreen = ({ navigation }) => {
       <MonthlyExpense
         expense={expense}
         target={parseFloat(target)}
-        modalVisible={targetModalVisible}
-        setModalVisible={setTargetModalVisible}
       />
       <View style={styles.chart}>
         <DataPieChart data={data} />
       </View>
-      <MonthlyTargetModal
-        modalVisible={targetModalVisible}
-        setModalVisible={setTargetModalVisible}
-      />
       {loading && <Spinner style={styles.spinner} />}
       {predictions && (
         <PredictionModal

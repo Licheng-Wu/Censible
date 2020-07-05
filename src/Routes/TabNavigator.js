@@ -3,7 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeStackNavigator from "./HomeStackNavigator";
 import ExploreScreen from "../Containers/explore/ExploreScreen";
-import Settings from "../Containers/SettingsScreen";
+import Settings from "../Containers/settings/SettingsScreen";
 import TxnStackNavigator from "./TxnStackNavigator";
 import SettingsStackNavigator from "./SettingsStackNavigator";
 

@@ -1,7 +1,8 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import SettingsScreen from "../Containers/SettingsScreen";
+import SettingsScreen from "../Containers/settings/SettingsScreen";
 import CategoryScreen from "../Containers/CategoryScreen";
+
 const SettingsStack = createStackNavigator();
 
 const SettingsStackNavigator = () => {
