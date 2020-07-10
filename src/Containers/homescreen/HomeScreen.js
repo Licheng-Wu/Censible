@@ -1,22 +1,18 @@
 import * as React from "react";
-import { Container, ActionSheet, Spinner, Fab, Button } from "native-base";
-import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
+import { Container, Spinner, Fab, Button } from "native-base";
+import { View, StyleSheet, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DataPieChart from "./DataPieChart";
 import MonthlyExpense from "./MonthlyExpense";
-import MonthlyTargetModal from "../settings/MonthlyTargetModal";
 import firebase from "../../../firebaseDb";
 import * as tf from "@tensorflow/tfjs";
-import { fetch } from "@tensorflow/tfjs-react-native";
 import * as mobilenet from "@tensorflow-models/mobilenet";
 import * as ImagePicker from "expo-image-picker";
 import * as jpeg from "jpeg-js";
 import * as FileSystem from "expo-file-system";
-import {
-  getCameraPermission,
-  getGalleryPermission,
-} from "../../../Permissions";
+import { getCameraPermission, getGalleryPermission } from "../../../Permissions";
 import PredictionModal from "./PredictionModal";
+import { FloatingAction } from "react-native-floating-action";
 
 const HomeScreen = ({ navigation }) => {
   // Monthly Expense
@@ -27,9 +23,6 @@ const HomeScreen = ({ navigation }) => {
 
   // Pie chart data
   const [data, setData] = React.useState({});
-
-  // To show FAB for add expense options
-  const [activeFab, setActiveFab] = React.useState(false);
 
   // Updates monthly expense and pie chart
   React.useEffect(() => {
@@ -181,6 +174,28 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+  // Actions for Floating Action Button
+  const actions = [
+    {
+      text: "Camera",
+      icon: <Ionicons name="ios-camera" size={22} />,
+      name: "camera",
+      position: 3,
+    },
+    {
+      text: "Gallery",
+      icon: <Ionicons name="ios-image" size={18} />,
+      name: "gallery",
+      position: 2
+    },
+    {
+      text: "Manual Input",
+      icon: <Ionicons name="ios-create" size={20} />,
+      name: "bt_room",
+      position: 1
+    }
+  ];
+
   return (
     <Container style={styles.container}>
       <MonthlyExpense
@@ -198,37 +213,21 @@ const HomeScreen = ({ navigation }) => {
         />
       )}
       {!loading && (
-        <Fab
-          active={activeFab}
-          direction="up"
-          style={{ backgroundColor: "#5067FF" }}
-          position="bottomRight"
-          onPress={() => setActiveFab(!activeFab)}
-        >
-          <Ionicons name="ios-add" />
-          <Button
-            style={{ backgroundColor: "#34A34F" }}
-            onPress={launchCamera}
-          >
-            <Ionicons name="ios-camera" size={22} />
-          </Button>
-          <Button
-            style={{ backgroundColor: "#3B5998" }}
-            onPress={selectImage}
-          >
-            <Ionicons name="ios-image" size={18} />
-          </Button>
-          <Button
-            style={{ backgroundColor: "#DD5144" }}
-            onPress={() => {
+        <FloatingAction
+          actions={actions}
+          actionsPaddingTopBottom={3}
+          onPressItem={name => {
+            if (name === "camera") {
+              launchCamera();
+            } else if (name === "gallery") {
+              selectImage();
+            } else {
               navigation.navigate("Add Expense", {
                 item: "",
               });
-            }}
-          >
-            <Ionicons name="ios-create" size={20} />
-          </Button>
-        </Fab>
+            }
+          }}
+        />
       )}
     </Container>
   );
