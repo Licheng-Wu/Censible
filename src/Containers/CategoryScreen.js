@@ -59,7 +59,7 @@ class Category extends React.Component {
         <List style={styles.categoryList}>
           {this.props.category.map((indvCategory) => {
             return (
-              <ListItem icon key={indvCategory.key}>
+              <ListItem icon key={indvCategory}>
                 <Left>
                   <Button
                     transparent
