@@ -5688,6 +5688,11 @@ react-native-dotenv@^0.2.0:
   dependencies:
     babel-plugin-dotenv "0.1.1"
 
+react-native-draggable-flatlist@^2.3.6:
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-2.3.6.tgz#e5c5f449ce9d392777cbf29b7da6d8da783d536d"
+  integrity sha512-kaLUx2TWyCx62Fnrc4299vYIZNXEB9fQT/x/BHGb5QTnBGvTjq/qShdsgvYlgX2SzcXpIFR6Js0v9Uq/xFvE+A==
+
 react-native-drawer@2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/react-native-drawer/-/react-native-drawer-2.5.1.tgz#08b9314184f48c724f1b467f8859797369798654"
@@ -5724,6 +5729,11 @@ react-native-elements@^2.0.0:
     prop-types "^15.7.2"
     react-native-ratings "^6.5.0"
     react-native-status-bar-height "^2.2.0"
+
+react-native-floating-action@^1.21.0:
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/react-native-floating-action/-/react-native-floating-action-1.21.0.tgz#cb1e8349fec5b9aed06c8053c07372822c64b22f"
+  integrity sha512-ozd/iaJunrEYc4eGUWkP+4UI8yoIL0nQsToI3hnJRste/3LPhBkyu0eG3RTjc6aFY+q++JpRmgO469Ck8jJOwg==
 
 react-native-form-validator@^0.3.2:
   version "0.3.2"
@@ -5784,10 +5794,10 @@ react-native-ratings@^6.5.0:
     lodash "^4.17.4"
     prop-types "^15.5.10"
 
-react-native-reanimated@^1.7.1:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.8.0.tgz#0b5719b20c1fed9aaf8afd9a12e21c9bd46ee428"
-  integrity sha512-vGTt94lE5fsZmfMwERWFIsCr5LHsyllOESeNvlKryLgAg7h4cnJ5XSmVSy4L3qogdgFYCL6HEgY+s7tQmKXiiQ==
+react-native-reanimated@^1.10.1:
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.10.1.tgz#82e79ae119e97b282ce53d16bc6db9765a56b22b"
+  integrity sha512-j9+GOEmLLEzFpxpYOA9dSBusUHGaTJAHSJ9tIXU4IgklN7hIB5CA6ONMnm6iQ5lC/nhNFdLKag/jOgzVa+mHBQ==
   dependencies:
     fbjs "^1.0.0"
 
@@ -5813,6 +5823,11 @@ react-native-svg@^12.1.0:
   dependencies:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
+
+react-native-swipeable-item@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-swipeable-item/-/react-native-swipeable-item-1.5.0.tgz#95fe917dc2542acf41c0c442b50f4436bd22c7d3"
+  integrity sha512-GX9AZcbYR+6jIYeXLA1g1Gaqes0auyWCisRq/VWsoJ1XDgOC0BorcOFZkubDNuctDRe+uPwLADOvdkELQokcvA==
 
 react-native-vector-icons@^6.6.0:
   version "6.6.0"
