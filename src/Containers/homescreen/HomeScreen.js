@@ -17,6 +17,7 @@ import {
   getGalleryPermission,
 } from "../../../Permissions";
 import PredictionModal from "./PredictionModal";
+import ExpensePrediction from "./ExpensePrediction";
 
 const HomeScreen = ({ navigation }) => {
   // Monthly Expense
@@ -143,7 +144,7 @@ const HomeScreen = ({ navigation }) => {
         quality: 1,
         base64: false,
         allowsEditing: true,
-        aspect: [4, 3]
+        aspect: [4, 3],
       };
 
       const result = await ImagePicker.launchCameraAsync(options);
@@ -166,7 +167,7 @@ const HomeScreen = ({ navigation }) => {
         quality: 1,
         base64: false,
         allowsEditing: true,
-        aspect: [4, 3]
+        aspect: [4, 3],
       };
 
       const result = await ImagePicker.launchImageLibraryAsync(options);
@@ -183,13 +184,11 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <Container style={styles.container}>
-      <MonthlyExpense
-        expense={expense}
-        target={parseFloat(target)}
-      />
+      <MonthlyExpense expense={expense} target={parseFloat(target)} />
       <View style={styles.chart}>
         <DataPieChart data={data} />
       </View>
+      <ExpensePrediction expense={expense} target={target} />
       {loading && <Spinner style={styles.spinner} />}
       {predictions && (
         <PredictionModal
@@ -206,16 +205,10 @@ const HomeScreen = ({ navigation }) => {
           onPress={() => setActiveFab(!activeFab)}
         >
           <Ionicons name="ios-add" />
-          <Button
-            style={{ backgroundColor: "#34A34F" }}
-            onPress={launchCamera}
-          >
+          <Button style={{ backgroundColor: "#34A34F" }} onPress={launchCamera}>
             <Ionicons name="ios-camera" size={22} />
           </Button>
-          <Button
-            style={{ backgroundColor: "#3B5998" }}
-            onPress={selectImage}
-          >
+          <Button style={{ backgroundColor: "#3B5998" }} onPress={selectImage}>
             <Ionicons name="ios-image" size={18} />
           </Button>
           <Button
