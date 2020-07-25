@@ -10,10 +10,14 @@ import * as mobilenet from "@tensorflow-models/mobilenet";
 import * as ImagePicker from "expo-image-picker";
 import * as jpeg from "jpeg-js";
 import * as FileSystem from "expo-file-system";
-import { getCameraPermission, getGalleryPermission } from "../../../Permissions";
+import {
+  getCameraPermission,
+  getGalleryPermission,
+} from "../../../Permissions";
 import PredictionModal from "./PredictionModal";
+import ExpensePrediction from "./ExpensePrediction";
 import { FloatingAction } from "react-native-floating-action";
-import { VISION_API_KEY } from "react-native-dotenv";
+// import { VISION_API_KEY } from "react-native-dotenv";
 
 const HomeScreen = ({ navigation }) => {
   // Monthly Expense
@@ -99,6 +103,35 @@ const HomeScreen = ({ navigation }) => {
     return tf.tensor3d(buffer, [height, width, 3]);
   };
 
+  // const classifyImage = async (uri) => {
+  //   try {
+  //     setLoading(true);
+  //     console.log("Classifying uri: " + uri);
+  //     const imgB64 = await FileSystem.readAsStringAsync(uri, {
+  //       encoding: FileSystem.EncodingType.Base64,
+  //     });
+  //     const imgBuffer = tf.util.encodeString(imgB64, "base64").buffer;
+  //     const rawImageData = new Uint8Array(imgBuffer);
+  //     // References the image object which has the properties uri, width, and height
+  //     // const imageAssetPath = Image.resolveAssetSource(image);
+  //     // console.log(imageAssetPath);
+  //     // fetch returns a response
+  //     // const response = await fetch(uri, {}, { isBinary: true });
+  //     // console.log(response);
+  //     // turn the response into an ArrayBuffer (binary data)
+  //     // const rawImageData = await response.arrayBuffer();
+  //     const imageTensor = imageToTensor(rawImageData);
+  //     const predictions = await model.classify(imageTensor);
+  //     setPredictions(predictions);
+  //     console.log(predictions);
+  //   } catch (error) {
+  //     alert("Error predicting image");
+  //     console.error(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const classifyImage = async (uri) => {
     try {
       setLoading(true);
@@ -118,13 +151,14 @@ const HomeScreen = ({ navigation }) => {
       // const rawImageData = await response.arrayBuffer();
       const imageTensor = imageToTensor(rawImageData);
       const predictions = await model.classify(imageTensor);
+      setLoading(false);
       setPredictions(predictions);
       console.log(predictions);
     } catch (error) {
-      alert("Error predicting image");
-      console.error(error);
-    } finally {
       setLoading(false);
+      alert("Error predicting image");
+      console.log("error classifying");
+      console.log(error);
     }
   };
 
@@ -136,7 +170,7 @@ const HomeScreen = ({ navigation }) => {
         quality: 1,
         base64: false,
         allowsEditing: true,
-        aspect: [4, 3]
+        aspect: [4, 3],
       };
 
       const result = await ImagePicker.launchCameraAsync(options);
@@ -151,15 +185,15 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  const selectReceipt = async () => {
+  const selectImage = async () => {
     getGalleryPermission();
-    console.log("Select receipt");
+    console.log("Select Image");
     try {
       const options = {
         quality: 1,
-        base64: true,
+        base64: false,
         allowsEditing: true,
-        aspect: [4, 3]
+        aspect: [4, 3],
       };
 
       const result = await ImagePicker.launchImageLibraryAsync(options);
@@ -167,88 +201,110 @@ const HomeScreen = ({ navigation }) => {
       if (result.cancelled) {
         console.log("User cancelled image picker");
       } else {
-        handleTextExtraction(result.base64);
+        classifyImage(result.uri);
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
-  }
+  };
 
-  const handleTextExtraction = async (base64) => {
-    try {
-      setLoading(true);
-      const body = JSON.stringify({
-        requests: [
-          {
-            features: [
-              { type: "TEXT_DETECTION" }
-            ],
-            "image": {
-              "content": base64
-            },
-          }
-        ]
-      });
-      const response = await fetch(
-        "https://vision.googleapis.com/v1/images:annotate?key=" +
-        VISION_API_KEY,
-        {
-          // headers: {
-          //   Accept: "application/json",
-          //   "Content-Type": "application/json"
-          // },
-          method: "POST",
-          body: body
-        }
-      );
-      const responseJson = await response.json();
-      const extractedText = responseJson.responses[0].textAnnotations[0].description;
-      handleDataExtraction(extractedText);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
+  // const selectReceipt = async () => {
+  //   getGalleryPermission();
+  //   console.log("Select receipt");
+  //   try {
+  //     const options = {
+  //       quality: 1,
+  //       base64: true,
+  //       allowsEditing: true,
+  //       aspect: [4, 3],
+  //     };
 
-  const handleDataExtraction = extractedText => {
-    let text = extractedText;
-    const lines = text.split("\n");
+  //     const result = await ImagePicker.launchImageLibraryAsync(options);
 
-    //Regex matching decimal value at end of line
-    const regexAmount = /\d+\.[0-9]{2}$/;
-    const amountIndex = lines.findIndex(line => regexAmount.test(line));
-    const itemName = lines[amountIndex - 1];
+  //     if (result.cancelled) {
+  //       console.log("User cancelled image picker");
+  //     } else {
+  //       handleTextExtraction(result.base64);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-    const amountLine = lines[amountIndex];
-    const amount = amountLine.substring(amountLine.search(regexAmount));
+  // const handleTextExtraction = async (base64) => {
+  //   try {
+  //     setLoading(true);
+  //     const body = JSON.stringify({
+  //       requests: [
+  //         {
+  //           features: [{ type: "TEXT_DETECTION" }],
+  //           image: {
+  //             content: base64,
+  //           },
+  //         },
+  //       ],
+  //     });
+  //     const response = await fetch(
+  //       "https://vision.googleapis.com/v1/images:annotate?key=" +
+  //         VISION_API_KEY,
+  //       {
+  //         // headers: {
+  //         //   Accept: "application/json",
+  //         //   "Content-Type": "application/json"
+  //         // },
+  //         method: "POST",
+  //         body: body,
+  //       }
+  //     );
+  //     const responseJson = await response.json();
+  //     const extractedText =
+  //       responseJson.responses[0].textAnnotations[0].description;
+  //     handleDataExtraction(extractedText);
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-    const dateLine = lines[amountIndex + 1];
-    const dayMonth = dateLine.substring(0, 6);
-    const year = new Date().getFullYear();
-    const completeDate = dayMonth + " " + year;
+  // const handleDataExtraction = (extractedText) => {
+  //   let text = extractedText;
+  //   const lines = text.split("\n");
 
-    console.log(itemName);
-    console.log(amount);
-    console.log(completeDate);
-    navigation.navigate("Add Expense", {
-      item: itemName,
-      amount: amount.toString(),
-      description: itemName,
-      date: completeDate
-    });
-    // const reg = /\d?\s*.*\s*\d+\.[0-9]{2}$/m
-    // const lines = text.match(reg);
-    // let data = [];
-    // lines.filter(line => reg.test(line))
-    //   .forEach(line => {
-    //     let index = line.search(regex);
-    //     data.push([
-    //       line.substring(0, index).trim(),
-    //       line.substring(index).trim()
-    //     ]);
-    //   });
-  }
+  //   //Regex matching decimal value at end of line
+  //   const regexAmount = /\d+\.[0-9]{2}$/;
+  //   const amountIndex = lines.findIndex((line) => regexAmount.test(line));
+  //   const itemName = lines[amountIndex - 1];
+
+  //   const amountLine = lines[amountIndex];
+  //   const amount = amountLine.substring(amountLine.search(regexAmount));
+
+  //   const dateLine = lines[amountIndex + 1];
+  //   const dayMonth = dateLine.substring(0, 6);
+  //   const year = new Date().getFullYear();
+  //   const completeDate = dayMonth + " " + year;
+
+  //   console.log(itemName);
+  //   console.log(amount);
+  //   console.log(completeDate);
+  //   navigation.navigate("Add Expense", {
+  //     item: itemName,
+  //     amount: amount.toString(),
+  //     description: itemName,
+  //     date: completeDate,
+  //   });
+  //   // const reg = /\d?\s*.*\s*\d+\.[0-9]{2}$/m
+  //   // const lines = text.match(reg);
+  //   // let data = [];
+  //   // lines.filter(line => reg.test(line))
+  //   //   .forEach(line => {
+  //   //     let index = line.search(regex);
+  //   //     data.push([
+  //   //       line.substring(0, index).trim(),
+  //   //       line.substring(index).trim()
+  //   //     ]);
+  //   //   });
+  // };
 
   // Actions for Floating Action Button
   const actions = [
@@ -262,25 +318,23 @@ const HomeScreen = ({ navigation }) => {
       text: "Scan Receipt",
       icon: <Ionicons name="ios-image" size={18} />,
       name: "receipt",
-      position: 2
+      position: 2,
     },
     {
       text: "Manual Input",
       icon: <Ionicons name="ios-create" size={20} />,
       name: "manual",
-      position: 1
-    }
+      position: 1,
+    },
   ];
 
   return (
     <Container style={styles.container}>
-      <MonthlyExpense
-        expense={expense}
-        target={parseFloat(target)}
-      />
+      <MonthlyExpense expense={expense} target={parseFloat(target)} />
       <View style={styles.chart}>
         <DataPieChart data={data} />
       </View>
+      <ExpensePrediction expense={expense} target={target} />
       {loading && <Spinner style={styles.spinner} />}
       {predictions && (
         <PredictionModal
@@ -292,11 +346,11 @@ const HomeScreen = ({ navigation }) => {
         <FloatingAction
           actions={actions}
           actionsPaddingTopBottom={3}
-          onPressItem={name => {
+          onPressItem={(name) => {
             if (name === "camera") {
               launchCamera();
             } else if (name === "receipt") {
-              selectReceipt();
+              selectImage();
             } else {
               navigation.navigate("Add Expense", {});
             }
