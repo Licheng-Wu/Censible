@@ -1,13 +1,11 @@
 import * as React from "react";
-import { Container, ActionSheet, Spinner, Fab, Button } from "native-base";
-import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
+import { Container, Spinner, Fab, Button } from "native-base";
+import { View, StyleSheet, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DataPieChart from "./DataPieChart";
 import MonthlyExpense from "./MonthlyExpense";
-import MonthlyTargetModal from "../settings/MonthlyTargetModal";
 import firebase from "../../../firebaseDb";
 import * as tf from "@tensorflow/tfjs";
-import { fetch } from "@tensorflow/tfjs-react-native";
 import * as mobilenet from "@tensorflow-models/mobilenet";
 import * as ImagePicker from "expo-image-picker";
 import * as jpeg from "jpeg-js";
@@ -18,6 +16,8 @@ import {
 } from "../../../Permissions";
 import PredictionModal from "./PredictionModal";
 import ExpensePrediction from "./ExpensePrediction";
+import { FloatingAction } from "react-native-floating-action";
+// import { VISION_API_KEY } from "react-native-dotenv";
 
 const HomeScreen = ({ navigation }) => {
   // Monthly Expense
@@ -28,9 +28,6 @@ const HomeScreen = ({ navigation }) => {
 
   // Pie chart data
   const [data, setData] = React.useState({});
-
-  // To show FAB for add expense options
-  const [activeFab, setActiveFab] = React.useState(false);
 
   // Updates monthly expense and pie chart
   React.useEffect(() => {
@@ -105,6 +102,35 @@ const HomeScreen = ({ navigation }) => {
     // Height and width is the dimensions of the 2D layer, 3 refers to the number of layers
     return tf.tensor3d(buffer, [height, width, 3]);
   };
+
+  // const classifyImage = async (uri) => {
+  //   try {
+  //     setLoading(true);
+  //     console.log("Classifying uri: " + uri);
+  //     const imgB64 = await FileSystem.readAsStringAsync(uri, {
+  //       encoding: FileSystem.EncodingType.Base64,
+  //     });
+  //     const imgBuffer = tf.util.encodeString(imgB64, "base64").buffer;
+  //     const rawImageData = new Uint8Array(imgBuffer);
+  //     // References the image object which has the properties uri, width, and height
+  //     // const imageAssetPath = Image.resolveAssetSource(image);
+  //     // console.log(imageAssetPath);
+  //     // fetch returns a response
+  //     // const response = await fetch(uri, {}, { isBinary: true });
+  //     // console.log(response);
+  //     // turn the response into an ArrayBuffer (binary data)
+  //     // const rawImageData = await response.arrayBuffer();
+  //     const imageTensor = imageToTensor(rawImageData);
+  //     const predictions = await model.classify(imageTensor);
+  //     setPredictions(predictions);
+  //     console.log(predictions);
+  //   } catch (error) {
+  //     alert("Error predicting image");
+  //     console.error(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const classifyImage = async (uri) => {
     try {
@@ -182,6 +208,126 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+  // const selectReceipt = async () => {
+  //   getGalleryPermission();
+  //   console.log("Select receipt");
+  //   try {
+  //     const options = {
+  //       quality: 1,
+  //       base64: true,
+  //       allowsEditing: true,
+  //       aspect: [4, 3],
+  //     };
+
+  //     const result = await ImagePicker.launchImageLibraryAsync(options);
+
+  //     if (result.cancelled) {
+  //       console.log("User cancelled image picker");
+  //     } else {
+  //       handleTextExtraction(result.base64);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // const handleTextExtraction = async (base64) => {
+  //   try {
+  //     setLoading(true);
+  //     const body = JSON.stringify({
+  //       requests: [
+  //         {
+  //           features: [{ type: "TEXT_DETECTION" }],
+  //           image: {
+  //             content: base64,
+  //           },
+  //         },
+  //       ],
+  //     });
+  //     const response = await fetch(
+  //       "https://vision.googleapis.com/v1/images:annotate?key=" +
+  //         VISION_API_KEY,
+  //       {
+  //         // headers: {
+  //         //   Accept: "application/json",
+  //         //   "Content-Type": "application/json"
+  //         // },
+  //         method: "POST",
+  //         body: body,
+  //       }
+  //     );
+  //     const responseJson = await response.json();
+  //     const extractedText =
+  //       responseJson.responses[0].textAnnotations[0].description;
+  //     handleDataExtraction(extractedText);
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const handleDataExtraction = (extractedText) => {
+  //   let text = extractedText;
+  //   const lines = text.split("\n");
+
+  //   //Regex matching decimal value at end of line
+  //   const regexAmount = /\d+\.[0-9]{2}$/;
+  //   const amountIndex = lines.findIndex((line) => regexAmount.test(line));
+  //   const itemName = lines[amountIndex - 1];
+
+  //   const amountLine = lines[amountIndex];
+  //   const amount = amountLine.substring(amountLine.search(regexAmount));
+
+  //   const dateLine = lines[amountIndex + 1];
+  //   const dayMonth = dateLine.substring(0, 6);
+  //   const year = new Date().getFullYear();
+  //   const completeDate = dayMonth + " " + year;
+
+  //   console.log(itemName);
+  //   console.log(amount);
+  //   console.log(completeDate);
+  //   navigation.navigate("Add Expense", {
+  //     item: itemName,
+  //     amount: amount.toString(),
+  //     description: itemName,
+  //     date: completeDate,
+  //   });
+  //   // const reg = /\d?\s*.*\s*\d+\.[0-9]{2}$/m
+  //   // const lines = text.match(reg);
+  //   // let data = [];
+  //   // lines.filter(line => reg.test(line))
+  //   //   .forEach(line => {
+  //   //     let index = line.search(regex);
+  //   //     data.push([
+  //   //       line.substring(0, index).trim(),
+  //   //       line.substring(index).trim()
+  //   //     ]);
+  //   //   });
+  // };
+
+  // Actions for Floating Action Button
+  const actions = [
+    {
+      text: "Camera",
+      icon: <Ionicons name="ios-camera" size={22} />,
+      name: "camera",
+      position: 3,
+    },
+    {
+      text: "Scan Receipt",
+      icon: <Ionicons name="ios-image" size={18} />,
+      name: "receipt",
+      position: 2,
+    },
+    {
+      text: "Manual Input",
+      icon: <Ionicons name="ios-create" size={20} />,
+      name: "manual",
+      position: 1,
+    },
+  ];
+
   return (
     <Container style={styles.container}>
       <MonthlyExpense expense={expense} target={parseFloat(target)} />
@@ -197,31 +343,19 @@ const HomeScreen = ({ navigation }) => {
         />
       )}
       {!loading && (
-        <Fab
-          active={activeFab}
-          direction="up"
-          style={{ backgroundColor: "#5067FF" }}
-          position="bottomRight"
-          onPress={() => setActiveFab(!activeFab)}
-        >
-          <Ionicons name="ios-add" />
-          <Button style={{ backgroundColor: "#34A34F" }} onPress={launchCamera}>
-            <Ionicons name="ios-camera" size={22} />
-          </Button>
-          <Button style={{ backgroundColor: "#3B5998" }} onPress={selectImage}>
-            <Ionicons name="ios-image" size={18} />
-          </Button>
-          <Button
-            style={{ backgroundColor: "#DD5144" }}
-            onPress={() => {
-              navigation.navigate("Add Expense", {
-                item: "",
-              });
-            }}
-          >
-            <Ionicons name="ios-create" size={20} />
-          </Button>
-        </Fab>
+        <FloatingAction
+          actions={actions}
+          actionsPaddingTopBottom={3}
+          onPressItem={(name) => {
+            if (name === "camera") {
+              launchCamera();
+            } else if (name === "receipt") {
+              selectImage();
+            } else {
+              navigation.navigate("Add Expense", {});
+            }
+          }}
+        />
       )}
     </Container>
   );

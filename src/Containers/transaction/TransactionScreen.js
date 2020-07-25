@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Container, Content, Spinner } from "native-base";
+import { Container, Content, Spinner, Footer } from "native-base";
 import { YellowBox } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import firebase from "../../../firebaseDb";
@@ -12,7 +12,20 @@ const TransactionScreen = () => {
   const [month, setMonth] = React.useState(new Date().toString().substr(4, 3));
   const [dates, setDates] = React.useState([]);
 
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   React.useEffect(() => {
     setLoading(true);
@@ -48,23 +61,23 @@ const TransactionScreen = () => {
       monthArray = [
         { label: months[0], value: months[0] },
         { label: months[11], value: months[11] },
-        { label: months[10], value: months[10] }
+        { label: months[10], value: months[10] },
       ];
     } else if (index === 1) {
       monthArray = [
         { label: months[1], value: months[1] },
         { label: months[0], value: months[0] },
-        { label: months[11], value: months[11] }
+        { label: months[11], value: months[11] },
       ];
     } else {
       monthArray = [
         { label: months[index], value: months[index] },
         { label: months[index - 1], value: months[index - 1] },
-        { label: months[index - 2], value: months[index - 2] }
+        { label: months[index - 2], value: months[index - 2] },
       ];
     }
     return monthArray;
-  }
+  };
 
   const renderDates = () => {
     if (loading) {
@@ -96,25 +109,27 @@ const TransactionScreen = () => {
 
   return (
     <Container style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Monthly Transactions</Text>
-      </View>
-      <View style={styles.pickerContainer}>
-        <View>
-          <Text style={styles.text}>Select a month:</Text>
+      <Content>
+        <View style={styles.header}>
+          <Text style={styles.title}>Monthly Transactions</Text>
         </View>
-        <View>
-          <RNPickerSelect
-            placeholder={{}}
-            style={{ width: 10 }}
-            textInputProps={styles.picker}
-            onValueChange={(value) => setMonth(value)}
-            items={getLastThreeMonths()}
-          />
+        <View style={styles.pickerContainer}>
+          <View>
+            <Text style={styles.text}>Select a month:</Text>
+          </View>
+          <View>
+            <RNPickerSelect
+              placeholder={{}}
+              style={{ width: 10 }}
+              textInputProps={styles.picker}
+              onValueChange={(value) => setMonth(value)}
+              items={getLastThreeMonths()}
+            />
+          </View>
+          <Text style={styles.subtitle}>At a glance...</Text>
         </View>
-        <Text style={styles.subtitle}>At a glance...</Text>
-      </View>
-      {renderDates()}
+        {renderDates()}
+      </Content>
     </Container>
   );
 };

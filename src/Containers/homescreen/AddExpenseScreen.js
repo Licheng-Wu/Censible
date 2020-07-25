@@ -19,12 +19,13 @@ import { connect } from "react-redux";
 class AddExpenseScreen extends Component {
   constructor(props) {
     super(props);
+    const {item, amount, date } = props.route.params;
     this.state = {
-      item: props.route.params.item,
-      amount: "",
+      item: item ? item: "",
+      amount: amount ? amount : "",
       category: "",
-      description: "",
-      chosenDate: new Date(),
+      description: item ? item : "",
+      chosenDate: date ? new Date(date) : new Date()
     };
   }
 
@@ -86,7 +87,7 @@ class AddExpenseScreen extends Component {
             />
             <DatePicker
               textStyle={styles.datePicker}
-              defaultDate={new Date()}
+              defaultDate={chosenDate}
               minimumDate={new Date(2010, 0, 1)}
               maximumDate={new Date()}
               locale={"en"}

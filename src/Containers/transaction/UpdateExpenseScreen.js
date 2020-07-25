@@ -15,8 +15,9 @@ import {
 import { StyleSheet, Text, View, Platform } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { addExpense, deleteExpense } from "../../../ExpenseAPI";
+import { connect } from "react-redux";
 
-export default class UpdateExpenseScreen extends Component {
+class UpdateExpenseScreen extends Component {
   constructor(props) {
     super(props);
     const { name, price, category, description, date } = props.route.params;
@@ -112,33 +113,29 @@ export default class UpdateExpenseScreen extends Component {
                 value={description}
               />
             </Item>
-              <RNPickerSelect
-                placeholder={{ label: "Category", value: null }}
-                textInputProps={styles.pickerText}
-                value={newCategory}
-                onValueChange={this.handleCategory.bind(this)}
-                items={[
-                  { label: "Food", value: "Food" },
-                  { label: "Transport", value: "Transport" },
-                  { label: "Education", value: "Education" },
-                  { label: "Entertainment", value: "Entertainment" },
-                  { label: "Sports", value: "Sports" },
-                  { label: "Others", value: "Others" },
-                ]}
-              />
-              <DatePicker
-                textStyle={styles.datePicker}
-                defaultDate={new Date(chosenDate)}
-                minimumDate={new Date(2010, 0, 1)}
-                maximumDate={new Date()}
-                locale={"en"}
-                modalTransparent={true}
-                animationType={"fade"}
-                androidMode={"default"}
-                placeHolderTextStyle={{ color: "#bfc6ea" }}
-                onDateChange={this.handleDate.bind(this)}
-                disabled={false}
-              />
+            <RNPickerSelect
+              placeholder={{ label: "Category", value: null }}
+              textInputProps={styles.pickerText}
+              value={newCategory}
+              onValueChange={this.handleCategory.bind(this)}
+              items={this.props.category.map((indvCategory) => ({
+                label: indvCategory,
+                value: indvCategory,
+              }))}
+            />
+            <DatePicker
+              textStyle={styles.datePicker}
+              defaultDate={new Date(chosenDate)}
+              minimumDate={new Date(2010, 0, 1)}
+              maximumDate={new Date()}
+              locale={"en"}
+              modalTransparent={true}
+              animationType={"fade"}
+              androidMode={"default"}
+              placeHolderTextStyle={{ color: "#bfc6ea" }}
+              onDateChange={this.handleDate.bind(this)}
+              disabled={false}
+            />
           </Form>
 
           <Button
@@ -185,6 +182,15 @@ export default class UpdateExpenseScreen extends Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    category: state.category,
+    navigation: ownProps.navigation,
+  };
+};
+
+export default connect(mapStateToProps)(UpdateExpenseScreen);
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#e2eeff",
@@ -210,7 +216,7 @@ const styles = StyleSheet.create({
   },
   datePicker: {
     marginTop: 10,
-    marginLeft: 10
+    marginLeft: 10,
   },
   button: {
     marginTop: 50,
