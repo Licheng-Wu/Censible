@@ -7,11 +7,6 @@ const PredictionModal = props => {
 
   const navigation = useNavigation();
 
-  const toArray = (predictions) => {
-    const predictionArray = predictions.split(",");
-    return predictionArray;
-  }
-
   return (
     <Modal
       animationType="slide"
@@ -24,7 +19,7 @@ const PredictionModal = props => {
           <Text style={styles.modalText}>Choose a name:</Text>
           <List>
             {
-              toArray(props.predictions).map(prediction => {
+              props.predictions.map(prediction => {
                 return (
                   <ListItem
                     style={styles.item}
