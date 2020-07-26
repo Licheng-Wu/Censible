@@ -1,16 +1,16 @@
 import * as React from "react";
 import { Form, Item, Input, Toast, List, ListItem } from "native-base";
-import { View, StyleSheet, Text, Modal, TouchableHighlight } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Modal,
+  TouchableHighlight,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const PredictionModal = props => {
-
+const PredictionModal = (props) => {
   const navigation = useNavigation();
-
-  const toArray = (predictions) => {
-    const predictionArray = predictions.split(",");
-    return predictionArray;
-  }
 
   return (
     <Modal
@@ -23,43 +23,42 @@ const PredictionModal = props => {
         <View style={styles.modalView}>
           <Text style={styles.modalText}>Choose a name:</Text>
           <List>
-            {
-              toArray(props.predictions).map(prediction => {
-                return (
-                  <ListItem
-                    style={styles.item}
-                    noBorder={true}
-                    key={prediction}
-                    onPress={() => {
-                      navigation.navigate("Add Expense", {
-                        item: prediction
-                      });
-                      props.setPredictions(null);
-                    }}
-                  >
-                    <Text style={styles.itemText}>{prediction}</Text>
-                  </ListItem>
-                )
-              })
-            }
+            {props.predictions.map((prediction) => {
+              return (
+                <ListItem
+                  style={styles.item}
+                  noBorder={true}
+                  key={prediction}
+                  onPress={() => {
+                    navigation.navigate("Add Expense", {
+                      item: prediction,
+                    });
+                    props.setPredictions(null);
+                  }}
+                >
+                  <Text style={styles.itemText}>{prediction}</Text>
+                </ListItem>
+              );
+            })}
           </List>
           <TouchableHighlight
             style={{ ...styles.button, backgroundColor: "red" }}
             onPress={() => {
               props.setPredictions(null);
-            }}>
+            }}
+          >
             <Text style={styles.textStyle}>Cancel</Text>
           </TouchableHighlight>
         </View>
       </View>
     </Modal>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   modalView: {
     margin: 50,
@@ -70,22 +69,22 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
   },
   modalText: {
     textAlign: "center",
     fontSize: 20,
-    color: "gray"
+    color: "gray",
   },
   item: {
-    justifyContent: "center"
+    justifyContent: "center",
   },
   itemText: {
-    fontSize: 18
+    fontSize: 18,
   },
   button: {
     backgroundColor: "#2196F3",
@@ -93,13 +92,13 @@ const styles = StyleSheet.create({
     width: 100,
     padding: 12,
     elevation: 2,
-    marginTop: 10
+    marginTop: 10,
   },
   textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 18
+    fontSize: 18,
   },
 });
 
