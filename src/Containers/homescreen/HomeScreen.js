@@ -68,11 +68,11 @@ const HomeScreen = ({ navigation }) => {
       setTfReady(true);
       console.log(tfReady);
     });
-    mobilenet.load().then((model) => {
-      setModel(model);
-      setModelReady(true);
-      console.log(modelReady);
-    });
+    // mobilenet.load().then((model) => {
+    //   setModel(model);
+    //   setModelReady(true);
+    //   console.log(modelReady);
+    // });
   }, []);
 
   const imageToTensor = (rawImageData) => {
@@ -99,34 +99,34 @@ const HomeScreen = ({ navigation }) => {
     return tf.tensor3d(buffer, [height, width, 3]);
   };
 
-  const classifyImage = async (uri) => {
-    try {
-      setLoading(true);
-      console.log("Classifying uri: " + uri);
-      const imgB64 = await FileSystem.readAsStringAsync(uri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-      const imgBuffer = tf.util.encodeString(imgB64, "base64").buffer;
-      const rawImageData = new Uint8Array(imgBuffer);
-      // References the image object which has the properties uri, width, and height
-      // const imageAssetPath = Image.resolveAssetSource(image);
-      // console.log(imageAssetPath);
-      // fetch returns a response
-      // const response = await fetch(uri, {}, { isBinary: true });
-      // console.log(response);
-      // turn the response into an ArrayBuffer (binary data)
-      // const rawImageData = await response.arrayBuffer();
-      const imageTensor = imageToTensor(rawImageData);
-      const predictions = await model.classify(imageTensor);
-      setPredictions(predictions);
-      console.log(predictions);
-    } catch (error) {
-      alert("Error predicting image");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const classifyImage = async (uri) => {
+  //   try {
+  //     setLoading(true);
+  //     console.log("Classifying uri: " + uri);
+  //     const imgB64 = await FileSystem.readAsStringAsync(uri, {
+  //       encoding: FileSystem.EncodingType.Base64,
+  //     });
+  //     const imgBuffer = tf.util.encodeString(imgB64, "base64").buffer;
+  //     const rawImageData = new Uint8Array(imgBuffer);
+  //     // References the image object which has the properties uri, width, and height
+  //     // const imageAssetPath = Image.resolveAssetSource(image);
+  //     // console.log(imageAssetPath);
+  //     // fetch returns a response
+  //     // const response = await fetch(uri, {}, { isBinary: true });
+  //     // console.log(response);
+  //     // turn the response into an ArrayBuffer (binary data)
+  //     // const rawImageData = await response.arrayBuffer();
+  //     const imageTensor = imageToTensor(rawImageData);
+  //     const predictions = await model.classify(imageTensor);
+  //     setPredictions(predictions);
+  //     console.log(predictions);
+  //   } catch (error) {
+  //     alert("Error predicting image");
+  //     console.error(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const launchCamera = async () => {
     getCameraPermission();
@@ -134,7 +134,7 @@ const HomeScreen = ({ navigation }) => {
     try {
       const options = {
         quality: 1,
-        base64: false,
+        base64: true,
         allowsEditing: true,
         aspect: [4, 3]
       };
@@ -144,12 +144,51 @@ const HomeScreen = ({ navigation }) => {
       if (result.cancelled) {
         console.log("User cancelled camera");
       } else {
-        classifyImage(result.uri);
+        classifyImage(result.base64);
       }
     } catch (error) {
       console.error(error);
     }
   };
+
+  const classifyImage = async (base64) => {
+    try {
+      setLoading(true);
+      const body = JSON.stringify({
+        requests: [
+          {
+            features: [
+              { type: "LABEL_DETECTION", maxResults: 3 }
+            ],
+            "image": {
+              "content": base64
+            },
+          }
+        ]
+      });
+      const response = await fetch(
+        "https://vision.googleapis.com/v1/images:annotate?key=" +
+        VISION_API_KEY,
+        {
+          // headers: {
+          //   Accept: "application/json",
+          //   "Content-Type": "application/json"
+          // },
+          method: "POST",
+          body: body
+        }
+      );
+      const responseJson = await response.json();
+      const data = responseJson.responses[0].labelAnnotations;
+      let pred = [];
+      data.forEach(prediction => pred.push(prediction.description));
+      setPredictions(pred);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const selectReceipt = async () => {
     getGalleryPermission();
@@ -237,17 +276,6 @@ const HomeScreen = ({ navigation }) => {
       description: itemName,
       date: completeDate
     });
-    // const reg = /\d?\s*.*\s*\d+\.[0-9]{2}$/m
-    // const lines = text.match(reg);
-    // let data = [];
-    // lines.filter(line => reg.test(line))
-    //   .forEach(line => {
-    //     let index = line.search(regex);
-    //     data.push([
-    //       line.substring(0, index).trim(),
-    //       line.substring(index).trim()
-    //     ]);
-    //   });
   }
 
   // Actions for Floating Action Button
@@ -284,7 +312,7 @@ const HomeScreen = ({ navigation }) => {
       {loading && <Spinner style={styles.spinner} />}
       {predictions && (
         <PredictionModal
-          predictions={predictions[0].className}
+          predictions={predictions}
           setPredictions={setPredictions}
         />
       )}
