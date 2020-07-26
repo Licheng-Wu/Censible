@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeStackNavigator from "./HomeStackNavigator";
 import ExploreScreen from "../Containers/explore/ExploreScreen";
@@ -16,15 +16,15 @@ export default function TabNavigator() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           if (route.name === "Home") {
-            iconName = "ios-home";
+            iconName = "home";
           } else if (route.name === "Explore") {
-            iconName = "ios-search";
+            iconName = "earth";
           } else if (route.name === "Transactions") {
-            iconName = "ios-paper";
+            iconName = "profile";
           } else {
-            iconName = "ios-settings";
+            iconName = "setting";
           }
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <AntDesign name={iconName} size={size} color={color} />;
         },
       })}
       tabBarOptions={{

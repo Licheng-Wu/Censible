@@ -79,8 +79,8 @@ const MonthlyTargetModal = (props) => {
                     buttonText: "Okay",
                     duration: 3000,
                     type: "warning",
-                    position: "top",
-                    style: { marginTop: 100 },
+                    position: "bottom",
+                    style: { marginBottom: 40 }
                   });
                 }
               }}

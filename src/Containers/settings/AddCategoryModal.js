@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
   TextInput,
 } from "react-native";
-import { Input } from "native-base";
+import { Toast } from "native-base";
 
 const AddCategoryModal = (props) => {
   const [category, setCategory] = React.useState("");
@@ -39,9 +39,20 @@ const AddCategoryModal = (props) => {
             <TouchableHighlight
               style={styles.button}
               onPress={() => {
-                props.handleAddCategory(category);
-                setCategory("");
-                props.setModalVisible(!props.modalVisible);
+                const lowerCase = props.categories.map(cat => cat.toLowerCase());
+                if (!lowerCase.includes(category.toLowerCase())) {
+                  props.handleAddCategory(category);
+                  setCategory("");
+                  props.setModalVisible(!props.modalVisible);
+                } else {
+                  Toast.show({
+                    text: "Category already exists!",
+                    duration: 3000,
+                    buttonText: "Okay",
+                    type: "warning",
+                    style: { marginBottom: 40 },
+                  })
+                }
               }}
             >
               <Text style={styles.textStyle}>Add</Text>
