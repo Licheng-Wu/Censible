@@ -390,32 +390,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
-
-// Updates pie chart
-// collectionRef
-//   .doc("Info")
-//   .onSnapshot(querySnapshot => {
-//     querySnapshot.docs.forEach(doc => {
-//       if (doc.id === "Food") {
-//         // prices.splice(0, 1, doc.data().total)
-//         setFoodPrice(doc.data().total);
-//       } else if (doc.id === "Transport") {
-//         // prices.splice(1, 1, doc.data().total)
-//         setTransportPrice(doc.data().total);
-//       } else if (doc.id === "Education") {
-//         // prices.splice(2, 1, doc.data().total)
-//         setEducationPrice(doc.data().total);
-//       } else if (doc.id === "Entertainment") {
-//         // prices.splice(3, 1, doc.data().total)
-//         setEntertainmentPrice(doc.data().total);
-//       } else if (doc.id === "Sports") {
-//         // prices.splice(4, 1, doc.data().total)
-//         setSportsPrice(doc.data().total);
-//       } else {
-//         // prices.splice(5, 1, doc.data().total)
-//         setOtherPrice(doc.data().total);
-//       }
-//     })
-//   }, error => {
-//     console.error(error);
-//   })
