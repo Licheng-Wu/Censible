@@ -72,11 +72,11 @@ const HomeScreen = ({ navigation }) => {
       setTfReady(true);
       console.log(tfReady);
     });
-    // mobilenet.load().then((model) => {
-    //   setModel(model);
-    //   setModelReady(true);
-    //   console.log(modelReady);
-    // });
+    mobilenet.load().then((model) => {
+      setModel(model);
+      setModelReady(true);
+      console.log(modelReady);
+    });
   }, []);
 
   const imageToTensor = (rawImageData) => {
@@ -132,13 +132,43 @@ const HomeScreen = ({ navigation }) => {
   //   }
   // };
 
+  const classifyImage = async (uri) => {
+    try {
+      setLoading(true);
+      console.log("Classifying uri: " + uri);
+      const imgB64 = await FileSystem.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      const imgBuffer = tf.util.encodeString(imgB64, "base64").buffer;
+      const rawImageData = new Uint8Array(imgBuffer);
+      // References the image object which has the properties uri, width, and height
+      // const imageAssetPath = Image.resolveAssetSource(image);
+      // console.log(imageAssetPath);
+      // fetch returns a response
+      // const response = await fetch(uri, {}, { isBinary: true });
+      // console.log(response);
+      // turn the response into an ArrayBuffer (binary data)
+      // const rawImageData = await response.arrayBuffer();
+      const imageTensor = imageToTensor(rawImageData);
+      const predictions = await model.classify(imageTensor);
+      setLoading(false);
+      setPredictions(predictions);
+      console.log(predictions);
+    } catch (error) {
+      setLoading(false);
+      alert("Error predicting image");
+      console.log("error classifying");
+      console.log(error);
+    }
+  };
+
   const launchCamera = async () => {
     getCameraPermission();
     console.log("Launch camera");
     try {
       const options = {
         quality: 1,
-        base64: true,
+        base64: false,
         allowsEditing: true,
         aspect: [4, 3],
       };
@@ -148,53 +178,14 @@ const HomeScreen = ({ navigation }) => {
       if (result.cancelled) {
         console.log("User cancelled camera");
       } else {
-        classifyImage(result.base64);
+        classifyImage(result.uri);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const classifyImage = async (base64) => {
-    try {
-      setLoading(true);
-      const body = JSON.stringify({
-        requests: [
-          {
-            features: [
-              { type: "LABEL_DETECTION", maxResults: 3 }
-            ],
-            "image": {
-              "content": base64
-            },
-          }
-        ]
-      });
-      const response = await fetch(
-        "https://vision.googleapis.com/v1/images:annotate?key=" +
-        VISION_API_KEY,
-        {
-          // headers: {
-          //   Accept: "application/json",
-          //   "Content-Type": "application/json"
-          // },
-          method: "POST",
-          body: body
-        }
-      );
-      const responseJson = await response.json();
-      const data = responseJson.responses[0].labelAnnotations;
-      let pred = [];
-      data.forEach(prediction => pred.push(prediction.description));
-      setPredictions(pred);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const selectReceipt = async () => {
+  const selectImage = async () => {
     getGalleryPermission();
     console.log("Select Image");
     try {
@@ -280,16 +271,40 @@ const HomeScreen = ({ navigation }) => {
   //   let text = extractedText;
   //   const lines = text.split("\n");
 
-    console.log(itemName);
-    console.log(amount);
-    console.log(completeDate);
-    navigation.navigate("Add Expense", {
-      item: itemName,
-      amount: amount.toString(),
-      description: itemName,
-      date: completeDate
-    });
-  }
+  //   //Regex matching decimal value at end of line
+  //   const regexAmount = /\d+\.[0-9]{2}$/;
+  //   const amountIndex = lines.findIndex((line) => regexAmount.test(line));
+  //   const itemName = lines[amountIndex - 1];
+
+  //   const amountLine = lines[amountIndex];
+  //   const amount = amountLine.substring(amountLine.search(regexAmount));
+
+  //   const dateLine = lines[amountIndex + 1];
+  //   const dayMonth = dateLine.substring(0, 6);
+  //   const year = new Date().getFullYear();
+  //   const completeDate = dayMonth + " " + year;
+
+  //   console.log(itemName);
+  //   console.log(amount);
+  //   console.log(completeDate);
+  //   navigation.navigate("Add Expense", {
+  //     item: itemName,
+  //     amount: amount.toString(),
+  //     description: itemName,
+  //     date: completeDate,
+  //   });
+  //   // const reg = /\d?\s*.*\s*\d+\.[0-9]{2}$/m
+  //   // const lines = text.match(reg);
+  //   // let data = [];
+  //   // lines.filter(line => reg.test(line))
+  //   //   .forEach(line => {
+  //   //     let index = line.search(regex);
+  //   //     data.push([
+  //   //       line.substring(0, index).trim(),
+  //   //       line.substring(index).trim()
+  //   //     ]);
+  //   //   });
+  // };
 
   // Actions for Floating Action Button
   const actions = [
@@ -323,7 +338,7 @@ const HomeScreen = ({ navigation }) => {
       {loading && <Spinner style={styles.spinner} />}
       {predictions && (
         <PredictionModal
-          predictions={predictions}
+          predictions={predictions[0].className}
           setPredictions={setPredictions}
         />
       )}
