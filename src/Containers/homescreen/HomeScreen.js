@@ -10,10 +10,14 @@ import * as mobilenet from "@tensorflow-models/mobilenet";
 import * as ImagePicker from "expo-image-picker";
 import * as jpeg from "jpeg-js";
 import * as FileSystem from "expo-file-system";
-import { getCameraPermission, getGalleryPermission } from "../../../Permissions";
+import {
+  getCameraPermission,
+  getGalleryPermission,
+} from "../../../Permissions";
 import PredictionModal from "./PredictionModal";
+import ExpensePrediction from "./ExpensePrediction";
 import { FloatingAction } from "react-native-floating-action";
-import { VISION_API_KEY } from "react-native-dotenv";
+// import { VISION_API_KEY } from "react-native-dotenv";
 
 const HomeScreen = ({ navigation }) => {
   // Monthly Expense
@@ -136,7 +140,7 @@ const HomeScreen = ({ navigation }) => {
         quality: 1,
         base64: true,
         allowsEditing: true,
-        aspect: [4, 3]
+        aspect: [4, 3],
       };
 
       const result = await ImagePicker.launchCameraAsync(options);
@@ -192,13 +196,13 @@ const HomeScreen = ({ navigation }) => {
 
   const selectReceipt = async () => {
     getGalleryPermission();
-    console.log("Select receipt");
+    console.log("Select Image");
     try {
       const options = {
         quality: 1,
-        base64: true,
+        base64: false,
         allowsEditing: true,
-        aspect: [4, 3]
+        aspect: [4, 3],
       };
 
       const result = await ImagePicker.launchImageLibraryAsync(options);
@@ -206,66 +210,75 @@ const HomeScreen = ({ navigation }) => {
       if (result.cancelled) {
         console.log("User cancelled image picker");
       } else {
-        handleTextExtraction(result.base64);
+        classifyImage(result.uri);
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
-  }
+  };
 
-  const handleTextExtraction = async (base64) => {
-    try {
-      setLoading(true);
-      const body = JSON.stringify({
-        requests: [
-          {
-            features: [
-              { type: "TEXT_DETECTION" }
-            ],
-            "image": {
-              "content": base64
-            },
-          }
-        ]
-      });
-      const response = await fetch(
-        "https://vision.googleapis.com/v1/images:annotate?key=" +
-        VISION_API_KEY,
-        {
-          // headers: {
-          //   Accept: "application/json",
-          //   "Content-Type": "application/json"
-          // },
-          method: "POST",
-          body: body
-        }
-      );
-      const responseJson = await response.json();
-      const extractedText = responseJson.responses[0].textAnnotations[0].description;
-      handleDataExtraction(extractedText);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
+  // const selectReceipt = async () => {
+  //   getGalleryPermission();
+  //   console.log("Select receipt");
+  //   try {
+  //     const options = {
+  //       quality: 1,
+  //       base64: true,
+  //       allowsEditing: true,
+  //       aspect: [4, 3],
+  //     };
 
-  const handleDataExtraction = extractedText => {
-    let text = extractedText;
-    const lines = text.split("\n");
+  //     const result = await ImagePicker.launchImageLibraryAsync(options);
 
-    //Regex matching decimal value at end of line
-    const regexAmount = /\d+\.[0-9]{2}$/;
-    const amountIndex = lines.findIndex(line => regexAmount.test(line));
-    const itemName = lines[amountIndex - 1];
+  //     if (result.cancelled) {
+  //       console.log("User cancelled image picker");
+  //     } else {
+  //       handleTextExtraction(result.base64);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-    const amountLine = lines[amountIndex];
-    const amount = amountLine.substring(amountLine.search(regexAmount));
+  // const handleTextExtraction = async (base64) => {
+  //   try {
+  //     setLoading(true);
+  //     const body = JSON.stringify({
+  //       requests: [
+  //         {
+  //           features: [{ type: "TEXT_DETECTION" }],
+  //           image: {
+  //             content: base64,
+  //           },
+  //         },
+  //       ],
+  //     });
+  //     const response = await fetch(
+  //       "https://vision.googleapis.com/v1/images:annotate?key=" +
+  //         VISION_API_KEY,
+  //       {
+  //         // headers: {
+  //         //   Accept: "application/json",
+  //         //   "Content-Type": "application/json"
+  //         // },
+  //         method: "POST",
+  //         body: body,
+  //       }
+  //     );
+  //     const responseJson = await response.json();
+  //     const extractedText =
+  //       responseJson.responses[0].textAnnotations[0].description;
+  //     handleDataExtraction(extractedText);
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-    const dateLine = lines[amountIndex + 1];
-    const dayMonth = dateLine.substring(0, 6);
-    const year = new Date().getFullYear();
-    const completeDate = dayMonth + " " + year;
+  // const handleDataExtraction = (extractedText) => {
+  //   let text = extractedText;
+  //   const lines = text.split("\n");
 
     console.log(itemName);
     console.log(amount);
@@ -290,25 +303,23 @@ const HomeScreen = ({ navigation }) => {
       text: "Scan Receipt",
       icon: <Ionicons name="ios-image" size={18} />,
       name: "receipt",
-      position: 2
+      position: 2,
     },
     {
       text: "Manual Input",
       icon: <Ionicons name="ios-create" size={20} />,
       name: "manual",
-      position: 1
-    }
+      position: 1,
+    },
   ];
 
   return (
     <Container style={styles.container}>
-      <MonthlyExpense
-        expense={expense}
-        target={parseFloat(target)}
-      />
+      <MonthlyExpense expense={expense} target={parseFloat(target)} />
       <View style={styles.chart}>
         <DataPieChart data={data} />
       </View>
+      <ExpensePrediction expense={expense} target={target} />
       {loading && <Spinner style={styles.spinner} />}
       {predictions && (
         <PredictionModal
@@ -320,11 +331,11 @@ const HomeScreen = ({ navigation }) => {
         <FloatingAction
           actions={actions}
           actionsPaddingTopBottom={3}
-          onPressItem={name => {
+          onPressItem={(name) => {
             if (name === "camera") {
               launchCamera();
             } else if (name === "receipt") {
-              selectReceipt();
+              selectImage();
             } else {
               navigation.navigate("Add Expense", {});
             }
