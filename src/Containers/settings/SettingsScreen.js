@@ -97,6 +97,12 @@ const Settings = () => {
   };
 
   return (
+    // {/* <Ionicons
+    //     name="ios-log-out"
+    //     color="#529FF3"
+    //     size={40}
+    //     onPress={signOut}
+    //   /> */}
     <Container style={styles.container}>
       <View style={styles.headerAndListContainer}>
         <View style={styles.header}>
@@ -199,13 +205,13 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     // alignContent: "center",
     justifyContent: "center",
-    // paddingLeft: 20,
+    paddingLeft: 20,
     backgroundColor: "#0E7FFF",
     zIndex: 2,
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    marginLeft: 5,
   },
   containerView: {
     flexDirection: "column",

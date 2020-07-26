@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import SettingsScreen from "../Containers/settings/SettingsScreen";
-import CategoryScreen from "../Containers/settings/CategoryScreen";
+import CategoryScreen from "../Containers/CategoryScreen";
 
 const SettingsStack = createStackNavigator();
 
@@ -19,7 +19,7 @@ const SettingsStackNavigator = () => {
         name="CategoryScreen"
         component={CategoryScreen}
         options={{
-          title: "Categories",
+          title: "Category Settings",
           // headerTitleStyle: { fontWeight: "bold" },
           headerBackTitle: "Back",
         }}

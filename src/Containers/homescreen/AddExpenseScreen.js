@@ -19,12 +19,12 @@ import { connect } from "react-redux";
 class AddExpenseScreen extends Component {
   constructor(props) {
     super(props);
-    const {item, amount, description, date } = props.route.params;
+    const {item, amount, date } = props.route.params;
     this.state = {
       item: item ? item: "",
       amount: amount ? amount : "",
       category: "",
-      description: description ? description : "",
+      description: item ? item : "",
       chosenDate: date ? new Date(date) : new Date()
     };
   }
