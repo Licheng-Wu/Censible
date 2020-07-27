@@ -1,13 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text, Alert, Dimensions } from "react-native";
-import {
-  Container,
-  Title,
-  List,
-  ListItem,
-  Left,
-  Body,
-} from "native-base";
+import { Container, Title, List, ListItem, Left, Body } from "native-base";
 import firebase from "../../../firebaseDb";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -81,7 +74,6 @@ const Settings = () => {
       .catch((error) => console.error(error));
   };
 
-  // Realised it does not work because deleting doc does not delete its subcollection
   const handleDeleteData = (uid) => {
     console.log(uid);
     firebase

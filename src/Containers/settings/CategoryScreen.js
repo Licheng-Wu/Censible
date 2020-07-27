@@ -21,7 +21,11 @@ import {
   Toast,
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
-import { addCategory, removeCategory, orderCategory } from "../../redux/actions";
+import {
+  addCategory,
+  removeCategory,
+  orderCategory,
+} from "../../redux/actions";
 import AddCategoryModal from "./AddCategoryModal";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import SwipeableItem from "react-native-swipeable-item";
@@ -114,25 +118,6 @@ class Category extends React.Component {
   render() {
     return (
       <Container style={styles.container}>
-        {/* <List style={styles.categoryList}>
-          {this.props.category.map((indvCategory) => {
-            return (
-              <ListItem icon key={indvCategory}>
-                <Left>
-                  <Button
-                    transparent
-                    onPress={() => this.handleRemoveCategory(indvCategory)}
-                  >
-                    <Ionicons name="md-close" size={32} color="red" />
-                  </Button>
-                </Left>
-                <Body>
-                  <Text>{indvCategory}</Text>
-                </Body>
-              </ListItem>
-            );
-          })}
-        </List> */}
         <View style={styles.categoryList}>
           <DraggableFlatList
             activationDistance={15}
@@ -187,7 +172,6 @@ const styles = StyleSheet.create({
     flex: 0.8,
     padding: 8,
     backgroundColor: "white",
-    // justifyContent: "flex-end",
     shadowColor: "#000",
     borderRadius: 20,
     shadowOpacity: 0.25,
@@ -208,7 +192,7 @@ const styles = StyleSheet.create({
   },
   item: {
     height: 50,
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
 });
 

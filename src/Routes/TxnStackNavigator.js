@@ -8,14 +8,7 @@ const TxnStack = createStackNavigator();
 
 const TxnStackNavigator = () => {
   return (
-    <TxnStack.Navigator
-    // initialRouteName="TransactionScreen"
-    // headerMode="screen"
-    // screenOptions={{
-    //   headerTintColor: "white",
-    //   headerStyle: { backgroundColor: "tomato" },
-    // }}
-    >
+    <TxnStack.Navigator>
       <TxnStack.Screen
         name="TransactionScreen"
         component={TransactionScreen}

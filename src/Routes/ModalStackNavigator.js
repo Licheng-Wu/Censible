@@ -10,21 +10,15 @@ const ModalStackNavigator = () => {
     <ModalStack.Navigator
       mode="modal"
       screenOptions={{
-        cardStyle: {backgroundColor: "transparent"},
+        cardStyle: { backgroundColor: "transparent" },
         cardOverlayEnabled: true,
       }}
-    // initialRouteName="TransactionScreen"
-    // headerMode="screen"
-    // screenOptions={{
-    //   headerTintColor: "white",
-    //   headerStyle: { backgroundColor: "tomato" },
-    // }}
     >
       <ModalStack.Screen
         name="Tab"
         component={TabNavigator}
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
       <ModalStack.Screen
@@ -32,7 +26,7 @@ const ModalStackNavigator = () => {
         component={TransactionDetails}
         options={{
           headerShown: false,
-          cardStyle: {marginTop: 80}
+          cardStyle: { marginTop: 80 },
         }}
       />
     </ModalStack.Navigator>

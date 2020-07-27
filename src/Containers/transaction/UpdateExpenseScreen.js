@@ -228,21 +228,3 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
-
-{
-  /* <Item picker style={styles.picker}>
-  <Picker
-    style={{ width: undefined }}
-    textStyle={{ marginLeft: 5 }}
-    selectedValue={newCategory}
-    onValueChange={this.handleCategory.bind(this)}
-  >
-    <Picker.Item label="Food" value="Food" />
-    <Picker.Item label="Transport" value="Transport" />
-    <Picker.Item label="Education" value="Education" />
-    <Picker.Item label="Entertainment" value="Entertainment" />
-    <Picker.Item label="Sports" value="Sports" />
-    <Picker.Item label="Others" value="Others" />
-  </Picker>
-</Item> */
-}

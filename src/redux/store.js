@@ -18,8 +18,6 @@ const preloadedState = {
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  // whitelist: ["category"],
-  // blacklist: ["categoryReducer"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);

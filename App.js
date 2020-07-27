@@ -30,7 +30,6 @@ export default class App extends React.Component {
     });
     this.setState({ isLoading: false });
     unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      // console.log(user);
       if (user) {
         this.setState({ isLoggedIn: true });
       } else {
@@ -41,13 +40,10 @@ export default class App extends React.Component {
 
   componentWillUnmount() {
     // Unsubscribe to the firebase auth listener when we have stopped using it
-    // Explanation: https://stackoverflow.com/questions/59223510/why-do-i-need-to-unsubscribe-to-onauthstatechanged-in-firebase
     if (this.unsubscribe) {
       this.unsubscribe();
     }
   }
-
-  // handleClick = () => this.setState({ isLoggedIn: true });
 
   render() {
     if (this.state.isLoading) {
@@ -55,7 +51,6 @@ export default class App extends React.Component {
     }
 
     return (
-      // <ImageRecognition />
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <Root>

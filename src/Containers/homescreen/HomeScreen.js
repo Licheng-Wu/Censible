@@ -1,15 +1,13 @@
 import * as React from "react";
-import { Container, Spinner, Fab, Button } from "native-base";
+import { Container, Spinner } from "native-base";
 import { View, StyleSheet, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import DataPieChart from "./DataPieChart";
 import MonthlyExpense from "./MonthlyExpense";
 import firebase from "../../../firebaseDb";
 import * as tf from "@tensorflow/tfjs";
-import * as mobilenet from "@tensorflow-models/mobilenet";
 import * as ImagePicker from "expo-image-picker";
 import * as jpeg from "jpeg-js";
-import * as FileSystem from "expo-file-system";
 import {
   getCameraPermission,
   getGalleryPermission,
@@ -72,11 +70,6 @@ const HomeScreen = ({ navigation }) => {
       setTfReady(true);
       console.log(tfReady);
     });
-    // mobilenet.load().then((model) => {
-    //   setModel(model);
-    //   setModelReady(true);
-    //   console.log(modelReady);
-    // });
   }, []);
 
   const imageToTensor = (rawImageData) => {
@@ -102,35 +95,6 @@ const HomeScreen = ({ navigation }) => {
     // Height and width is the dimensions of the 2D layer, 3 refers to the number of layers
     return tf.tensor3d(buffer, [height, width, 3]);
   };
-
-  // const classifyImage = async (uri) => {
-  //   try {
-  //     setLoading(true);
-  //     console.log("Classifying uri: " + uri);
-  //     const imgB64 = await FileSystem.readAsStringAsync(uri, {
-  //       encoding: FileSystem.EncodingType.Base64,
-  //     });
-  //     const imgBuffer = tf.util.encodeString(imgB64, "base64").buffer;
-  //     const rawImageData = new Uint8Array(imgBuffer);
-  //     // References the image object which has the properties uri, width, and height
-  //     // const imageAssetPath = Image.resolveAssetSource(image);
-  //     // console.log(imageAssetPath);
-  //     // fetch returns a response
-  //     // const response = await fetch(uri, {}, { isBinary: true });
-  //     // console.log(response);
-  //     // turn the response into an ArrayBuffer (binary data)
-  //     // const rawImageData = await response.arrayBuffer();
-  //     const imageTensor = imageToTensor(rawImageData);
-  //     const predictions = await model.classify(imageTensor);
-  //     setPredictions(predictions);
-  //     console.log(predictions);
-  //   } catch (error) {
-  //     alert("Error predicting image");
-  //     console.error(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const launchCamera = async () => {
     getCameraPermission();
@@ -172,10 +136,6 @@ const HomeScreen = ({ navigation }) => {
         "https://vision.googleapis.com/v1/images:annotate?key=" +
           VISION_API_KEY,
         {
-          // headers: {
-          //   Accept: "application/json",
-          //   "Content-Type": "application/json"
-          // },
           method: "POST",
           body: body,
         }
@@ -232,10 +192,6 @@ const HomeScreen = ({ navigation }) => {
         "https://vision.googleapis.com/v1/images:annotate?key=" +
           VISION_API_KEY,
         {
-          // headers: {
-          //   Accept: "application/json",
-          //   "Content-Type": "application/json"
-          // },
           method: "POST",
           body: body,
         }

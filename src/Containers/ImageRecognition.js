@@ -1,10 +1,18 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, StatusBar, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  StatusBar,
+  ActivityIndicator,
+} from "react-native";
 import * as tf from "@tensorflow/tfjs";
 import { fetch } from "@tensorflow/tfjs-react-native";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import * as jpeg from "jpeg-js";
 import * as mobilenet from "@tensorflow-models/mobilenet";
 import cat from "../../assets/cat.jpg";
@@ -51,11 +59,6 @@ export default class ImageRecognition extends React.Component {
     } else {
       this.setState({ cameraStatus: true });
     }
-
-    // const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    // if (status !== "granted") {
-    //   alert("Sorry, we need camera roll permissions to make this work!");
-    // }
   };
 
   imageToTensor(rawImageData) {
@@ -126,40 +129,7 @@ export default class ImageRecognition extends React.Component {
   };
 
   render() {
-    // if (this.state.image) {
-    //   console.log("if");
-    //   console.log(this.state.image);
-    //   return (
-    //     <View>
-    //       <Image source={this.state.image} />
-    //     </View>
-    //   );
-    // }
     return (
-      // <View style={styles.container}>
-      //   <Text>
-      //     Model ready?{" "}
-      //     {this.state.isModelReady ? (
-      //       <Text>Yes</Text>
-      //     ) : (
-      //       <Text>Loading Model...</Text>
-      //     )}
-      //   </Text>
-      //   <Text>TFJS ready? {this.state.isTfReady ? <Text>Yes</Text> : ""}</Text>
-      //   <TouchableOpacity
-      //     // style={styles.imageWrapper}
-      //     onPress={this.state.isModelReady ? this.selectImage() : undefined}
-      //   >
-      //     {this.state.image && (
-      //       <Image source={this.state.image} style={styles.imageContainer} />
-      //     )}
-
-      //     {this.state.isModelReady && !this.state.image && (
-      //       <Text style={styles.transparentText}>Tap to choose image</Text>
-      //     )}
-      //   </TouchableOpacity>
-      // </View>
-      // <View>
       <Camera
         style={{ flex: 1 }}
         type={Camera.Constants.Type.back}
@@ -230,63 +200,63 @@ export default class ImageRecognition extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#171f24',
-    alignItems: 'center'
+    backgroundColor: "#171f24",
+    alignItems: "center",
   },
   loadingContainer: {
     marginTop: 80,
-    justifyContent: 'center'
+    justifyContent: "center",
   },
   text: {
-    color: '#ffffff',
-    fontSize: 16
+    color: "#ffffff",
+    fontSize: 16,
   },
   loadingModelContainer: {
-    flexDirection: 'row',
-    marginTop: 10
+    flexDirection: "row",
+    marginTop: 10,
   },
   imageWrapper: {
     width: 280,
     height: 280,
     padding: 10,
-    borderColor: '#cf667f',
+    borderColor: "#cf667f",
     borderWidth: 5,
-    borderStyle: 'dashed',
+    borderStyle: "dashed",
     marginTop: 40,
     marginBottom: 10,
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center'
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
   },
   imageContainer: {
     width: 250,
     height: 250,
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     left: 10,
     bottom: 10,
-    right: 10
+    right: 10,
   },
   predictionWrapper: {
     height: 100,
-    width: '100%',
-    flexDirection: 'column',
-    alignItems: 'center'
+    width: "100%",
+    flexDirection: "column",
+    alignItems: "center",
   },
   transparentText: {
-    color: '#ffffff',
-    opacity: 0.7
+    color: "#ffffff",
+    opacity: 0.7,
   },
   footer: {
-    marginTop: 40
+    marginTop: 40,
   },
   poweredBy: {
     fontSize: 20,
-    color: '#e69e34',
-    marginBottom: 6
+    color: "#e69e34",
+    marginBottom: 6,
   },
   tfLogo: {
     width: 125,
-    height: 70
-  }
+    height: 70,
+  },
 });

@@ -26,8 +26,6 @@ export default class ExploreScreen extends Component {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
     if (status !== "granted") {
-      console.log("Permission not granted");
-
       this.setState({ errorMessage: "Permission not granted" });
     }
 
@@ -37,25 +35,13 @@ export default class ExploreScreen extends Component {
       initialRegion: {
         latitude: userLocation.coords.latitude,
         longitude: userLocation.coords.longitude,
-        // latitude: 1.3612,
-        // longitude: 103.8863,
         latitudeDelta: 0.01,
         longitudeDelta: 0.005,
       },
     });
-
-    console.log(JSON.stringify(this.state.initialRegion.latitude));
-    console.log(JSON.stringify(this.state.initialRegion.longitude));
   };
 
   getNearbyPlaces = (rad, placeType, price) => {
-    console.log("get");
-    // Buangkok MRT
-    // lat:  1.3829, long: 103.8934
-
-    // Orchard Road
-    // lat: 1.304833, long: 103.831833
-
     const { latitude, longitude } = this.state.initialRegion;
     let radius = rad * 1000;
 
@@ -91,7 +77,6 @@ export default class ExploreScreen extends Component {
           tempHolder.push(obj);
         });
         this.setState({ places: tempHolder });
-        console.log(this.state.places);
       })
       .catch((error) => {
         console.error(error);
