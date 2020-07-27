@@ -107,6 +107,7 @@ const TransactionScreen = () => {
 
   return (
     <Container style={styles.container}>
+      <Content>
         <View style={styles.header}>
           <Text style={styles.title}>Monthly Transactions</Text>
         </View>
@@ -126,6 +127,7 @@ const TransactionScreen = () => {
           <Text style={styles.subtitle}>At a glance...</Text>
         </View>
         {renderDates()}
+      </Content>
     </Container>
   );
 };
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
   title: {
     justifyContent: "center",
     alignItems: "center",
-    fontSize: 34,
+    fontSize: 26,
     fontWeight: "bold",
     color: "#3F6DB3",
     marginTop: 10,
@@ -181,7 +183,7 @@ const styles = StyleSheet.create({
   },
   list: {
     padding: 10,
-    marginBottom: 182,
+    // marginBottom: 100,
     margin: 20,
     backgroundColor: "white",
     shadowColor: "#000",
