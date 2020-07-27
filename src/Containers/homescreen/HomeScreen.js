@@ -27,6 +27,12 @@ const HomeScreen = ({ navigation }) => {
   // Pie chart data
   const [data, setData] = React.useState({});
 
+  // List of predictions for image classification
+  const [predictions, setPredictions] = React.useState(null);
+
+  // Set to true when processing images
+  const [loading, setLoading] = React.useState(false);
+
   // Updates monthly expense and pie chart
   React.useEffect(() => {
     let uid = firebase.auth().currentUser.uid;
@@ -56,45 +62,6 @@ const HomeScreen = ({ navigation }) => {
       );
     return unsubscribe;
   }, []);
-
-  // Tensorflow Model
-  const [tfReady, setTfReady] = React.useState(false);
-  const [model, setModel] = React.useState(null);
-  const [modelReady, setModelReady] = React.useState(false);
-  const [predictions, setPredictions] = React.useState(null);
-  const [loading, setLoading] = React.useState(false);
-
-  // Loads Tensorflow model
-  React.useEffect(() => {
-    tf.ready().then(() => {
-      setTfReady(true);
-      console.log(tfReady);
-    });
-  }, []);
-
-  const imageToTensor = (rawImageData) => {
-    // rawImageData refers to the binary data. rawImageData is a buffer
-
-    const TO_UINT8ARRAY = true;
-    // const data is a typed array holding raw binary data
-    const { width, height, data } = jpeg.decode(rawImageData, TO_UINT8ARRAY);
-    // Drop the alpha channel info for mobilenet
-    // Create a buffer in memory of size length
-    const buffer = new Uint8Array(width * height * 3);
-    // stores the data in buffer
-    let offset = 0;
-    for (let i = 0; i < buffer.length; i += 3) {
-      buffer[i] = data[offset];
-      buffer[i + 1] = data[offset + 1];
-      buffer[i + 2] = data[offset + 2];
-
-      offset += 4;
-    }
-    // Creates a rank 3 tensor. For RGB channels
-    // Buffer is the data. And [height, width, 3] specifies the shape of the tensor
-    // Height and width is the dimensions of the 2D layer, 3 refers to the number of layers
-    return tf.tensor3d(buffer, [height, width, 3]);
-  };
 
   const launchCamera = async () => {
     getCameraPermission();
@@ -134,7 +101,7 @@ const HomeScreen = ({ navigation }) => {
       });
       const response = await fetch(
         "https://vision.googleapis.com/v1/images:annotate?key=" +
-          VISION_API_KEY,
+        VISION_API_KEY,
         {
           method: "POST",
           body: body,
@@ -147,6 +114,7 @@ const HomeScreen = ({ navigation }) => {
       setPredictions(pred);
     } catch (error) {
       console.error(error);
+      alert("Error classifying image.");
     } finally {
       setLoading(false);
     }
@@ -190,7 +158,7 @@ const HomeScreen = ({ navigation }) => {
       });
       const response = await fetch(
         "https://vision.googleapis.com/v1/images:annotate?key=" +
-          VISION_API_KEY,
+        VISION_API_KEY,
         {
           method: "POST",
           body: body,
@@ -202,6 +170,7 @@ const HomeScreen = ({ navigation }) => {
       handleDataExtraction(extractedText);
     } catch (error) {
       console.error(error);
+      alert("Error processing receipt.");
     } finally {
       setLoading(false);
     }
@@ -209,29 +178,33 @@ const HomeScreen = ({ navigation }) => {
 
   const handleDataExtraction = (extractedText) => {
     let text = extractedText;
-    const lines = text.split("\n");
+    if (!text.includes("PayLah!")) {
+      alert("Error processing receipt");
+    } else {
+      const lines = text.split("\n");
 
-    //Regex matching decimal value at end of line
-    const regexAmount = /\d+\.[0-9]{2}$/;
-    const amountIndex = lines.findIndex((line) => regexAmount.test(line));
-    const itemName = lines[amountIndex - 1];
+      //Regex matching decimal value at end of line
+      const regexAmount = /\d+\.[0-9]{2}$/;
+      const amountIndex = lines.findIndex((line) => regexAmount.test(line));
+      const itemName = lines[amountIndex - 1];
 
-    const amountLine = lines[amountIndex];
-    const amount = amountLine.substring(amountLine.search(regexAmount));
+      const amountLine = lines[amountIndex];
+      const amount = amountLine.substring(amountLine.search(regexAmount));
 
-    const dateLine = lines[amountIndex + 1];
-    const dayMonth = dateLine.substring(0, 6);
-    const year = new Date().getFullYear();
-    const completeDate = dayMonth + " " + year;
+      const dateLine = lines[amountIndex + 1];
+      const dayMonth = dateLine.substring(0, 6);
+      const year = new Date().getFullYear();
+      const completeDate = dayMonth + " " + year;
 
-    console.log(itemName);
-    console.log(amount);
-    console.log(completeDate);
-    navigation.navigate("Add Expense", {
-      item: itemName,
-      amount: amount.toString(),
-      date: completeDate,
-    });
+      console.log(itemName);
+      console.log(amount);
+      console.log(completeDate);
+      navigation.navigate("Add Expense", {
+        item: itemName,
+        amount: amount.toString(),
+        date: completeDate,
+      });
+    }
   };
 
   // Actions for Floating Action Button
