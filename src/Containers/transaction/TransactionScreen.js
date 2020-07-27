@@ -86,7 +86,6 @@ const TransactionScreen = () => {
 
     if (dates.length) {
       return (
-        // <Content>
         <View style={styles.list}>
           <ScrollView style={{ marginTop: 10 }}>
             {dates.map((date) => {
@@ -94,7 +93,6 @@ const TransactionScreen = () => {
             })}
           </ScrollView>
         </View>
-        // </Content>
       );
     } else {
       return (
@@ -109,7 +107,6 @@ const TransactionScreen = () => {
 
   return (
     <Container style={styles.container}>
-      <Content>
         <View style={styles.header}>
           <Text style={styles.title}>Monthly Transactions</Text>
         </View>
@@ -129,7 +126,6 @@ const TransactionScreen = () => {
           <Text style={styles.subtitle}>At a glance...</Text>
         </View>
         {renderDates()}
-      </Content>
     </Container>
   );
 };

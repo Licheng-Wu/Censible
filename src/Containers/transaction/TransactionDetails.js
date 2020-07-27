@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text, Alert } from "react-native";
 import { Container, Title, Content, Button } from "native-base";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { deleteExpense } from "../../../ExpenseAPI";
 
 const TransactionDetails = ({ route, navigation }) => {
@@ -62,8 +62,8 @@ const TransactionDetails = ({ route, navigation }) => {
         </View>
 
         <View style={styles.buttons}>
-          <Ionicons
-            name="ios-create"
+          <AntDesign
+            name="edit"
             size={40}
             color="#529FF3"
             onPress={() =>
@@ -77,11 +77,11 @@ const TransactionDetails = ({ route, navigation }) => {
               })
             }
           />
-          <Ionicons
-            name="ios-trash"
+          <AntDesign
+            name="delete"
             size={40}
             color="red"
-            onPress={() => confirmDelete()}
+            onPress={confirmDelete}
           />
         </View>
       </Content>

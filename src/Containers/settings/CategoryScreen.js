@@ -21,7 +21,7 @@ import {
   Toast,
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
-import { addCategory, removeCategory, orderCategory } from "../redux/actions";
+import { addCategory, removeCategory, orderCategory } from "../../redux/actions";
 import AddCategoryModal from "./AddCategoryModal";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import SwipeableItem from "react-native-swipeable-item";
@@ -34,7 +34,6 @@ class Category extends React.Component {
     this.state = {
       modalVisible: false,
     };
-    console.log(this.props);
   }
 
   handleAddCategory = (category) => {
@@ -97,7 +96,7 @@ class Category extends React.Component {
   renderOverlay = ({ item }) => {
     return (
       <ListItem style={styles.item} onLongPress={item.drag} noIndent>
-        <Text style={styles.itemText}>{item.item}</Text>
+        <Text>{item.item}</Text>
       </ListItem>
     );
   };
@@ -149,9 +148,8 @@ class Category extends React.Component {
           full
           rounded
           info
-          style={{ alignSelf: "flex-end" }}
           onPress={() => {
-            if (this.props.category.length > 10) {
+            if (this.props.category.length >= 10) {
               Toast.show({
                 text: "Too many categories",
                 duration: 3000,
@@ -167,6 +165,7 @@ class Category extends React.Component {
           <Text style={{ color: "white", fontSize: 16 }}>Add new category</Text>
         </Button>
         <AddCategoryModal
+          categories={this.props.category}
           modalVisible={this.state.modalVisible}
           setModalVisible={this.setModalVisible}
           handleAddCategory={this.handleAddCategory}
@@ -186,6 +185,7 @@ const styles = StyleSheet.create({
   },
   categoryList: {
     flex: 0.8,
+    padding: 8,
     backgroundColor: "white",
     // justifyContent: "flex-end",
     shadowColor: "#000",
@@ -205,6 +205,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "pink",
     justifyContent: "flex-start",
+  },
+  item: {
+    height: 50,
+    backgroundColor: "white"
   },
 });
 

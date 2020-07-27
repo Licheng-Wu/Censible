@@ -2,11 +2,8 @@ import React from "react";
 import { StyleSheet, View, Text, Alert, Dimensions } from "react-native";
 import {
   Container,
-  Header,
   Title,
-  Content,
   List,
-  Separator,
   ListItem,
   Left,
   Body,
@@ -144,20 +141,32 @@ const Settings = () => {
                 <Text style={styles.separatorText}>Account</Text>
               </View>
               <ListItem
+                icon
                 key="logout"
                 noBorder
                 style={styles.item}
                 onPress={confirmLogOut}
               >
-                <Text style={styles.itemText}>Logout</Text>
+                <Left>
+                  <AntDesign name="logout" size={24} color="#0E7FFF" />
+                </Left>
+                <Body>
+                  <Text style={styles.itemText}>Logout</Text>
+                </Body>
               </ListItem>
               <ListItem
+                icon
                 key="delete"
                 noBorder
                 style={styles.item}
                 onPress={confirmDeleteAccount}
               >
-                <Text style={styles.itemText}>Delete Account</Text>
+                <Left>
+                  <AntDesign name="delete" size={24} color="#0E7FFF" />
+                </Left>
+                <Body>
+                  <Text style={styles.itemText}>Delete Account</Text>
+                </Body>
               </ListItem>
             </View>
           </List>
@@ -190,14 +199,13 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     // alignContent: "center",
     justifyContent: "center",
-    // paddingLeft: 20,
     backgroundColor: "#0E7FFF",
     zIndex: 2,
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
-    marginLeft: 20,
+    alignSelf: "center",
   },
   containerView: {
     flexDirection: "column",

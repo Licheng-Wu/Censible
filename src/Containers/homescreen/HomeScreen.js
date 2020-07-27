@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Container, Spinner, Fab, Button } from "native-base";
 import { View, StyleSheet, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import DataPieChart from "./DataPieChart";
 import MonthlyExpense from "./MonthlyExpense";
 import firebase from "../../../firebaseDb";
@@ -282,19 +282,19 @@ const HomeScreen = ({ navigation }) => {
   const actions = [
     {
       text: "Camera",
-      icon: <Ionicons name="ios-camera" size={22} />,
+      icon: <AntDesign name="camerao" size={20} />,
       name: "camera",
       position: 3,
     },
     {
       text: "Scan Receipt",
-      icon: <Ionicons name="ios-image" size={18} />,
+      icon: <AntDesign name="scan1" size={20} />,
       name: "receipt",
       position: 2,
     },
     {
       text: "Manual Input",
-      icon: <Ionicons name="ios-create" size={20} />,
+      icon: <AntDesign name="form" size={20} />,
       name: "manual",
       position: 1,
     },
